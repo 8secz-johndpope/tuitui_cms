@@ -75,14 +75,14 @@ router.get('/del', async (req, res, next) => {
   }
 })
 
-// router.get('/reset', async (req, res, next) => {
-//   var config = new ConfigModel()
-//   config.nextCount(function (err, count) {
-//     config.resetCount(function (err, nextCount) {
-//     });
-//   });
-//   res.send({success: '重置成功'})
-// })
+router.get('/reset', async (req, res, next) => {
+  var config = new ConfigModel()
+  config.nextCount(function (err, count) {
+    config.resetCount(function (err, nextCount) {
+    });
+  });
+  res.send({success: '重置成功'})
+})
 
 router.get('/jieguan', async (req, res, next) => {
   let code = req.query.code
