@@ -3,12 +3,12 @@ const router = express.Router();
 const AccountModel = require('../model/Account.js')
 
 router.post('/', async (req, res, next) => {
-  let { account, password } = req.body;
+  let { account, password, role } = req.body;
   let result = await AccountModel.find({account});
   if(result.length > 0) {
     res.send({code: 2, msg: "该账户名已存在，请检查输入是否有误"})
   } else {
-    let data = await AccountModel.create({ account, password });
+    let data = await AccountModel.create({ account, password, role, loginAt: Date.now() });
     if(data) {
       res.send({code: 1, msg: '账户创建成功', data})
     } else {
