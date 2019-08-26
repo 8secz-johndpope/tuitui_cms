@@ -87,7 +87,6 @@ router.get('/unbind', async(req, res, next) => {
 })
 
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
-    console.log('------------aaaaaaa')
     //用户回复
     res.send('')
     console.log('回复完了')
@@ -98,6 +97,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         code = conf.code
         await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
     }
+    console.log(code,'------------------------code')
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
