@@ -4,15 +4,20 @@ var MsgModel = require('../model/Msg');
 var mem = require('../util/mem.js');
 
 router.get('/', async(req, res, next) => {
-    let doc = await MsgModel.find()
+    let account_id = req.session.account._id;
+
+    let doc = await MsgModel.find({account_id})
     res.send({data: doc})
 })
 
 router.post('/create', async(req, res, next) => {
+    let account_id = req.session.account._id;
+
     let data = {
         type:req.body.type,
         description:req.body.description,
-        contents:req.body.contents
+        contents:req.body.contents,
+        account_id
     }
     let doc = await MsgModel.create(data)
     if(doc){

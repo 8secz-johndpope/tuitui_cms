@@ -6,12 +6,13 @@ var weichat_util = require('../util/get_weichat_client.js')
 var ConfigModel = require('../model/Config');
 
 router.get('/show', async(req, res, next) => {
-    var codes = await ConfigModel.find()
+    let account_id = req.session.account._id;
+    var codes = await ConfigModel.find({account_id})
     // var codes = [];
     // for (var key in weichat_conf) {
     //     codes.push(weichat_conf[key]);
     // }
-    QRcodeModel.find({}, (err, data) => {
+    QRcodeModel.find({account_id}, (err, data) => {
         if (data == '') {
             res.send({err: '没有数据'})
         } else {
@@ -22,11 +23,13 @@ router.get('/show', async(req, res, next) => {
 
 
 router.post('/create', (req, res, next) => {
+    let account_id = req.session.account._id;
     var qrInfo = {
         name: req.body.name,
         content: req.body.content,
         code: req.body.code,
-        tagId:req.body.tagId
+        tagId:req.body.tagId,
+        account_id
     }
     var user = new QRcodeModel(qrInfo)
     user.save(async function (err, data) {
@@ -59,7 +62,8 @@ router.post('/create', (req, res, next) => {
 })
 
 router.get('/get_code', async(req, res, next) => {
-    var codes = await ConfigModel.find()
+    let account_id = req.session.account._id;
+    var codes = await ConfigModel.find({account_id})
     // var codes = [];
     // for (var key in weichat_conf) {
     //     codes.push(weichat_conf[key]);

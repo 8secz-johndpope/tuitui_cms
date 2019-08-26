@@ -8,14 +8,15 @@ var wechat_util = require('../util/get_weichat_client.js')
 
 
 router.get('/', async(req, res, next) => {
+    let account_id = req.session.account._id;
     let sort = req.query.sort
     let messages = null
     if (sort === "_id") {
-        messages = await MessageModel.find().sort({
+        messages = await MessageModel.find({account_id}).sort({
             _id: -1
         });
     } else if (sort === "timing_time") {
-        messages = await MessageModel.find().sort({
+        messages = await MessageModel.find({account_id}).sort({
             timing_time: -1
         });
     }
@@ -51,7 +52,8 @@ router.get('/', async(req, res, next) => {
 })
 
 router.get('/get_code', async(req, res, next) => {
-    let doc = await ConfigModel.find()
+    let account_id = req.session.account._id;
+    let doc = await ConfigModel.find({account_id})
     res.send({
         data: doc
     })
@@ -60,7 +62,9 @@ router.get('/get_code', async(req, res, next) => {
 
 router.post('/create', async(req, res, next) => {
   var ab_img = __dirname + '/../' + req.body.img_path;
-  var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes)
+  var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
+    let account_id = req.session.account._id;
+
     var message = {
         codes: req.body.codes,
         sex: req.body.sex,
@@ -72,9 +76,9 @@ router.post('/create', async(req, res, next) => {
         contents: req.body.contents,
         img: req.body.img,
         tagId: req.body.tagId,
-        mediaId: mediaId
-    }
-    console.log(message)
+        mediaId: mediaId,
+        account_id
+    };
     var docs = await MessageModel.create(message);
     if (docs) {
         res.send({
@@ -144,11 +148,12 @@ router.get('/delete', async(req, res, next) => {
 router.get('/remove', async(req, res, next) => {
     var startTime = new Date(Number(req.query.startTime)),
         endTime = new Date(Number(req.query.endTime));
+    let account_id = req.session.account._id;
     var docs = await MessageModel.remove({
         timing_time: {
             $gte: startTime,
             $lt: endTime
-        }
+        }, account_id
     })
     if (docs) {
         res.send({

@@ -4,8 +4,9 @@ var TransferModel = require('../model/Transfer');
 var DomainModel = require('../model/Domain');
 var mem = require('../util/mem.js')
 router.get('/', async(req, res, next) => {
-    var messages = await TransferModel.find().sort({order: -1, _id: -1})
-    var domain_names = await DomainModel.find();
+    let account_id = req.session.account._id;
+    var messages = await TransferModel.find({account_id}).sort({order: -1, _id: -1})
+    var domain_names = await DomainModel.find({account_id});
     res.send({messages: messages, domain_names: domain_names})
 });
 
@@ -16,7 +17,8 @@ router.get('/', async(req, res, next) => {
 // })
 
 router.post('/goTop', async(req, res, next) => {
-  let message = await TransferModel.findOne().sort({order: -1});
+    let account_id = req.session.account._id;
+    let message = await TransferModel.findOne({account_id}).sort({order: -1});
   let order = message.order + 1;
   let result = await TransferModel.findByIdAndUpdate(req.body.id, {order}, {new: true});
   if(result) {
@@ -25,8 +27,9 @@ router.post('/goTop', async(req, res, next) => {
 });
 
 router.get('/update_links', async(req, res, next) => {
-    var domain_name = req.query.domain_name, 
-    messages = await TransferModel.find(),
+    let account_id = req.session.account._id;
+    var domain_name = req.query.domain_name,
+    messages = await TransferModel.find({account_id}),
     domain_names = await DomainModel.findByIdAndUpdate('5b6d0b899a9fab38f48b5b10', {domain_name: domain_name})
     // for(var i=0,mLength=messages.length;i<mLength;i++){
     //     messages[i].links[0] = domain_name + '/tuiguang' + messages[i].links[0].split('/tuiguang')[1]
@@ -36,6 +39,7 @@ router.get('/update_links', async(req, res, next) => {
 })
 
 router.post('/create', async(req, res, next)=> {
+    let account_id = req.session.account._id;
     var message = {
         id:req.body.id,
         title: req.body.title,
@@ -46,7 +50,8 @@ router.post('/create', async(req, res, next)=> {
         granularity: req.body.granularity,
         remarks: req.body.remarks,
         group: req.body.group || '默认',
-        back_urls: req.body.back_urls
+        back_urls: req.body.back_urls,
+        account_id
     }
     var result = await TransferModel.find({id: message.id})
     if(result.length !== 0) {

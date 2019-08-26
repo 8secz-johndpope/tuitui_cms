@@ -8,13 +8,14 @@ var request = require('request');
 var UserconfModel = require('../model/Userconf');
 
 router.get('/', async (req, res, next) => {
-  let doc = await ConfigModel.find().sort({_id: -1})
+  let account_id = req.session.account._id;
+  let doc = await ConfigModel.find({account_id}).sort({_id: -1})
   res.send({data: doc})
 })
 
 router.get('/find_one', async (req, res, next) => {
-  let reg = new RegExp(req.query.nick_name);
-  let doc = await ConfigModel.find({nick_name: {$regex: reg}})
+  let reg = new RegExp(req.query.nick_name), account_id = req.session.account._id;
+  let doc = await ConfigModel.find({nick_name: {$regex: reg}, account_id})
   res.send({data: doc})
 })
 

@@ -4,17 +4,20 @@ var MenuModel = require('../model/Menu');
 var WechatUtil = require('../util/get_weichat_client.js');
 
 router.get('/', async(req, res, next) => {
-    let doc = await MenuModel.find();
+    let account_id = req.session.account._id;
+    let doc = await MenuModel.find({account_id});
     res.send({data: doc})
 });
 
 router.post('/create', async(req, res, next) => {
+    let account_id = req.session.account._id;
     let data = {
         title: req.body.title,
         codes: req.body.codes,
         values: req.body.values,
         individual: req.body.individual,
-        sex: req.body.sex
+        sex: req.body.sex,
+        account_id
     };
     let doc = await MenuModel.create(data);
 

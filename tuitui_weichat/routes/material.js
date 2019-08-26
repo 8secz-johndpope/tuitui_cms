@@ -7,7 +7,7 @@ var getMaterials = require('../script/get_material');
 var sendTag = require('../script/send_tag_message');
 
 router.get('/', async (req, res, next) => {
-  let docs = getMaterials.get_aterials(req.query.code)
+  let docs = getMaterials.get_aterials(req.query.code);
   if (docs) {
     res.send({
       success: '同步成功',
@@ -17,9 +17,12 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/show', async (req, res, next) => {
+  let account_id = req.session.account._id;
+
   let docs = await MaterialModel.find({
     code: req.query.code,
-    type: 'news'
+    type: 'news',
+    account_id
   }).sort({
     'update_time': -1
   })
@@ -51,7 +54,6 @@ router.get('/show', async (req, res, next) => {
 })
 
 router.get('/send_timing', async (req, res, next) => {
-  console.log(req.query.id)
   let id = req.query.id,
       message = {
         tagId: Number(req.query.tagId),
@@ -71,7 +73,7 @@ router.post('/copy', async (req, res, next) => {
   let result = await MaterialModel.findById(id)
   if(result) {
     result = result.toObject();
-    delete result._id
+    delete result._id;
     let doc = await MaterialModel.create(result)
     res.send({success: "复制成功", data: doc})
   } else {
@@ -90,8 +92,10 @@ router.get('/del', async (req, res, next) => {
 })
 
 router.get('/tag', async (req, res, next) => {
+  let account_id = req.session.account._id;
   let doc = await UserTagModel.find({
-    code: req.query.code
+    code: req.query.code,
+    account_id
   })
   res.send({
     data: doc
@@ -99,7 +103,8 @@ router.get('/tag', async (req, res, next) => {
 })
 
 router.get('/clear', async (req, res, next) => {
-  let docs = await MaterialModel.remove({code: req.query.code})
+  let account_id = req.session.account._id;
+  let docs = await MaterialModel.remove({code: req.query.code, account_id})
   if(docs) {
     res.send({success: '已删除全部素材，如有需要请重新同步素材'})
   }

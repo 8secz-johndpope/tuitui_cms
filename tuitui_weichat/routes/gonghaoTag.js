@@ -3,7 +3,8 @@ var router = express.Router();
 var GonghaoTagModel = require('../model/GonghaoTag.js')
 
 router.get('/', function (req, res, next) {
-  GonghaoTagModel.find(function (err, result) {
+  let account_id = req.session.account._id;
+  GonghaoTagModel.find({account_id}, function (err, result) {
     if (err) {
       console.log(err)
       res.send({
@@ -19,8 +20,10 @@ router.get('/', function (req, res, next) {
 })
 
 router.get('/get_name', function (req, res, next) {
+  let account_id = req.session.account._id;
   GonghaoTagModel.findOne({
-    _id: req.query.tagId
+    _id: req.query.tagId,
+    account_id
   }, function (err, result) {
     if (err) {
       console.log(err)
@@ -37,8 +40,10 @@ router.get('/get_name', function (req, res, next) {
 })
 
 router.post('/', function (req, res, next) {
+  let account_id = req.session.account._id;
   GonghaoTagModel.findOne({
-    name: req.body.name
+    name: req.body.name,
+    account_id
   }, function (err, result) {
     if (err) {
       console.log(err)
@@ -57,7 +62,8 @@ router.post('/', function (req, res, next) {
       } else {
         console.log("新增用户")
         var tm = GonghaoTagModel({
-          name: req.body.name
+          name: req.body.name,
+          account_id
         })
         tm.save(function (error, tm) {
           console.log(error)

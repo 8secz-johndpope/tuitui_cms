@@ -21,12 +21,14 @@ router.post('/upload', upload.single('imageFile'), function (req, res, next) {
 })
 
 router.get('/', async(req, res, next) => {
+    let account_id = req.session.account._id;
     let code = req.query.code
-    let doc = await ReplyModel.find({code:code})
+    let doc = await ReplyModel.find({code:code, account_id})
     res.send({data: doc})
 })
 
 router.post('/create', async(req, res, next) => {
+    let account_id = req.session.account._id;
     if (req.body.replyType == 1 && req.body.url) {
         let client = await wechat_util.getClient(req.body.code);
         console.log(req.body.code, __dirname + "/." + req.body.url, client, '-------------------')
@@ -49,7 +51,8 @@ router.post('/create', async(req, res, next) => {
                     text: req.body.text || "",
                     key: req.body.key || "",
                     sex: req.body.sex,
-                    attribute: req.body.attribute
+                    attribute: req.body.attribute,
+                    account_id
                 }
                 console.log(data,'---------------------data')
                 let doc = await ReplyModel.create(data)
@@ -78,7 +81,8 @@ router.post('/create', async(req, res, next) => {
             key: req.body.key || "",
             msgId: req.body.msgId,
             sex: req.body.sex,
-            attribute: req.body.attribute
+            attribute: req.body.attribute,
+            account_id
         }
         let doc = await ReplyModel.create(data)
         if (doc) {
@@ -202,7 +206,8 @@ router.get('/del', async(req, res, next) => {
 })
 
 router.get('/remove', async(req, res, next) => {
-  var docs = await ReplyModel.remove({})
+    let account_id = req.session.account._id;
+    var docs = await ReplyModel.remove({account_id})
   res.send({success: '删除成功', data: docs})
 })
 
