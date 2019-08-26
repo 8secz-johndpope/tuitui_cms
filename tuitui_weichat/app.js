@@ -7,7 +7,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var weichat = require('./routes/weichat');
 var qr_code = require('./routes/qr_code');
 var transfer = require('./routes/transfer');
 var tag = require('./routes/tag')
@@ -58,7 +57,6 @@ app.use(session({
 }));
 
 app.use('/', index);
-app.use('/weichat',weichat);
 app.use('/qr_code', qr_code);
 app.use('/transfer', transfer);
 app.use('/tag',tag);
