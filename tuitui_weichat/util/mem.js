@@ -4,7 +4,7 @@ let prefix = require('../conf/proj.json').memcache_prefix;
 
 module.exports.get = function(key){
     return new Promise((resolve, reject)=>{
-        memcached.get(key,function(err,value){
+        memcached.get(prefix+"_"+key,function(err,value){
             resolve(value);
         });
     });
@@ -12,7 +12,7 @@ module.exports.get = function(key){
 
 module.exports.set = function(key,value,time){
     return new Promise((resolve, reject)=>{
-        memcached.set(key,value,time,function(err,value){
+        memcached.set(prefix+"_"+key,value,time,function(err,value){
             resolve(value);
         });
     });
