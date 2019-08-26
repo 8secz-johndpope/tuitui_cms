@@ -16,11 +16,9 @@ var menuTime = require('./routes/menuTime');
 var msg = require('./routes/msg');
 var reply = require('./routes/reply');
 var message = require('./routes/message');
-var manage = require('./routes/manage');
 var material = require('./routes/material');
 var gonghaoTag = require('./routes/gonghaoTag')
 var msgHistory = require('./routes/msgHistory')
-var rManage = require('./routes/rManage');
 var component = require('./routes/component');
 var account = require('./routes/account');
 
@@ -41,6 +39,8 @@ app.all('*', function(req, res, next) {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+app.use(express.static(path.join(__dirname, 'build')));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -66,11 +66,9 @@ app.use('/menuTime',menuTime);
 app.use('/msg',msg);
 app.use('/reply',reply)
 app.use('/message',message)
-app.use('/manage',manage)
 app.use('/material',material)
 app.use('/gonghaoTag',gonghaoTag)
 app.use('/history',msgHistory)
-app.use('/admin',rManage)
 app.use('/component',component)
 app.use('/account',account)
 
