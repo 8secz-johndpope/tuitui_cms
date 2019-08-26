@@ -81,7 +81,7 @@ module.exports.getAuthorizeUrl = async function() {
 }
 
 module.exports.queryAuthorizeInfo = async (auth_code) => {
-    var access_token = await mem.get('component_access_token');
+    var access_token = await mem.get('cms_component_access_token');
     let queryAuthorizePostData = {
         component_appid : 'wx4b715a7b61bfe0a4',
         authorization_code : auth_code

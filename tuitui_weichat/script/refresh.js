@@ -61,7 +61,7 @@ var refreshComponentAuthCode = async function() {
 //账号比较多，有待优化的细节
 var refreshAccessToken = async function(con={}) {
     var auths = await ConfigModel.find(con)
-    var access_token = await mem.get("component_access_token");
+    var access_token = await mem.get("cms_component_access_token");
     var https_options = {
         hostname : 'api.weixin.qq.com',
         path : '/cgi-bin/component/api_authorizer_token?component_access_token=%ACCESS_TOKEN%',
@@ -97,7 +97,7 @@ var get_authorizer_info = async function(con={}) {
 
     var  auths = await ConfigModel.find(con)
 
-    var access_token = await mem.get("component_access_token");
+    var access_token = await mem.get("cms_component_access_token");
     var https_options = {
         hostname : 'api.weixin.qq.com',
         path : '/cgi-bin/component/api_get_authorizer_info?component_access_token=%ACCESS_TOKEN%',
