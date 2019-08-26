@@ -25,8 +25,7 @@ router.post('/create', (req, res, next) => {
     var qrInfo = {
         name: req.body.name,
         content: req.body.content,
-        code: req.body.code,
-        tagId:req.body.tagId
+        code: req.body.code
     }
     var user = new QRcodeModel(qrInfo)
     user.save(async function (err, data) {
