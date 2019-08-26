@@ -97,7 +97,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         code = conf.code
         await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
     }
-    console.log(code,'------------------------code')
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
@@ -148,6 +147,7 @@ async function userInfo(appid, message) {
 }
 
 async function reply(appid, type, param, openid, sex) {
+    console.log(appid, type, param, openid, sex,'------------------')
     if (sex == 0) {
         let info = await ReplyModel.findOne({appid: appid})
         if (info && info.attribute) {
