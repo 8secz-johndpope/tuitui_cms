@@ -35,6 +35,7 @@ var refreshComponentAccessToken = async function() {
 //refresh pre_auth_code every 20 minutes
 var refreshComponentAuthCode = async function() {
     var access_token = await mem.get("component_access_token");
+    console.log(access_token,'------------------------acc')
     if(!access_token) {
         return;
     }
