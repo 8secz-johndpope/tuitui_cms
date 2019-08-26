@@ -4,6 +4,7 @@ var connect_url = require('../conf/proj.json').mongodb;
 var db = mongoose.createConnection(connect_url);
 
 var MenuTimeSchema = new Schema({
+    account_id : String,
     time:String,
     title: String,
     codes: Array,

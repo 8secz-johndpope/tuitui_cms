@@ -4,6 +4,7 @@ var connect_url = require('../conf/proj.json').mongodb;
 var db = mongoose.createConnection(connect_url);
 
 var MsgHistorySchema = new Schema({
+    account_id : String,
     type: String,  // 图片（image）、视频（video）、语音 （voice）、图文（news）
     media_id: String, 
     code: Number,

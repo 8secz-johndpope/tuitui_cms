@@ -6,6 +6,7 @@ var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(db);
 
 var ConfigSchema = new Schema({
+    account_id : String,
     appid: String,
     authorizer_access_token: String,
     expires_in: Number,

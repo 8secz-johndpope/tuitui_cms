@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var MenuModel = require('../model/Menu');
-var WechatUtil = require('../util/wechat_get.js');
+var WechatUtil = require('../util/get_weichat_client.js');
 
 router.get('/', async(req, res, next) => {
     let doc = await MenuModel.find();

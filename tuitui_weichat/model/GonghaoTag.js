@@ -6,7 +6,8 @@ var db = mongoose.createConnection(connect_url);
 // autoIncrement.initialize(db);
 
 var GonghaoTagSchema = new Schema({
-  name:{ type: String, required: true }
+  name:{ type: String, required: true },
+  account_id : String
 });
 
 // GonghaoTagSchema.plugin(autoIncrement.plugin, {

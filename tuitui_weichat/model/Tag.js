@@ -6,6 +6,7 @@ var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(db);
 
 var TagSchema = new Schema({
+  account_id : String,
   name:{ type: String, required: true }
 });
 

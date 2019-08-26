@@ -6,6 +6,7 @@ var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(db);
 
 var Msgchema = new Schema({
+    account_id : String,
     type: Number,  //0文字 1图文
     description:String,
     contents:[{

@@ -8,7 +8,7 @@ var QRcodeSchema = new Schema({
     content: String,
     code: String,
     qr_code_url: String,
-    tagId:Number
+    account_id : String,
 });
 
 var QRcodeModel = db.model('QRcode', QRcodeSchema);

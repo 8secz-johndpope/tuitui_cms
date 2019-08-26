@@ -31,27 +31,9 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-require('../script/domain_wx.js');
-
-require('../script/statics_tuiguang.js');
-
 require('../script/refresh');
 require('../script/re_test');
 
-// require('../script/userInfo.js');
-// require('../script/order_get.js');
-//require('../script/baokuan.js');
-//require('../script/usera.js');
-// require('../util/test');
-// require('../script/send_service_message');
-// require('../script/test');
-// require('../script/test_get');
-// require('../script/test_compare');
-// require('../script/test_untag');
-// require('../script/deltag');
-/**
- * Normalize a port into a number, string, or false.
- */
 
 function normalizePort(val) {
   var port = parseInt(val, 10);

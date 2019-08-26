@@ -7,20 +7,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
 var weichat = require('./routes/weichat');
-var adzone = require('./routes/adzone');
-var alipay = require('./routes/alipay');
-var piclink = require('./routes/piclink');
-var reading = require('./routes/reading');
-// var youhuiquan = require('./routes/youhuiquan');
-var fetchLink = require('./routes/fetchLink');
-var goodsInfo = require('./routes/goodsInfo');
-var tuiguang = require('./routes/tuiguang');
 var qr_code = require('./routes/qr_code');
 var transfer = require('./routes/transfer');
 var tag = require('./routes/tag')
-var statistics = require('./routes/statistics');
 var conf = require('./routes/conf');
 var menu = require('./routes/menu');
 var menuTime = require('./routes/menuTime');
@@ -28,19 +18,12 @@ var msg = require('./routes/msg');
 var reply = require('./routes/reply');
 var message = require('./routes/message');
 var manage = require('./routes/manage');
-var alipayLink = require('./routes/alipayLink');
-var novelTransfer = require('./routes/novelTransfer');
 var material = require('./routes/material');
-var recommend = require('./routes/recommend');
 var gonghaoTag = require('./routes/gonghaoTag')
 var msgHistory = require('./routes/msgHistory')
-var qiangguan = require('./routes/qiangguan')
-var tuiguangTag = require('./routes/tuiguangTag')
-var adMaterial = require('./routes/adMaterial')
-var channel = require('./routes/channel');
 var rManage = require('./routes/rManage');
 var component = require('./routes/component');
-var customer = require('./routes/customer');
+var account = require('./routes/account');
 
 var app = express();
 
@@ -75,40 +58,23 @@ app.use(session({
 }));
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/weichat',weichat);
-app.use('/adzone',adzone);
-app.use('/alipay',alipay);
-app.use('/alipayLink',alipayLink);
-app.use('/piclink',piclink);
-app.use('/reading',reading);
-// app.use('/youhuiquan',youhuiquan);
-app.use('/fetchlink', fetchLink);
-app.use('/goodsinfo', goodsInfo);
-app.use('/tuiguang', tuiguang);
 app.use('/qr_code', qr_code);
 app.use('/transfer', transfer);
-app.use('/tag',tag)
-app.use('/statistics',statistics)
-app.use('/conf',conf)
-app.use('/menu',menu)
-app.use('/menuTime',menuTime)
-app.use('/msg',msg)
+app.use('/tag',tag);
+app.use('/conf',conf);
+app.use('/menu',menu);
+app.use('/menuTime',menuTime);
+app.use('/msg',msg);
 app.use('/reply',reply)
 app.use('/message',message)
 app.use('/manage',manage)
-app.use('/novel_transfer',novelTransfer)
 app.use('/material',material)
-app.use('/recommend',recommend)
 app.use('/gonghaoTag',gonghaoTag)
 app.use('/history',msgHistory)
-app.use('/qiangguan',qiangguan)
-app.use('/tuiguangTag',tuiguangTag)
-app.use('/adMaterial',adMaterial)
-app.use('/channel',channel)
 app.use('/admin',rManage)
 app.use('/component',component)
-app.use('/customer',customer)
+app.use('/account',account)
 
 app.use(express.static(path.join(__dirname, 'public')));
 

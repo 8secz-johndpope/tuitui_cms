@@ -4,6 +4,7 @@ var connect_url = require('../conf/proj.json').mongodb;
 var db = mongoose.createConnection(connect_url);
 
 var ReplySchema = new Schema({
+    account_id : String,
     code: Number,
     type: Number, //事件类型:0文本 1点击 2关注 3location 4自动回复
     replyType: Number,//返回类型:0文字或图文 1图片

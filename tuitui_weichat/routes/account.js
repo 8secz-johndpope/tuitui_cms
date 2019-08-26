@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const CustomerModel = require('../model/Customer.js')
+const AccountModel = require('../model/Account.js')
 
 router.post('/', async (req, res, next) => {
   let { account, password, belongTo } = req.body;
-  let result = await CustomerModel.find({account});
+  let result = await AccountModel.find({account});
   if(result.length > 0) {
     res.send({code: 2, msg: "该账户名已存在，请检查输入是否有误"})
   } else {
-    let data = await CustomerModel.create({ account, password, belongTo });
+    let data = await AccountModel.create({ account, password, belongTo });
     if(data) {
       res.send({code: 1, msg: '账户创建成功', data})
     } else {
@@ -20,9 +20,9 @@ router.post('/', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
   let { account } = req.query, result;
   if(account) {
-    result = await CustomerModel.find({account: {$regex: new RegExp(account)}})
+    result = await AccountModel.find({account: {$regex: new RegExp(account)}})
   } else {
-    result = await CustomerModel.find();
+    result = await AccountModel.find();
   }
   if(result.length > 0) {
     res.send({code: 1, msg: '查询成功', data: result})
@@ -33,7 +33,7 @@ router.get('/', async (req, res, next) => {
 
 router.delete('/', async (req, res, next) => {
   let { _id } = req.query;
-  let result = await CustomerModel.findByIdAndRemove(_id);
+  let result = await AccountModel.findByIdAndRemove(_id);
   if(result) {
     res.send({code: 1, msg: '删除成功'})
   } else {
