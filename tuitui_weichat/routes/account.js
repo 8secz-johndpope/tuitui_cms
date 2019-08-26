@@ -20,7 +20,7 @@ router.post('/', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
   let { username } = req.query, result;
   if(username) {
-    result = await AccountModel.find({username: {$regex: new RegExp(account)}})
+    result = await AccountModel.find({username: {$regex: new RegExp(username)}})
   } else {
     result = await AccountModel.find();
   }
