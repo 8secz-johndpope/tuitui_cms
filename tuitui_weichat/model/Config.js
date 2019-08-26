@@ -36,7 +36,7 @@ var ConfigSchema = new Schema({
 ConfigSchema.plugin(autoIncrement.plugin, {
     model: 'Config',
     field: 'code',
-    startAt: 1,
+    startAt: 10000000000,
     incrementBy: 1
 });
 

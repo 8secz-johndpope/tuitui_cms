@@ -102,13 +102,13 @@ module.exports.queryAuthorizeInfo = async (auth_code) => {
     let expires_in = authorization_info.expires_in;
     let refresh_token = authorization_info.authorizer_refresh_token;
     let func_info = JSON.stringify(authorization_info.func_info);
-    await ConfigModel.update({"appid":appid},{
+    await ConfigModel.create({
         "appid":appid,
         "authorizer_access_token":authorizer_access_token,
         "expires_in":expires_in,
         "refresh_token":refresh_token,
         "func_info":func_info
-    },{upsert : true})
+    })
     return authorization_info;
 }
 
