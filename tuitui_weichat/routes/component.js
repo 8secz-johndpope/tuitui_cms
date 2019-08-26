@@ -101,7 +101,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    // let info = await userInfo(appid, message)
+    // let info = await userInfo(code, message)
     // console.log(info, '------------------info')
     let user = {
         openid: message.FromUserName,
@@ -115,15 +115,15 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
             user.subscribe_flag = true;
-            reply(appid, 2, 'subscribe', message.FromUserName, 0)
+            reply(code, 2, 'subscribe', message.FromUserName, 0)
         } else if (message.Event === 'unsubscribe') {
             user.unsubscribe_time = Date.now();
             user.subscribe_flag = false;
         } else if (message.Event.toLowerCase() == 'click') {
-            reply(appid, 1, message.EventKey, message.FromUserName, 0)
+            reply(code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
-        reply(appid, 0, message.Content, message.FromUserName, 0)
+        reply(code, 0, message.Content, message.FromUserName, 0)
     }
 
     UserconfModel.findOneAndUpdate(
@@ -137,8 +137,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         })
 })
 
-async function userInfo(appid, message) {
-    let api = await wechat_util.getClient(appid);
+async function userInfo(code, message) {
+    let api = await wechat_util.getClient(code);
     return new Promise((resolve, reject) => {
         api.getUser(message.FromUserName, function (err, info) {
             resolve(info);
@@ -146,34 +146,33 @@ async function userInfo(appid, message) {
     })
 }
 
-async function reply(appid, type, param, openid, sex) {
-    console.log(appid, type, param, openid, sex,'------------------')
+async function reply(code, type, param, openid, sex) {
     if (sex == 0) {
-        let info = await ReplyModel.findOne({appid: appid})
+        let info = await ReplyModel.findOne({code: code})
         if (info && info.attribute) {
             sex = info.attribute
         }
     }
-    var reply = await mem.get("cms_reply_" + appid + "_" + param);
+    var reply = await mem.get("cms_reply_" + code + "_" + param);
     if (!reply) {
         if (type == 0) {
             reply = await ReplyModel.findOne({
                 $or: [
-                    {appid: appid, type: type, text: param},
-                    {appid: appid, type: 4}
+                    {code: code, type: type, text: param},
+                    {code: code, type: 4}
                 ]
             }).sort({type: 1})
         } else if (type == 1) {
-            reply = await ReplyModel.findOne({appid: appid, type: type, key: param})
+            reply = await ReplyModel.findOne({code: code, type: type, key: param})
         } else if (type == 2) {
             reply = await ReplyModel.findOne({
                 $or: [
                     {sex: sex},
                     {sex: 3}
-                ], appid: appid, type: type
+                ], code: code, type: type
             })
         } else if (type == 3) {
-            reply = await ReplyModel.findOne({appid: appid, type: type})
+            reply = await ReplyModel.findOne({code: code, type: type})
         }
         if (reply && reply.replyType == 0) {
             reply = JSON.stringify({type: 0, msg: reply.msgId})
@@ -182,7 +181,7 @@ async function reply(appid, type, param, openid, sex) {
         } else {
             return
         }
-        await mem.set("cms_reply_" + appid + "_" + param, reply, 30)
+        await mem.set("cms_reply_" + code + "_" + param, reply, 30)
     }
 
     reply = JSON.parse(reply)
@@ -194,16 +193,16 @@ async function reply(appid, type, param, openid, sex) {
             content = await MsgModel.findOne({msgId: reply.msg})
             if (content) {
                 await mem.set("cms_msg_" + reply.msg, content, 30);
-                replyMsg(content, appid, openid)
+                replyMsg(content, code, openid)
             }
         } else {
-            replyMsg(content, appid, openid)
+            replyMsg(content, code, openid)
         }
     }
 }
 
-async function replyMsg(content, appid, openid) {
-    var client = await wechat_util.getClient(appid);
+async function replyMsg(content, code, openid) {
+    var client = await wechat_util.getClient(code);
     var data = {}
     if (content.type == 0) {
         client.sendText(openid, content.description, function (err, data) {
