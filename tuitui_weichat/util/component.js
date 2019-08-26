@@ -103,7 +103,6 @@ module.exports.queryAuthorizeInfo = async (auth_code) => {
     let refresh_token = authorization_info.authorizer_refresh_token;
     let func_info = JSON.stringify(authorization_info.func_info);
     let conf = await ConfigModel.findOne({"appid":appid})
-    console.log(conf,'--------------------------conf')
     if(conf){
         await ConfigModel.update({"appid":appid},{
             "authorizer_access_token":authorizer_access_token,
@@ -112,14 +111,13 @@ module.exports.queryAuthorizeInfo = async (auth_code) => {
             "func_info":func_info
         })
     }else{
-        let aa = await ConfigModel.create({
+        await ConfigModel.create({
             "appid":appid,
             "authorizer_access_token":authorizer_access_token,
             "expires_in":expires_in,
             "refresh_token":refresh_token,
             "func_info":func_info
         })
-        console.log(aa,'----------------------aa')
     }
     return authorization_info;
 }
