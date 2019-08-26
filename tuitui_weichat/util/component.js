@@ -76,7 +76,7 @@ module.exports.getAuthorizeUrl = async function() {
         .replace('%APPID%', 'wx4b715a7b61bfe0a4')
         .replace('%AUTH_CODE%', await mem.get('component_auth_code'))
         .replace('%REDIRECT_URI%',
-            'http://wechat.oorggt.top/queryAuthorizeInfo');
+            'http://t.dmmup.com/queryAuthorizeInfo');
     return url;
 }
 
