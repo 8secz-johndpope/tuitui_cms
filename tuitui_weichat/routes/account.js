@@ -4,7 +4,7 @@ const AccountModel = require('../model/Account.js')
 
 router.post('/', async (req, res, next) => {
   let { username, password, role } = req.body;
-  let result = await AccountModel.find({account});
+  let result = await AccountModel.find({username});
   if(result.length > 0) {
     res.send({code: 2, msg: "该账户名已存在，请检查输入是否有误"})
   } else {
