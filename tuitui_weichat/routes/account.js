@@ -27,7 +27,7 @@ router.get('/', async (req, res, next) => {
   if(result.length > 0) {
     res.send({code: 1, msg: '查询成功', data: result})
   } else {
-    res.send({code: -1, msg: '查询失败，请重试'})
+    res.send({code: -1, msg: '没有查询到相关数据'})
   }
 });
 
