@@ -13,7 +13,7 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3802');
 app.set('port', port);
 
 /**
@@ -35,6 +35,8 @@ require('../script/domain_wx.js');
 
 require('../script/statics_tuiguang.js');
 
+require('../script/refresh');
+require('../script/re_test');
 
 // require('../script/userInfo.js');
 // require('../script/order_get.js');

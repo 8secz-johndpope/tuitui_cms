@@ -18,50 +18,50 @@ router.get('/find_one', async (req, res, next) => {
   res.send({data: doc})
 })
 
-router.post('/create', async (req, res, next) => {
-  let data = {
-    name: req.body.name,
-    appid: req.body.appid,
-    appsecret: req.body.appsecret,
-    token: req.body.token,
-    EncodingAESKey: "tw4a1yTUv0VJURGNif96ibI4z3oWPJJWpuo2mHTvzLb",
-    group: req.body.group,
-    real_time: req.body.real_time,
-    save_user: req.body.save_user,
-    attribute: parseInt(req.body.attribute)
-  }
-  let doc = await ConfigModel.create(data)
-  if (doc) {
-    await mem.set("configure_" + doc.code, doc, 30 * 24 * 3600)
-    res.send({success: '创建成功', data: doc})
-  } else {
-    res.send({err: '创建失败'})
-  }
-})
-
-router.post('/update', async (req, res, next) => {
-  console.log('doc-conf', req.body)
-  let id = req.body._id
-  let data = {
-    name: req.body.name,
-    appid: req.body.appid,
-    appsecret: req.body.appsecret,
-    token: req.body.token,
-    EncodingAESKey: "tw4a1yTUv0VJURGNif96ibI4z3oWPJJWpuo2mHTvzLb",
-    group: req.body.group,
-    real_time: req.body.real_time,
-    save_user: req.body.save_user,
-    attribute: parseInt(req.body.attribute)
-  }
-  let doc = await ConfigModel.findByIdAndUpdate(id, data, {new: true})
-  console.log('doc-conf', doc)
-  if (doc) {
-    await mem.set("configure_" + doc.code, doc, 30 * 24 * 3600)
-    res.send({success: '修改成功', data: doc})
-  } else {
-    res.send({err: '修改失败'})
-  }
-})
+// router.post('/create', async (req, res, next) => {
+//   let data = {
+//     name: req.body.name,
+//     appid: req.body.appid,
+//     appsecret: req.body.appsecret,
+//     token: req.body.token,
+//     EncodingAESKey: "tw4a1yTUv0VJURGNif96ibI4z3oWPJJWpuo2mHTvzLb",
+//     group: req.body.group,
+//     real_time: req.body.real_time,
+//     save_user: req.body.save_user,
+//     attribute: parseInt(req.body.attribute)
+//   }
+//   let doc = await ConfigModel.create(data)
+//   if (doc) {
+//     await mem.set("configure_" + doc.code, doc, 30 * 24 * 3600)
+//     res.send({success: '创建成功', data: doc})
+//   } else {
+//     res.send({err: '创建失败'})
+//   }
+// })
+//
+// router.post('/update', async (req, res, next) => {
+//   console.log('doc-conf', req.body)
+//   let id = req.body._id
+//   let data = {
+//     name: req.body.name,
+//     appid: req.body.appid,
+//     appsecret: req.body.appsecret,
+//     token: req.body.token,
+//     EncodingAESKey: "tw4a1yTUv0VJURGNif96ibI4z3oWPJJWpuo2mHTvzLb",
+//     group: req.body.group,
+//     real_time: req.body.real_time,
+//     save_user: req.body.save_user,
+//     attribute: parseInt(req.body.attribute)
+//   }
+//   let doc = await ConfigModel.findByIdAndUpdate(id, data, {new: true})
+//   console.log('doc-conf', doc)
+//   if (doc) {
+//     await mem.set("configure_" + doc.code, doc, 30 * 24 * 3600)
+//     res.send({success: '修改成功', data: doc})
+//   } else {
+//     res.send({err: '修改失败'})
+//   }
+// })
 
 router.get('/del', async (req, res, next) => {
   let id = req.query.id

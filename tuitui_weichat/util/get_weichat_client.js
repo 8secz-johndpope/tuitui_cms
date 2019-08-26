@@ -1,34 +1,38 @@
-// var weichat_conf = require('../conf/weichat.json');
+var API = require('wechat-api');
 var ConfigModel = require('../model/Config');
-var WechatAPI = require('wechat-api');
-var Memcached = require('memcached');
-var memcached = new Memcached('127.0.0.1:11211');
 var mem = require('../util/mem.js');
 
 async function getClient(code) {
-    var config = await mem.get("configure_" + code);
-    if (!config) {
-        config = await ConfigModel.findOne({code: code})
-        await mem.set("configure_" + code, config, 30 * 24 * 3600)
+    let appid = await mem.get("configure_" + code)
+    if(!appid){
+        let conf = await ConfigModel.findOne({code:code})
+        appid = conf.appid
+        await mem.set("configure_" + code, appid, 30 * 24 * 3600)
     }
-    // var config=weichat_conf[code];
-    var api = new WechatAPI(config.appid, config.appsecret,
-        function getToken(callback) {
-            // console.log('----- getToken ----')
-            memcached.get('access_token' + code, function (err, token) {
-                // console.log(token)
-                if (token) {
-                    callback(null, JSON.parse(token));
-                } else {
-                    callback(null, null);
-                }
-            });
-        },
-        function saveToken(token, callback) {
-            console.log('----- saveToken ----')
-            memcached.set('access_token' + code, JSON.stringify(token), 5 * 60, callback)
-        });
-    return api;
+    let api = Singleton.getInterface(appid)
+    // console.log(api.api, '----------------------api')
+    return api.api;
 }
 
+class Singleton {
+    constructor(appid) {
+        var api = new API(appid);
+        this.api = api
+    }
+
+    static getInterface(appid) {
+        if (!Singleton[appid]) {
+            Singleton[appid] = new Singleton(appid)
+        }
+        return Singleton[appid];
+    }
+
+    setToken(appid, token, expires_in) {
+        this.api.store = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
+        this.api.token = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
+    }
+}
+
+
+module.exports = Singleton
 module.exports.getClient = getClient;
