@@ -56,10 +56,11 @@ router.get('/componentAuthorize', async(req, res, next) => {
 
 //授权后跳转到的页面
 router.get('/queryAuthorizeInfo', async(req, res, next) => {
+    let account_id = req.session.account._id
     let query = req.query;
     let auth_code = query.auth_code;
     let expires_in = query.expires_in;
-    let authorization_info = await componentService.queryAuthorizeInfo(auth_code);
+    let authorization_info = await componentService.queryAuthorizeInfo(account_id,auth_code);
     await refresh.get_authorizer_info({appid: authorization_info.authorizer_appid})
     res.redirect('/component/appinfo/' + authorization_info.authorizer_appid)
 })
