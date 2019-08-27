@@ -10,6 +10,7 @@ const ReplyModel = require('../model/Reply');
 const MsgModel = require('../model/Msg');
 const mem = require('../util/mem');
 const wechat_util = require('../util/get_weichat_client')
+const wxReplay = require('../util/wxReplay')
 
 var xml_msg = async function (req, res, next) {
     if (req.method == 'POST' && req.is('text/xml')) {
@@ -90,8 +91,6 @@ router.get('/unbind', async(req, res, next) => {
 
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //用户回复
-    res.send('')
-    console.log('回复完了')
     let appid = req.params.appid;
     let code = await mem.get("configure_appid_" + appid)
     if(!code){
@@ -105,6 +104,11 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let message = await componentService.handleMessage(requestMessage, query);
     // let info = await userInfo(code, message)
     // console.log(info, '------------------info')
+    let str_s = wxReplay.get_reply(req,'测试回复文字',message)
+    console.log('回复微信：：：：')
+    console.log(str_s)
+    res.send(str_s)
+    
     let user = {
         openid: message.FromUserName,
         code: code,
