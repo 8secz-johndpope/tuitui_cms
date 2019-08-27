@@ -6,6 +6,7 @@ var user = require('../script/get_users')
 var exec = require('child_process').exec;
 var request = require('request');
 var UserconfModel = require('../model/Userconf');
+var WechatUtil = require('../util/get_weichat_client.js');
 
 router.get('/', async (req, res, next) => {
   let account_id = req.session.account._id;
@@ -46,7 +47,7 @@ router.get('/jieguan', async(req, res, next) => {
     if (!jieguan) {
         await ConfigModel.findOneAndUpdate({code: code}, {status: -1})
         await mem.set('access_token' + code, '', 10)
-        let client = await wechat_util.getClient(code)
+        let client = await WechatUtil.getClient(code)
         async.waterfall([
             function (callback) {
                 UserTagModel.remove({code: code}, function (err, doc) {
