@@ -20,6 +20,7 @@ var gonghaoTag = require('./routes/gonghaoTag')
 var msgHistory = require('./routes/msgHistory')
 var component = require('./routes/component');
 var account = require('./routes/account');
+var tuiguangTag = require('./routes/tuiguangTag')
 
 var app = express();
 
@@ -69,6 +70,7 @@ app.use('/gonghaoTag',gonghaoTag)
 app.use('/history',msgHistory)
 app.use('/component',component)
 app.use('/account',account)
+app.use('/tuiguangTag',tuiguangTag)
 
 app.use(express.static(path.join(__dirname, 'public')));
 
