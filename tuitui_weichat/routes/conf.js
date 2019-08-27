@@ -8,6 +8,7 @@ var request = require('request');
 var OpenidModel = require('../model/Openid');
 var UserconfModel = require('../model/Userconf');
 var UserTagModel = require('../model/UserTag')
+var RecordModel = require('../model/Record')
 var WechatUtil = require('../util/get_weichat_client.js');
 var async = require('async');
 
