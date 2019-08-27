@@ -50,8 +50,8 @@ router.post('/auth', xml_msg, async(req, res, next) => {
 
 router.get('/componentAuthorize', async(req, res, next) => {
     let url = await componentService.getAuthorizeUrl();
-    // res.send(url);
-    res.redirect(url);
+    res.send(url);
+    // res.redirect(url);
 })
 
 //授权后跳转到的页面
