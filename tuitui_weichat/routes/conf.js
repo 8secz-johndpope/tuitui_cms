@@ -7,6 +7,7 @@ var exec = require('child_process').exec;
 var request = require('request');
 var UserconfModel = require('../model/Userconf');
 var WechatUtil = require('../util/get_weichat_client.js');
+var async = require('async');
 
 router.get('/', async (req, res, next) => {
   let account_id = req.session.account._id;
