@@ -80,7 +80,7 @@ module.exports.getAuthorizeUrl = async function() {
     return url;
 }
 
-module.exports.queryAuthorizeInfo = async (auth_code) => {
+module.exports.queryAuthorizeInfo = async (account_id,auth_code) => {
     var access_token = await mem.get('cms_component_access_token');
     let queryAuthorizePostData = {
         component_appid : 'wx4b715a7b61bfe0a4',
@@ -116,7 +116,8 @@ module.exports.queryAuthorizeInfo = async (auth_code) => {
             "authorizer_access_token":authorizer_access_token,
             "expires_in":expires_in,
             "refresh_token":refresh_token,
-            "func_info":func_info
+            "func_info":func_info,
+            "account_id":account_id
         })
     }
     return authorization_info;
