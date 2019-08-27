@@ -52,9 +52,7 @@ router.get('/jieguan', async(req, res, next) => {
                 UserTagModel.remove({code: code}, function (err, doc) {
                     client.getTags(function (err, res) {
                         if (res) {
-                            console.log(res, '------------------res')
                             for (let i of res.tags) {
-                                console.log(i, '--------------------i')
                                 if (i.name == "明星说男" || i.name == "明星说女" || i.name == "明星说未知") {
                                     client.deleteTag(i.id, function (error, res) {
                                         console.log(res)
@@ -96,7 +94,7 @@ router.get('/jieguan', async(req, res, next) => {
                     callback(null)
                 })
             }, function (callback) {
-                let cmdStr = 'code=' + code + ' pm2 start /home/work/dahaoscript/script/jieguan.js --name ' + code
+                let cmdStr = 'code=' + code + ' pm2 start /home/work/jieguan_script/script/jieguan.js --name ' + code
                 exec(cmdStr, function () {
                 })
             }], async function (error) {
