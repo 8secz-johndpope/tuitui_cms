@@ -39,6 +39,7 @@ router.get('/update_links', async(req, res, next) => {
 })
 
 router.post('/create', async(req, res, next)=> {
+    console.log(req.session.account, "req.session.account----------------------------------")
     let account_id = req.session.account._id;
     var message = {
         id:req.body.id,
