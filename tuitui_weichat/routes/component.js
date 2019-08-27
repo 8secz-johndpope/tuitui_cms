@@ -104,7 +104,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let message = await componentService.handleMessage(requestMessage, query);
     // let info = await userInfo(code, message)
     // console.log(info, '------------------info')
-    let str_s = wxReplay.get_reply('测试回复文字',message)
+    let str_s = wxReplay.get_reply(req,'测试回复文字',message)
     console.log('回复微信：：：：')
     console.log(str_s)
     res.send(str_s)

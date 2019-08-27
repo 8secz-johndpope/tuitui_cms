@@ -87,9 +87,13 @@ var tpl = ['<xml>',
  */
 var compiled = ejs.compile(tpl);
 
-function encryptXml(xml) {
+function encryptXml(req,xml) {
+    if (!req.query.encrypt_type || req.query.encrypt_type === 'raw') {
+        return xml;
+    } else {
     let cryptor = new wechatCrypto('mingxingshuo', 'tw4a1yTUv0VJURGNif96ibI4z3oWPJJWpuo2mHTvzLb', 'wx4b715a7b61bfe0a4');
     return cryptor.encrypt(xml)
+    }
 }
 
 function reply(content, fromUsername, toUsername, message) {
@@ -136,8 +140,8 @@ function reply(content, fromUsername, toUsername, message) {
     return compiled(info);
 };
 
-function get_reply(content,message){
-    return encryptXml(reply(content,message.ToUserName,message.FromUserName,message));
+function get_reply(req,content,message){
+    return encryptXml(req,reply(content,message.ToUserName,message.FromUserName,message));
 }
 
 exports.get_reply = get_reply
