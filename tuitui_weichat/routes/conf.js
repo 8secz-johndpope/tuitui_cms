@@ -9,7 +9,7 @@ var UserconfModel = require('../model/Userconf');
 
 router.get('/', async (req, res, next) => {
   let account_id = req.session.account._id;
-  let doc = await ConfigModel.find({account_id}).sort({_id: -1})
+  let doc = await ConfigModel.find({}).sort({_id: -1})
   res.send({data: doc})
 })
 
