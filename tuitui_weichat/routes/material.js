@@ -17,12 +17,10 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/show', async (req, res, next) => {
-  let account_id = req.session.account._id;
 
   let docs = await MaterialModel.find({
     code: req.query.code,
     type: 'news',
-    account_id
   }).sort({
     'update_time': -1
   })
@@ -92,10 +90,8 @@ router.get('/del', async (req, res, next) => {
 })
 
 router.get('/tag', async (req, res, next) => {
-  let account_id = req.session.account._id;
   let doc = await UserTagModel.find({
-    code: req.query.code,
-    account_id
+    code: req.query.code
   })
   res.send({
     data: doc
@@ -103,8 +99,7 @@ router.get('/tag', async (req, res, next) => {
 })
 
 router.get('/clear', async (req, res, next) => {
-  let account_id = req.session.account._id;
-  let docs = await MaterialModel.remove({code: req.query.code, account_id})
+  let docs = await MaterialModel.remove({code: req.query.code})
   if(docs) {
     res.send({success: '已删除全部素材，如有需要请重新同步素材'})
   }
