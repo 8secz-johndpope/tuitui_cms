@@ -52,6 +52,7 @@ router.get('/jieguan', async(req, res, next) => {
         await ConfigModel.findOneAndUpdate({code: code}, {status: -1})
         await mem.set('access_token' + code, '', 10)
         let client = await WechatUtil.getClient(code)
+    console.log(client,'-----------------------client')
         async.waterfall([
             function (callback) {
                 UserTagModel.remove({code: code}, function (err, doc) {
