@@ -4,7 +4,7 @@ var TuiguangTagModel = require('../model/TuiguangTag.js')
 
 router.get('/', function (req, res, next) {
   let account_id = req.session.account._id;
-  TuiguangTagModel.find({}, function (err, result) {
+  TuiguangTagModel.find({account_id}, function (err, result) {
     if (err) {
       console.log(err)
       res.send({
