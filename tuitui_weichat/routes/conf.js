@@ -5,7 +5,9 @@ var mem = require('../util/mem.js');
 var user = require('../script/get_users')
 var exec = require('child_process').exec;
 var request = require('request');
+var OpenidModel = require('../model/Openid');
 var UserconfModel = require('../model/Userconf');
+var UserTagModel = require('../model/UserTag')
 var WechatUtil = require('../util/get_weichat_client.js');
 var async = require('async');
 
