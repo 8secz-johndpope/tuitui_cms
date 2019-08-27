@@ -23,13 +23,13 @@ router.get('/show', async(req, res, next) => {
 
 
 router.post('/create', (req, res, next) => {
-    let account_id = req.session.account._id;
+    //let account_id = req.session.account._id;
     var qrInfo = {
         name: req.body.name,
         content: req.body.content,
         code: req.body.code,
         tagId:req.body.tagId,
-        account_id
+        //account_id : account_id
     }
     var user = new QRcodeModel(qrInfo)
     user.save(async function (err, data) {
