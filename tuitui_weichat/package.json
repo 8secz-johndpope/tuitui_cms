@@ -11,6 +11,7 @@
     "async-redis": "^1.1.7",
     "body-parser": "^1.18.3",
     "commander": "^2.19.0",
+    "connect-memcached": "^1.0.0",
     "cookie-parser": "^1.4.3",
     "crypto": "~1.0.1 ",
     "debug": "~2.6.9",

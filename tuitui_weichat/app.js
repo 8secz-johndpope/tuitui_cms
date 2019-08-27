@@ -5,6 +5,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var MemcachedStore = require('connect-memcached')(session);
+
 
 var index = require('./routes/index');
 var qr_code = require('./routes/qr_code');
@@ -54,6 +56,10 @@ app.use(session({
     cookie: {maxAge: 1000*60*60*24 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
     resave: false,
     saveUninitialized: true,
+    store: new MemcachedStore({
+      hosts: ["127.0.0.1:11211"],
+      secret: "mingxingshuo" // Optionally use transparent encryption for memcache session data
+    })
 }));
 
 app.use('/', index);
