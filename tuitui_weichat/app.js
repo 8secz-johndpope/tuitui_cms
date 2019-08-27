@@ -12,7 +12,6 @@ var transfer = require('./routes/transfer');
 var tag = require('./routes/tag')
 var conf = require('./routes/conf');
 var menu = require('./routes/menu');
-var menuTime = require('./routes/menuTime');
 var msg = require('./routes/msg');
 var reply = require('./routes/reply');
 var message = require('./routes/message');
@@ -62,7 +61,6 @@ app.use('/transfer', transfer);
 app.use('/tag',tag);
 app.use('/conf',conf);
 app.use('/menu',menu);
-app.use('/menuTime',menuTime);
 app.use('/msg',msg);
 app.use('/reply',reply)
 app.use('/message',message)
