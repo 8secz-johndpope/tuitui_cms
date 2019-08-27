@@ -87,12 +87,26 @@ var tpl = ['<xml>',
  */
 var compiled = ejs.compile(tpl);
 
+var wrapTpl = '<xml>' +
+  '<Encrypt><![CDATA[<%-encrypt%>]]></Encrypt>' +
+  '<MsgSignature><![CDATA[<%-signature%>]]></MsgSignature>' +
+  '<TimeStamp><%-timestamp%></TimeStamp>' +
+  '<Nonce><![CDATA[<%-nonce%>]]></Nonce>' +
+'</xml>';
+
+var encryptWrap = ejs.compile(wrapTpl);
+
 function encryptXml(req,xml) {
     if (!req.query.encrypt_type || req.query.encrypt_type === 'raw') {
         return xml;
     } else {
     let cryptor = new wechatCrypto('mingxingshuo', 'tw4a1yTUv0VJURGNif96ibI4z3oWPJJWpuo2mHTvzLb', 'wx4b715a7b61bfe0a4');
-    return cryptor.encrypt(xml)
+    var wrap = {};
+    wrap.encrypt = cryptor.encrypt(xml);
+    wrap.nonce = parseInt((Math.random() * 100000000000), 10);
+    wrap.timestamp = new Date().getTime();
+    wrap.signature = cryptor.getSignature(wrap.timestamp, wrap.nonce, wrap.encrypt);
+    return encryptWrap(wrap);
     }
 }
 
