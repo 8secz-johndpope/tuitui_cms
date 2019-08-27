@@ -56,6 +56,8 @@ router.post('/login', async (req, res, next) => {
   let result = await AccountModel.find({username, password});
   if(result.length > 0) {
     req.session.account = result[0];
+    let id = result[0]._id;
+    await AccountModel.fingByIdAndUpdate(id, {loginAt: Date.now()})
     res.send({code: 1, msg: '登录成功', data: result})
   } else {
     res.send({code: -1, msg: '用户名或密码输入有误，请重新输入'})
