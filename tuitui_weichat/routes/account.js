@@ -56,6 +56,7 @@ router.post('/login', async (req, res, next) => {
   let result = await AccountModel.find({username, password});
   if(result.length > 0) {
     req.session.account = result[0];
+    console.log(req.session.account, "---------------------------------req.session.account----------------------------------")
     let id = result[0]._id;
     await AccountModel.findByIdAndUpdate(id, {loginAt: Date.now()})
     res.send({code: 1, msg: '登录成功', data: result})
