@@ -1,7 +1,10 @@
 var mem = require('../util/mem.js');
+var WechatUtil = require('../util/get_weichat_client.js');
 
 async function a() {
-    let a = await mem.get('cms_component_access_token')
-    console.log(a)
+    let client = await WechatUtil.getClient(code)
+    client.getFollowers(async function (err, result) {
+        console.log(err,result,'----------------------result')
+    })
 }
 a()
