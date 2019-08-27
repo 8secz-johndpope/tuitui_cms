@@ -3,7 +3,8 @@ var router = express.Router();
 var TuiguangTagModel = require('../model/TuiguangTag.js')
 
 router.get('/', function (req, res, next) {
-  TuiguangTagModel.find(function (err, result) {
+  let account_id = req.session.account._id;
+  TuiguangTagModel.find({account_id}, function (err, result) {
     if (err) {
       console.log(err)
       res.send({
@@ -19,8 +20,10 @@ router.get('/', function (req, res, next) {
 })
 
 router.post('/', function (req, res, next) {
+  let account_id = req.session.account._id;
   TuiguangTagModel.findOne({
-    name: req.body.name
+    name: req.body.name,
+    account_id
   }, function (err, result) {
     if (err) {
       console.log(err)
