@@ -104,11 +104,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let message = await componentService.handleMessage(requestMessage, query);
     // let info = await userInfo(code, message)
     // console.log(info, '------------------info')
-    let str_s = wxReplay.get_reply(req,'测试回复文字',message)
-    console.log('回复微信：：：：')
-    console.log(str_s)
-    res.send(str_s)
+
     
+
     let user = {
         openid: message.FromUserName,
         code: code,
@@ -129,7 +127,12 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             reply(code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
-        reply(code, 0, message.Content, message.FromUserName, 0)
+        if(message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT'){
+            res.send(wxReplay.get_reply(req,'TESTCOMPONENT_MSG_TYPE_TEXT_callback',message))
+        }else{
+            res.send(wxReplay.get_reply(req,'测试回复文字',message))
+        }
+        //reply(code, 0, message.Content, message.FromUserName, 0)
     }
 
     UserconfModel.findOneAndUpdate(
