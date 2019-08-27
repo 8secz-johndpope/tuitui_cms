@@ -40,7 +40,8 @@ router.post('/', function (req, res, next) {
         })
       } else {
         var tm = TuiguangTagModel({
-          name: req.body.name
+          name: req.body.name,
+          account_id
         })
         tm.save(function (error, tm) {
           console.log(error)
