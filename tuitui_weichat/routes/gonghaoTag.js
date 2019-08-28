@@ -1,99 +1,60 @@
 var express = require('express');
 var router = express.Router();
-var GonghaoTagModel = require('../model/GonghaoTag.js')
+var GonghaoTagModel = require('../model/GonghaoTag.js');
 
-router.get('/', function (req, res, next) {
+router.get('/', async (req, res, next) => {
   let account_id = req.session.account._id;
-  GonghaoTagModel.find({account_id}, function (err, result) {
-    if (err) {
-      console.log(err)
-      res.send({
-        err: err
-      })
-    } else {
-      res.send({
-        success: "查询成功",
-        data: result
-      })
-    }
-  })
-})
+  let result = await GonghaoTagModel.find({account_id});
+  if(result.length > 0) {
+    res.send({ code: 1, msg: "查询成功", data: result })
+  } else {
+    res.send({code: -1, msg: "没有查询到相关数据"})
+  }
+});
 
-router.get('/get_name', function (req, res, next) {
+router.get('/get_name', async (req, res, next) => {
+  let account_id = req.session.account._id, _id = req.query.tagId;
+  let result = GonghaoTagModel.findOne({_id, account_id});
+  if(result) {
+    res.send({ code: 1, msg: "查询成功", data: result })
+  } else {
+    res.send({code: -1, msg: "没有查询到相关数据"})
+  }
+});
+
+router.post('/', async (req, res, next) => {
   let account_id = req.session.account._id;
-  GonghaoTagModel.findOne({
-    _id: req.query.tagId,
-    account_id
-  }, function (err, result) {
-    if (err) {
-      console.log(err)
-      res.send({
-        err: err
-      })
+  let { name } = req.body;
+  let result = await GonghaoTagModel.findOne({ name, account_id });
+  if(result) {
+    res.send({ code: 1, msg: "查询成功", exist: 1, data: result })
+  } else {
+    let data = await GonghaoTagModel.create({ name, account_id });
+    if(data) {
+      res.send({ code: 1, msg: "创建标签成功", exist: 0, data })
     } else {
-      res.send({
-        success: "查询成功",
-        data: result
-      })
+      res.send({ code: -1, msg: "创建失败" })
     }
-  })
-})
+  }
+});
 
-router.post('/', function (req, res, next) {
-  let account_id = req.session.account._id;
-  GonghaoTagModel.findOne({
-    name: req.body.name,
-    account_id
-  }, function (err, result) {
-    if (err) {
-      console.log(err)
-      res.send({
-        err: err
-      })
-    } else {
-      console.log('result', result)
-      if (result) {
-        console.log("有数据")
-        res.send({
-          success: "查询成功",
-          exist: 1,
-          data: result
-        })
-      } else {
-        console.log("新增用户")
-        var tm = GonghaoTagModel({
-          name: req.body.name,
-          account_id
-        })
-        tm.save(function (error, tm) {
-          console.log(error)
-          res.send({
-            success: "查询成功",
-            exist: 0,
-            data: tm
-          })
-        });
-      }
-    }
-  });
-})
+router.put("/", async (req, res, next) => {
+  let { id, name } = req.body;
+  let result = await GonghaoTagModel.findByIdAndUpdate(id, {name}, {new: true});
+  if(result) {
+    res.send({code:1, msg: "修改成功", data: result})
+  } else {
+    res.send({code: -1, msg: "修改失败"})
+  }
+});
 
-
-router.delete('/:id', function (req, res, next) {
-  GonghaoTagModel.findByIdAndRemove(req.params.id, function (err, result) {
-    if (err) {
-      console.log(err);
-      res.send({
-        err: err
-      })
-    } else {
-      res.send({
-        success: "删除成功"
-      })
-    }
-  })
-})
-
-
+router.delete('/:id', async (req, res, next) => {
+  let result = await GonghaoTagModel.findByIdAndRemove(req.params.id);
+  if(result) {
+    res.send({code: 1, msg: "删除成功"})
+  } else {
+    res.send({code: -1, msg: "删除失败"})
+  }
+});
 
 module.exports = router;
