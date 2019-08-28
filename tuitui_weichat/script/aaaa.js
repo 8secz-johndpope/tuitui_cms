@@ -1,10 +1,10 @@
 var ConfigModel = require('../model/Config');
-var UserTagModel = require('../model/UserTag')
-var wechat_util = require('../util/get_weichat_client.js')
-var UserconfModel = require('../model/Userconf');
-var OpenidModel = require('../model/Openid');
-var OpenidTagModel = require('../model/OpenidTag');
-var SubOpenidTagModel = require('../model/SubOpenidTag');
+// var UserTagModel = require('../model/UserTag')
+// var wechat_util = require('../util/get_weichat_client.js')
+// var UserconfModel = require('../model/Userconf');
+// var OpenidModel = require('../model/Openid');
+// var OpenidTagModel = require('../model/OpenidTag');
+// var SubOpenidTagModel = require('../model/SubOpenidTag');
 
 async function a() {
     let code = process.argv.slice(2)[0]
