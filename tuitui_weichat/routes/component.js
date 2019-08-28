@@ -92,12 +92,17 @@ router.get('/unbind', async(req, res, next) => {
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //用户回复
     let appid = req.params.appid;
-    let code = await mem.get("configure_appid_" + appid)
-    if(!code){
-        let conf = await ConfigModel.findOne({appid:appid})
-        code = conf.code
-        await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
+    if(appid){
+        let code = await mem.get("configure_appid_" + appid)
+        if(!code){
+            let conf = await ConfigModel.findOne({appid:appid})
+            code = conf.code
+            await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
+        }
+    }else{
+        let code = 0
     }
+
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
