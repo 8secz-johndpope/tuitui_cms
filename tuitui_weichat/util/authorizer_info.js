@@ -1,5 +1,5 @@
-const http = require('httpUtils.js');
-const mem = require('mem.js');
+const http = require('../util/httpUtils.js');
+const mem = require('../util/mem.js');
 const ConfigModel= require("../model/Config");
 
 var get_authorizer_info = async function(con={}) {
