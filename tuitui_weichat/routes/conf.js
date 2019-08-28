@@ -103,8 +103,6 @@ router.get('/jieguan', async(req, res, next) => {
                 exec(cmdStr, function () {
                 })
             }], async function (error) {
-            let accessToken = await ConfigModel.findOne({code:code})
-            mem.set('accessToken_'+code,accessToken,60*60)
             res.send({success: '设置接管成功'})
         })
     // } else {
