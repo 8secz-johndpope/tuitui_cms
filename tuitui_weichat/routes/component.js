@@ -5,7 +5,7 @@ const componentService = require('../util/component');
 const UserconfModel = require("../model/Userconf")
 const ConfigModel = require("../model/Config")
 const http = require("../util/httpUtils");
-const refresh = require("../script/refresh")
+const authorizer_info = require("../util/authorizer_info")
 const ReplyModel = require('../model/Reply');
 const MsgModel = require('../model/Msg');
 const mem = require('../util/mem');
@@ -62,7 +62,7 @@ router.get('/queryAuthorizeInfo', async(req, res, next) => {
     let auth_code = query.auth_code;
     let expires_in = query.expires_in;
     let authorization_info = await componentService.queryAuthorizeInfo(account_id,auth_code);
-    await refresh.get_authorizer_info({appid: authorization_info.authorizer_appid})
+    await authorizer_info.get_authorizer_info({appid: authorization_info.authorizer_appid})
     res.redirect('/admin')
 })
 
