@@ -55,7 +55,7 @@ var refreshComponentAuthCode = async function() {
         return;
     }
     auth_code = preauthcode_json.pre_auth_code;
-    await mem.set("component_auth_code",auth_code,30*60)
+    await mem.set("cms_component_auth_code",auth_code,30*60)
 }
 
 //账号比较多，有待优化的细节

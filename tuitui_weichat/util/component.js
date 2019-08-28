@@ -74,7 +74,7 @@ module.exports.handleMessage = async (requestMessage, query) => {
 module.exports.getAuthorizeUrl = async function() {
     let url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=%APPID%&pre_auth_code=%AUTH_CODE%&redirect_uri=%REDIRECT_URI%'
         .replace('%APPID%', 'wx4b715a7b61bfe0a4')
-        .replace('%AUTH_CODE%', await mem.get('component_auth_code'))
+        .replace('%AUTH_CODE%', await mem.get('cms_component_auth_code'))
         .replace('%REDIRECT_URI%',
             'http://t.dmmup.com/component/queryAuthorizeInfo');
     return url;
