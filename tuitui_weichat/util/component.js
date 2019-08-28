@@ -40,7 +40,7 @@ module.exports.handleComponentMessage = async (requestMessage, query) => {
         let ticket = message.ComponentVerifyTicket;
         console.log('------ticket------')
         console.log(ticket)
-        await mem.set('component_ticket',ticket,20*60);
+        await mem.set('cms_component_ticket',ticket,20*60);
     } else if(infoType == 'authorized') {
         //TODO authorized
     } else if(infoType == 'unauthorized') {
@@ -74,7 +74,7 @@ module.exports.handleMessage = async (requestMessage, query) => {
 module.exports.getAuthorizeUrl = async function() {
     let url = 'https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=%APPID%&pre_auth_code=%AUTH_CODE%&redirect_uri=%REDIRECT_URI%'
         .replace('%APPID%', 'wx4b715a7b61bfe0a4')
-        .replace('%AUTH_CODE%', await mem.get('component_auth_code'))
+        .replace('%AUTH_CODE%', await mem.get('cms_component_auth_code'))
         .replace('%REDIRECT_URI%',
             'http://t.dmmup.com/component/queryAuthorizeInfo');
     return url;

@@ -72,7 +72,6 @@ router.get('/jieguan', async(req, res, next) => {
     let jieguan = await mem.get("jieguan_" + code)
     // if (!jieguan) {
         await ConfigModel.findOneAndUpdate({code: code}, {status: -1})
-        await mem.set('access_token' + code, '', 10)
         let client = await WechatUtil.getClient(code)
         async.waterfall([
             function (callback) {
