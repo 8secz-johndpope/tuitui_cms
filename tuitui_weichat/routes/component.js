@@ -76,7 +76,9 @@ router.get('/unbind', async(req, res, next) => {
         "appid": req.query.appid,
         "open_appid": "wx4b715a7b61bfe0a4"
     }
-    var access_token = await mem.get("access_token_"+data.appid);
+    var token = await mem.get("access_token_"+data.appid);
+    let access_token = token.split('!@#')[0]
+    console.log('access_token----------',access_token)
     var https_options = {
         hostname: 'api.weixin.qq.com',
         path: '/cgi-bin/open/unbind?access_token=%ACCESS_TOKEN%',
@@ -96,6 +98,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         let code = await mem.get("configure_appid_" + appid)
         if(!code){
             let conf = await ConfigModel.findOne({appid:appid})
+            if(!conf){
+                return res.send('')
+            }
             code = conf.code
             await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
         }
