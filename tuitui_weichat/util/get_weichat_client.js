@@ -12,8 +12,8 @@ async function getClient(code) {
     let token = mem.get('access_token_'+appid)
     console.log(token,'--------------------------token')
     let api = Singleton.getInterface(appid)
-    api.store = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
-    api.token = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
+    api.store = {accessToken: token, expireTime: Date.now() + (token.expires_in - 10) * 1000}
+    api.token = {accessToken: token, expireTime: Date.now() + (token.expires_in - 10) * 1000}
     console.log(api.store,'---------------------store')
     return api.api;
 }
