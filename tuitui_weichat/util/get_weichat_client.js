@@ -3,12 +3,12 @@ var ConfigModel = require('../model/Config');
 var mem = require('../util/mem.js');
 
 async function getClient(code) {
-    let appid = await mem.get("configure_" + code)
-    if(!appid){
+    // let appid = await mem.get("configure_" + code)
+    // if(!appid){
         let conf = await ConfigModel.findOne({code:code})
-        appid = conf.appid
+        let appid = conf.appid
         await mem.set("configure_" + code, appid, 30 * 24 * 3600)
-    }
+    // }
     let api = Singleton.getInterface(appid)
     // console.log(api.api, '----------------------api')
     return api.api;

@@ -69,7 +69,7 @@ router.get('/reset', async(req, res, next) => {
 
 router.get('/jieguan', async(req, res, next) => {
     let code = req.query.code
-    let jieguan = await mem.get("jieguan_" + code)
+    // let jieguan = await mem.get("jieguan_" + code)
     // if (!jieguan) {
         await ConfigModel.findOneAndUpdate({code: code}, {status: -1})
         let client = await WechatUtil.getClient(code)
