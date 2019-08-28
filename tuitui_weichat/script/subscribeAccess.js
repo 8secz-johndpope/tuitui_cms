@@ -8,6 +8,7 @@ redis_client.on("subscribe", function (channel, count) {
 redis_client.on("message", function (channel, message) {
     console.log('监听到发布事件')
     console.log("sub channel " + channel + ": " + message);
+
 });
 
 async function subscribeAccessToken(){
