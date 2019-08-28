@@ -10,7 +10,7 @@ async function getClient(code) {
         await mem.set("configure_" + code, appid, 30 * 24 * 3600)
     }
     let api = Singleton.getInterface(appid)
-    console.log(api.api, '----------------------api')
+    // console.log(api.api, '----------------------api')
     return api.api;
 }
 
@@ -28,6 +28,7 @@ class Singleton {
     }
 
     setToken(appid, token, expires_in) {
+        console.log(token,expires_in,'------------------------token')
         this.api.store = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
         this.api.token = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
     }
