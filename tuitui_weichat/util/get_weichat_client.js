@@ -17,6 +17,10 @@ async function getClient(code) {
 class Singleton {
     constructor(appid) {
         var api = new API(appid);
+        let token = await mem.get('access_token_' + appid)
+        let access_token = token.split('!@#')[0]
+        let expires_in = token.split('!@#')[1]
+        api.setToken(appid,access_token,expires_in)
         this.api = api
     }
 
@@ -27,7 +31,7 @@ class Singleton {
         return Singleton[appid];
     }
 
-    setToken(appid, token, expires_in) {
+    setToken(appid,token, expires_in) {
         console.log(token,expires_in,'------------------------token')
         this.api.store = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
         this.api.token = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
