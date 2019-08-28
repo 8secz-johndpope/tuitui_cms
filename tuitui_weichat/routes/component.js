@@ -76,7 +76,7 @@ router.get('/unbind', async(req, res, next) => {
         "appid": req.query.appid,
         "open_appid": "wx4b715a7b61bfe0a4"
     }
-    var access_token = await mem.get("cms_component_access_token");
+    var access_token = await mem.get("access_token_"+data.appid);
     var https_options = {
         hostname: 'api.weixin.qq.com',
         path: '/cgi-bin/open/unbind?access_token=%ACCESS_TOKEN%',
