@@ -6,7 +6,7 @@ const Singleton = require('../util/get_weichat_client');
 
 //refresh component_access_token every 1 hour
 var refreshComponentAccessToken = async function() {
-    var ticket = await mem.get('component_ticket');
+    var ticket = await mem.get('cms_component_ticket');
     if(ticket == null || ticket == undefined || ticket == '') {
         return;
     }

@@ -40,7 +40,7 @@ module.exports.handleComponentMessage = async (requestMessage, query) => {
         let ticket = message.ComponentVerifyTicket;
         console.log('------ticket------')
         console.log(ticket)
-        await mem.set('component_ticket',ticket,20*60);
+        await mem.set('cms_component_ticket',ticket,20*60);
     } else if(infoType == 'authorized') {
         //TODO authorized
     } else if(infoType == 'unauthorized') {
