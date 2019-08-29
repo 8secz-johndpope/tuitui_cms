@@ -15,20 +15,20 @@ var async = require('async');
 router.get('/', async (req, res, next) => {
     let account_id = req.session.account._id;
     let doc = await ConfigModel.find({account_id}).sort({_id: -1});
-    res.send({data: doc})
+    res.send({code: 1, msg: "查询成功", data: doc})
 });
 
 router.get('/group', async (req, res, next) => {
     let account_id = req.session.account._id;
     let { group = "未分组" } = req.query;
     let doc = await ConfigModel.find({account_id, group}).sort({_id: -1});
-    res.send({data: doc})
+    res.send({code: 1, msg: "查询成功", data: doc})
 });
 
 router.get('/find_one', async(req, res, next) => {
     let reg = new RegExp(req.query.nick_name), account_id = req.session.account._id;
     let doc = await ConfigModel.find({nick_name: {$regex: reg}, account_id});
-    res.send({data: doc})
+    res.send({code: 1, msg: "查询成功", data: doc})
 });
 
 router.get('/unbind', async(req, res, next) => {
