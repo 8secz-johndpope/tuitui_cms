@@ -7,18 +7,9 @@ var ConfigModel = require('../model/Config');
 
 router.get('/show', async(req, res, next) => {
     let account_id = req.session.account._id;
-    var codes = await ConfigModel.find({account_id})
-    // var codes = [];
-    // for (var key in weichat_conf) {
-    //     codes.push(weichat_conf[key]);
-    // }
-    QRcodeModel.find({account_id}, (err, data) => {
-        if (data == '') {
-            res.send({err: '没有数据'})
-        } else {
-            res.send({data: data, codes: codes})
-        }
-    })
+    var codes = await ConfigModel.find({account_id});
+    let data = await QRcodeModel.find({account_id});
+    res.send({data: data, codes: codes})
 })
 
 
