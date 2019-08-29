@@ -48,7 +48,6 @@ router.post('/auth', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let result = await componentService.handleComponentMessage(requestMessage, query);
-    refreshComponentAuthCode()
     res.send('success')
 })
 
@@ -78,6 +77,7 @@ var refreshComponentAuthCode = async function () {
 }
 
 router.get('/componentAuthorize', async(req, res, next) => {
+    await refreshComponentAuthCode()
     let url = await componentService.getAuthorizeUrl();
     res.send(url);
     // res.redirect(url);
