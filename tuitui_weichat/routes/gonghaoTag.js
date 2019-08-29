@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var GonghaoTagModel = require('../model/GonghaoTag.js');
-
+var ConfigModel = require('../model/Config');
 router.get('/', async (req, res, next) => {
   let account_id = req.session.account._id;
   let result = await GonghaoTagModel.find({account_id});
@@ -40,8 +40,11 @@ router.post('/', async (req, res, next) => {
 
 router.put("/", async (req, res, next) => {
   let { id, name } = req.body;
+  let account_id = req.session.account._id;
+  let message = await GonghaoTagModel.findById(id);
   let result = await GonghaoTagModel.findByIdAndUpdate(id, {name}, {new: true});
   if(result) {
+    await ConfigModel.update({group: message.name, account_id}, {$set: {group: name}});
     res.send({code:1, msg: "修改成功", data: result})
   } else {
     res.send({code: -1, msg: "修改失败"})
@@ -49,8 +52,10 @@ router.put("/", async (req, res, next) => {
 });
 
 router.delete('/:id', async (req, res, next) => {
+  let message = await GonghaoTagModel.findById(req.params.id);
   let result = await GonghaoTagModel.findByIdAndRemove(req.params.id);
   if(result) {
+    await ConfigModel.update({group: message.name, account_id}, {$set: {group: "未分组"}});
     res.send({code: 1, msg: "删除成功"})
   } else {
     res.send({code: -1, msg: "删除失败"})
