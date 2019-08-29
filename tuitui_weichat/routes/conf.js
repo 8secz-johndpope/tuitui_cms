@@ -13,15 +13,22 @@ var WechatUtil = require('../util/get_weichat_client.js');
 var async = require('async');
 
 router.get('/', async (req, res, next) => {
-  let account_id = req.session.account._id;
-  let doc = await ConfigModel.find({account_id}).sort({_id: -1});
-  res.send({data: doc})
+    let account_id = req.session.account._id;
+    let doc = await ConfigModel.find({account_id}).sort({_id: -1});
+    res.send({code: 1, msg: "查询成功", data: doc})
+});
+
+router.get('/group', async (req, res, next) => {
+    let account_id = req.session.account._id;
+    let { group = "未分组" } = req.query;
+    let doc = await ConfigModel.find({account_id, group}).sort({_id: -1});
+    res.send({code: 1, msg: "查询成功", data: doc})
 });
 
 router.get('/find_one', async(req, res, next) => {
     let reg = new RegExp(req.query.nick_name), account_id = req.session.account._id;
     let doc = await ConfigModel.find({nick_name: {$regex: reg}, account_id});
-    res.send({data: doc})
+    res.send({code: 1, msg: "查询成功", data: doc})
 });
 
 router.get('/unbind', async(req, res, next) => {
@@ -78,7 +85,7 @@ router.get('/jieguan', async(req, res, next) => {
             function (callback) {
                 UserTagModel.remove({code: code}, function (err, doc) {
                     client.getTags(function (err, res) {
-                        if (res) {
+                        if (res && res.tags) {
                             for (let i of res.tags) {
                                 if (i.name == "明星说男" || i.name == "明星说女" || i.name == "明星说未知") {
                                     client.deleteTag(i.id, function (error, res) {

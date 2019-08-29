@@ -94,6 +94,7 @@ router.get('/unbind', async(req, res, next) => {
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //用户回复
     let appid = req.params.appid;
+    let code = 0
     if(appid){
         let code = await mem.get("configure_appid_" + appid)
         if(!code){
@@ -104,8 +105,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             code = conf.code
             await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
         }
-    }else{
-        let code = 0
+    }
+    
+    if(!code){
+        return res.send('')
     }
 
     let requestString = req.body;
