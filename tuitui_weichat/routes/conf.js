@@ -76,6 +76,7 @@ router.get('/reset', async(req, res, next) => {
 
 router.get('/jieguan', async(req, res, next) => {
     let code = req.query.code
+    res.send({success: '设置接管成功'})
     // let jieguan = await mem.get("jieguan_" + code)
     // if (!jieguan) {
         await ConfigModel.findOneAndUpdate({code: code}, {status: -1})
@@ -86,7 +87,7 @@ router.get('/jieguan', async(req, res, next) => {
                     client.getTags(function (err, res) {
                         if (res && res.tags) {
                             for (let i of res.tags) {
-                                if (i.name == "明星说男" || i.name == "明星说女" || i.name == "明星说未知") {
+                                if (i.name == "明星说平台男" || i.name == "明星说平台女" || i.name == "明星说平台未知") {
                                     client.deleteTag(i.id, function (error, res) {
                                         console.log(res)
                                     })
@@ -111,18 +112,18 @@ router.get('/jieguan', async(req, res, next) => {
                     callback(null)
                 }, 10 * 1000)
             }, function (callback) {
-                client.createTag("明星说未知", async function (err, data) {
+                client.createTag("明星说平台未知", async function (err, data) {
                     console.log(err, data, '---------------------data')
                     await UserTagModel.create({id: data.tag.id, name: "未知", code: code, sex: '0'})
                     callback(null)
                 })
             }, function (callback) {
-                client.createTag("明星说男", async function (err, data) {
+                client.createTag("明星说平台男", async function (err, data) {
                     await UserTagModel.create({id: data.tag.id, name: "男", code: code, sex: '1'})
                     callback(null)
                 })
             }, function (callback) {
-                client.createTag("明星说女", async function (err, data) {
+                client.createTag("明星说平台女", async function (err, data) {
                     await UserTagModel.create({id: data.tag.id, name: "女", code: code, sex: '2'})
                     callback(null)
                 })
@@ -131,7 +132,7 @@ router.get('/jieguan', async(req, res, next) => {
                 exec(cmdStr, function () {
                 })
             }], async function (error) {
-            res.send({success: '设置接管成功'})
+            // res.send({success: '设置接管成功'})
         })
     // } else {
     //     res.send({success: '已接管'})

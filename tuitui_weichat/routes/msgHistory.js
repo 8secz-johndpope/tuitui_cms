@@ -16,12 +16,9 @@ router.get("/state", async (req, res, next) => {
 });
 
 router.get('/', async (req, res, next) => {
-  let account_id = req.session.account._id;
-
   let docs = await MsgHistoryModel.find({
     code: req.query.code,
-    type: 'news',
-    account_id
+    type: 'news'
   }).sort({
     'update_time': -1
   });
@@ -74,18 +71,6 @@ router.get('/delByDate', async (req, res, next) => {
   let data = await MsgHistoryModel.remove({code: req.query.code, update_time: {$lte: date}});
   res.send({success: '删除成功'})
 });
-
-// router.get('/delByDate', async (req, res, next) => {
-//   let date = req.query.date;
-//   let messages = await MsgHistoryModel.find({code: req.query.code, update_time: {$lte: date}});
-//   let code = messages[0].code;
-//   let api = await weichat_util.getClient(code);
-//   await messages.map(async item => {
-//     // await delMass(code, item)
-//   });
-//   // let data = await MsgHistoryModel.remove({code: req.query.code, update_time: {$lte: date}});
-//   res.send({success: '删除成功'})
-// });
 
 router.get('/clear', async (req, res, next) => {
   let account_id = req.session.account._id;

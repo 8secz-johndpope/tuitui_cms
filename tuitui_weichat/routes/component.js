@@ -11,6 +11,8 @@ const MsgModel = require('../model/Msg');
 const mem = require('../util/mem');
 const wechat_util = require('../util/get_weichat_client')
 const wxReplay = require('../util/wxReplay')
+const asyncRedis = require("async-redis");
+const redis_client = asyncRedis.createClient();
 
 var xml_msg = async function (req, res, next) {
     if (req.method == 'POST' && req.is('text/xml')) {
@@ -49,7 +51,33 @@ router.post('/auth', xml_msg, async(req, res, next) => {
     res.send('success')
 })
 
+var refreshComponentAuthCode = async function () {
+    var access_token = await mem.get("cms_component_access_token");
+    if (!access_token) {
+        return;
+    }
+    var componentAuthCodePostData = {
+        component_appid: "wx4b715a7b61bfe0a4"
+    };
+    var https_options = {
+        hostname: 'api.weixin.qq.com',
+        path: '/cgi-bin/component/api_create_preauthcode?component_access_token=%ACCESS_TOKEN%',
+        method: 'post'
+    };
+
+    https_options.path = https_options.path.replace('%ACCESS_TOKEN%', access_token);
+    var component_preauthcode_result = await http.doHttps_withdata(https_options, componentAuthCodePostData);
+    var preauthcode_json = JSON.parse(component_preauthcode_result);
+    console.log('Refresh pre_auth_code result: ' + component_preauthcode_result);
+    if (preauthcode_json.errcode != undefined) {
+        return;
+    }
+    auth_code = preauthcode_json.pre_auth_code;
+    await mem.set("cms_component_auth_code", auth_code, 30 * 60)
+}
+
 router.get('/componentAuthorize', async(req, res, next) => {
+    await refreshComponentAuthCode()
     let url = await componentService.getAuthorizeUrl();
     res.send(url);
     // res.redirect(url);
@@ -61,10 +89,46 @@ router.get('/queryAuthorizeInfo', async(req, res, next) => {
     let query = req.query;
     let auth_code = query.auth_code;
     let expires_in = query.expires_in;
-    let authorization_info = await componentService.queryAuthorizeInfo(account_id,auth_code);
+    let authorization_info = await componentService.queryAuthorizeInfo(account_id, auth_code);
+    refreshAccessToken({appid: authorization_info.authorizer_appid})
     await authorizer_info.get_authorizer_info({appid: authorization_info.authorizer_appid})
     res.redirect('/admin')
 })
+
+var refreshAccessToken = async function (con = {}) {
+    var auths = await ConfigModel.find(con)
+    var access_token = await mem.get("cms_component_access_token");
+    var https_options = {
+        hostname: 'api.weixin.qq.com',
+        path: '/cgi-bin/component/api_authorizer_token?component_access_token=%ACCESS_TOKEN%',
+        method: 'post'
+    };
+    https_options.path = https_options.path.replace('%ACCESS_TOKEN%', access_token);
+    for (var i = 0; i < auths.length; i++) {
+        try {
+            var auth = auths[i];
+            var post_data = {
+                component_appid: "wx4b715a7b61bfe0a4",
+                authorizer_appid: auth.appid,
+                authorizer_refresh_token: auth.refresh_token
+            }
+            var result = await http.doHttps_withdata(https_options, post_data);
+            var data = JSON.parse(result);
+            if (data && data.authorizer_access_token) {
+                auth.authorizer_access_token = data.authorizer_access_token
+                auth.expires_in = data.expires_in
+                auth.refresh_token = data.authorizer_refresh_token
+                auth.refresh_time = Date.now()
+                auth.save();
+            }
+            await redis_client.publish('access_token', auth.appid);
+            await mem.set('access_token_' + auth.appid, auth.authorizer_access_token + '!@#' + auth.expires_in, 2 * 60 * 60)
+        } catch (e) {
+            console.log('-------refreshAccessToken err-------')
+            console.log(e)
+        }
+    }
+}
 
 router.get('/appinfo/:appid', async(req, res, next) => {
     var auth = await ConfigModel.findOne({appid: req.params.appid})
@@ -76,9 +140,9 @@ router.get('/unbind', async(req, res, next) => {
         "appid": req.query.appid,
         "open_appid": "wx4b715a7b61bfe0a4"
     }
-    var token = await mem.get("access_token_"+data.appid);
+    var token = await mem.get("access_token_" + data.appid);
     let access_token = token.split('!@#')[0]
-    console.log('access_token----------',access_token)
+    console.log('access_token----------', access_token)
     var https_options = {
         hostname: 'api.weixin.qq.com',
         path: '/cgi-bin/open/unbind?access_token=%ACCESS_TOKEN%',
@@ -95,19 +159,19 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //用户回复
     let appid = req.params.appid;
     let code = 0
-    if(appid){
+    if (appid) {
         let code = await mem.get("configure_appid_" + appid)
-        if(!code){
-            let conf = await ConfigModel.findOne({appid:appid})
-            if(!conf){
+        if (!code) {
+            let conf = await ConfigModel.findOne({appid: appid})
+            if (!conf) {
                 return res.send('')
             }
             code = conf.code
             await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
         }
     }
-    
-    if(!code){
+
+    if (!code) {
         return res.send('')
     }
 
@@ -118,7 +182,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     // let info = await userInfo(code, message)
     // console.log(info, '------------------info')
 
-    
 
     let user = {
         openid: message.FromUserName,
@@ -140,10 +203,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             reply(code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
-        if(message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT'){
-            res.send(wxReplay.get_reply(req,'TESTCOMPONENT_MSG_TYPE_TEXT_callback',message))
-        }else{
-            res.send(wxReplay.get_reply(req,'测试回复文字',message))
+        if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
+            res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
+        } else {
+            res.send(wxReplay.get_reply(req, '测试回复文字', message))
         }
         //reply(code, 0, message.Content, message.FromUserName, 0)
     }
