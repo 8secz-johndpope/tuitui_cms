@@ -13,9 +13,16 @@ var WechatUtil = require('../util/get_weichat_client.js');
 var async = require('async');
 
 router.get('/', async (req, res, next) => {
-  let account_id = req.session.account._id;
-  let doc = await ConfigModel.find({account_id}).sort({_id: -1});
-  res.send({data: doc})
+    let account_id = req.session.account._id;
+    let doc = await ConfigModel.find({account_id}).sort({_id: -1});
+    res.send({data: doc})
+});
+
+router.get('/group', async (req, res, next) => {
+    let account_id = req.session.account._id;
+    let { group = undefined } = req.query;
+    let doc = await ConfigModel.find({account_id, group}).sort({_id: -1});
+    res.send({data: doc})
 });
 
 router.get('/find_one', async(req, res, next) => {
