@@ -3,6 +3,7 @@ var async = require('async');
 var weichat_util = require('../util/get_weichat_client.js')
 
 async function get_aterials(code) {
+    console.log('-------执行 get_aterials 方法-------')
     var api = await weichat_util.getClient(code);
     await api.getMaterialCount(async (err, result, res) => {
         console.log('----------- get_aterials-----------')
