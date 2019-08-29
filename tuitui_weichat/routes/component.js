@@ -11,6 +11,8 @@ const MsgModel = require('../model/Msg');
 const mem = require('../util/mem');
 const wechat_util = require('../util/get_weichat_client')
 const wxReplay = require('../util/wxReplay')
+const asyncRedis = require("async-redis");
+const redis_client = asyncRedis.createClient();
 
 var xml_msg = async function (req, res, next) {
     if (req.method == 'POST' && req.is('text/xml')) {
