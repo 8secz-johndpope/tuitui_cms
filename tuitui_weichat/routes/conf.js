@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/group', async (req, res, next) => {
     let account_id = req.session.account._id;
-    let { group = undefined } = req.query;
+    let { group = "未分组" } = req.query;
     let doc = await ConfigModel.find({account_id, group}).sort({_id: -1});
     res.send({data: doc})
 });
