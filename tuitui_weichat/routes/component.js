@@ -48,8 +48,34 @@ router.post('/auth', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let result = await componentService.handleComponentMessage(requestMessage, query);
+    refreshComponentAuthCode()
     res.send('success')
 })
+
+var refreshComponentAuthCode = async function () {
+    var access_token = await mem.get("cms_component_access_token");
+    if (!access_token) {
+        return;
+    }
+    var componentAuthCodePostData = {
+        component_appid: "wx4b715a7b61bfe0a4"
+    };
+    var https_options = {
+        hostname: 'api.weixin.qq.com',
+        path: '/cgi-bin/component/api_create_preauthcode?component_access_token=%ACCESS_TOKEN%',
+        method: 'post'
+    };
+
+    https_options.path = https_options.path.replace('%ACCESS_TOKEN%', access_token);
+    var component_preauthcode_result = await http.doHttps_withdata(https_options, componentAuthCodePostData);
+    var preauthcode_json = JSON.parse(component_preauthcode_result);
+    console.log('Refresh pre_auth_code result: ' + component_preauthcode_result);
+    if (preauthcode_json.errcode != undefined) {
+        return;
+    }
+    auth_code = preauthcode_json.pre_auth_code;
+    await mem.set("cms_component_auth_code", auth_code, 30 * 60)
+}
 
 router.get('/componentAuthorize', async(req, res, next) => {
     let url = await componentService.getAuthorizeUrl();
