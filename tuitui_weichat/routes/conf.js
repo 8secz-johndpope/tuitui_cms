@@ -84,7 +84,7 @@ router.get('/jieguan', async(req, res, next) => {
             function (callback) {
                 UserTagModel.remove({code: code}, function (err, doc) {
                     client.getTags(function (err, res) {
-                        if (res) {
+                        if (res && res.tags) {
                             for (let i of res.tags) {
                                 if (i.name == "明星说男" || i.name == "明星说女" || i.name == "明星说未知") {
                                     client.deleteTag(i.id, function (error, res) {
