@@ -14,16 +14,6 @@ var UserinfoSchema = new Schema({
     country: String,
     headimgurl: String,
     action_time: Number,
-    createAt: {
-        type: Date,
-        default: Date.now
-    },
-    updateAt: {
-        type: Date,
-        default: Date.now
-    }
-}, {
-    timestamps: {createdAt: 'createAt', updatedAt: 'updateAt'}
 });
 
 var UserinfoModel = db.model('Userinfo', UserinfoSchema);
