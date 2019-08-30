@@ -180,7 +180,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    console.log(appid,code,message,'---------------------------message')
     let info = await userInfo(code, message.FromUserName)
     let data = {}
     if (info.sex) {
@@ -208,6 +207,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         code: code,
         action_time: Date.now(),
     }
+    console.log(appid,code,message,'---------------------------message')
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
@@ -219,7 +219,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         } else if (message.Event.toLowerCase() == 'click') {
             reply(code, 1, message.EventKey, message.FromUserName, 0)
         }
-    } else if (message.MsgType === 'text') {
+    } else if (message.MsgType == 'text') {
         console.log(message,'------------------------------nessage')
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
