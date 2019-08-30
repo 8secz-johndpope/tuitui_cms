@@ -220,9 +220,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
-            // res.send(wxReplay.get_reply(req, '测试回复文字', message))
         }
-        reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
     }
 
     UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})

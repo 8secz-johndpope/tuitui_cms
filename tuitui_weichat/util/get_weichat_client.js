@@ -6,9 +6,6 @@ async function getClient(code) {
     // let appid = await mem.get("configure_" + code)
     // if(!appid){
     let conf = await ConfigModel.findOne({code: code})
-    if (code == 10000000003){
-        console.log(conf, '-------------------------conf')
-    }
     let appid = conf.appid
     await mem.set("configure_" + code, appid, 30 * 24 * 3600)
     // }
