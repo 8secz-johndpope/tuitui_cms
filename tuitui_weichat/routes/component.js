@@ -182,7 +182,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let message = await componentService.handleMessage(requestMessage, query);
     let info = await userInfo(code, message.FromUserName)
     let data = {}
-    if(info.sex){
+    if (info.sex) {
         data = {
             nickname: info.nickname,
             sex: info.sex.toString(),
@@ -190,25 +190,22 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             city: info.city,
             country: info.country,
             headimgurl: info.headimgurl,
-            action_time:Date.now()
+            action_time: Date.now()
         }
-    }else{
+    } else {
         data = {
             sex: "0",
-            action_time:Date.now()
+            action_time: Date.now()
         }
     }
 
-    let infos = await UserinfoModel.findOneAndUpdate({code: code, openid: message.FromUserName}, data, {upsert: true})
+    await UserinfoModel.findOneAndUpdate({code: code, openid: message.FromUserName}, data, {upsert: true})
 
 
     let user = {
         openid: message.FromUserName,
         code: code,
         action_time: Date.now(),
-        // nickname: info.nickname || "",
-        // headimgurl: info.headimgurl || "",
-        // sex: Number(info.sex) || 0
     }
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
@@ -230,15 +227,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         //reply(code, 0, message.Content, message.FromUserName, 0)
     }
 
-    UserconfModel.findOneAndUpdate(
-        {
-            "openid": message.FromUserName,
-            "code": code
-        },
-        user,
-        {upsert: true}, function (err) {
-            console.log(err)
-        })
+    UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
 })
 
 async function userInfo(code, openid) {
