@@ -181,7 +181,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
     let info = await userInfo(code, message.FromUserName)
-    console.log(info, '------------------info')
     let data = {}
     if(info.sex){
         data = {
@@ -195,11 +194,11 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         }
     }else{
         data = {
+            sex: "0",
             action_time:Date.now()
         }
     }
 
-    console.log(code,'--------------------code')
     let infos = await UserinfoModel.findOneAndUpdate({code: code, openid: message.FromUserName}, data, {upsert: true})
 
 
