@@ -183,7 +183,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let info = await userInfo(code, message.FromUserName)
     console.log(info, '------------------info')
     let data = {}
-    if(info){
+    if(info.sex){
         data = {
             nickname: info.nickname,
             sex: info.sex.toString(),
