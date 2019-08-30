@@ -182,6 +182,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let message = await componentService.handleMessage(requestMessage, query);
     let info = await userInfo(code, message.FromUserName)
     let data = {}
+    console.log(appid,code,message,'---------------------------message1')
     if (info.sex) {
         data = {
             nickname: info.nickname,
@@ -198,16 +199,16 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             action_time: Date.now()
         }
     }
-
+    console.log(appid,code,message,'---------------------------message2')
     await UserinfoModel.findOneAndUpdate({code: code, openid: message.FromUserName}, data, {upsert: true})
-
+    console.log(appid,code,message,'---------------------------message3')
 
     let user = {
         openid: message.FromUserName,
         code: code,
         action_time: Date.now(),
     }
-    console.log(appid,code,message,'---------------------------message')
+    console.log(appid,code,message,'---------------------------message4')
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
@@ -219,7 +220,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         } else if (message.Event.toLowerCase() == 'click') {
             reply(code, 1, message.EventKey, message.FromUserName, 0)
         }
-    } else if (message.MsgType == 'text') {
+    } else if (message.MsgType === 'text') {
         console.log(message,'------------------------------nessage')
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
