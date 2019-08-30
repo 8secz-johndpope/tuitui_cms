@@ -294,7 +294,12 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 }
 
 async function replyMsg(req, res, message, content, code, openid) {
-    return res.send(wxReplay.get_reply(req, content.contents, message))
+    if (content.type == 0) {
+        res.send(wxReplay.get_reply(req, content.contents.description, message))
+    } else if (content.type == 1) {
+        res.send(wxReplay.get_reply(req, content.contents, message))
+    }
+    return
 }
 
 
