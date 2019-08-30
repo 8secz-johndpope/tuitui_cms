@@ -44,29 +44,14 @@ router.get('/unbind', async(req, res, next) => {
 });
 
 router.put('/', async(req, res, next) => {
-    let {id, group} = req.body;
-    let result = await ConfigModel.findByIdAndUpdate(id, {group}, {new: true});
+    let {id, group, attribute} = req.body;
+    let result = await ConfigModel.findByIdAndUpdate(id, {group, attribute}, {new: true});
     if (result) {
         res.send({code: 1, msg: "修改成功", data: result})
     } else {
         res.send({code: -1, msg: "修改失败，请重试"})
     }
 });
-
-router.post('/update', async(req, res, next) => {
-    let id = req.body._id
-    let data = {
-        attribute: parseInt(req.body.attribute)
-    }
-    let doc = await ConfigModel.findByIdAndUpdate(id, data, {new: true})
-    console.log('doc-conf', doc)
-    if (doc) {
-        await mem.set("configure_" + doc.code, doc, 30 * 24 * 3600)
-        res.send({success: '修改成功', data: doc})
-    } else {
-        res.send({err: '修改失败'})
-    }
-})
 
 router.put('/multi_select', async(req, res, next) => {
     let {ids, group} = req.body;
