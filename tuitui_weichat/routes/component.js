@@ -278,16 +278,16 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     if (reply.type == 1) {
         res.send(reply.msg)
     } else {
-        // var content = await mem.get("cms_msg_" + reply.msg);
-        // if (!content) {
+        var content = await mem.get("cms_msg_" + reply.msg);
+        if (!content) {
             let content = await MsgModel.findOne({msgId: reply.msg})
             if (content) {
-                // await mem.set("cms_msg_" + reply.msg, content, 30);
+                await mem.set("cms_msg_" + reply.msg, content, 30);
                 replyMsg(req, res, message, content, code, openid)
             }
-        // } else {
-        //     replyMsg(req, res, message, content, code, openid)
-        // }
+        } else {
+            replyMsg(req, res, message, content, code, openid)
+        }
     }
 }
 
