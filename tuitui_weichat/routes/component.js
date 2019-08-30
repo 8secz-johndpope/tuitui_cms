@@ -179,10 +179,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    console.log(message,'---------------------------message')
+    // console.log(message,'---------------------------message')
     let info = await userInfo(code, message.FromUserName)
     let data = {}
-    console.log(appid,code,message,'---------------------------message1')
+    // console.log(appid,code,message,'---------------------------message1')
     if (info.sex) {
         data = {
             nickname: info.nickname,
@@ -199,16 +199,16 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             action_time: Date.now()
         }
     }
-    console.log(appid,code,message,'---------------------------message2')
+    // console.log(appid,code,message,'---------------------------message2')
     await UserinfoModel.findOneAndUpdate({code: code, openid: message.FromUserName}, data, {upsert: true})
-    console.log(appid,code,message,'---------------------------message3')
+    // console.log(appid,code,message,'---------------------------message3')
 
     let user = {
         openid: message.FromUserName,
         code: code,
         action_time: Date.now(),
     }
-    console.log(appid,code,message,'---------------------------message4')
+    // console.log(appid,code,message,'---------------------------message4')
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
@@ -234,7 +234,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
 })
 
 async function userInfo(code, openid) {
-    console.log(code,'-------------------------code')
+    // console.log(code,'-------------------------code')
     let api = await wechat_util.getClient(code);
     return new Promise((resolve, reject) => {
         api.getUser(openid, function (err, info) {
