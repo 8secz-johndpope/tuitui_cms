@@ -175,10 +175,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     if (!code) {
         return res.send('')
     }
-    console.log(code,'---------------------------code')
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
-    console.log(requestMessage,'---------------------------requestMessage')
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
     console.log(message,'---------------------------message')
