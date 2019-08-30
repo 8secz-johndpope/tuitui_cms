@@ -159,6 +159,7 @@ router.get('/unbind', async(req, res, next) => {
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //用户回复
     let appid = req.params.appid;
+    console.log(appid,'---------------------------appid')
     let code
     if (appid) {
         code = await mem.get("configure_appid_" + appid)
@@ -175,7 +176,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     if (!code) {
         return res.send('')
     }
-
+    console.log(code,'---------------------------code')
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
