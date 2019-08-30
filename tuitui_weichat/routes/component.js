@@ -161,15 +161,15 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let appid = req.params.appid;
     let code
     if (appid) {
-        // code = await mem.get("configure_appid_" + appid)
-        // if (!code) {
+        code = await mem.get("configure_appid_" + appid)
+        if (!code) {
             let conf = await ConfigModel.findOne({appid: appid})
             if (!conf) {
                 return res.send('')
             }
             code = conf.code
             await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
-        // }
+        }
     }
 
     if (!code) {
@@ -179,10 +179,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    console.log(appid,code,message,'---------------------------message')
     let info = await userInfo(code, message.FromUserName)
     let data = {}
-    // console.log(appid,code,message,'---------------------------message1')
     if (info.sex) {
         data = {
             nickname: info.nickname,
@@ -199,35 +197,32 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             action_time: Date.now()
         }
     }
-    // console.log(appid,code,message,'---------------------------message2')
     await UserinfoModel.findOneAndUpdate({code: code, openid: message.FromUserName}, data, {upsert: true})
-    // console.log(appid,code,message,'---------------------------message3')
 
     let user = {
         openid: message.FromUserName,
         code: code,
         action_time: Date.now(),
     }
-    // console.log(appid,code,message,'---------------------------message4')
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
             user.subscribe_flag = true;
-            reply(code, 2, 'subscribe', message.FromUserName, 0)
+            reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
         } else if (message.Event === 'unsubscribe') {
             user.unsubscribe_time = Date.now();
             user.subscribe_flag = false;
         } else if (message.Event.toLowerCase() == 'click') {
-            reply(code, 1, message.EventKey, message.FromUserName, 0)
+            reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
-        console.log(message,'------------------------------nessage')
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
-            res.send(wxReplay.get_reply(req, '测试回复文字', message))
+            reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
+            // res.send(wxReplay.get_reply(req, '测试回复文字', message))
         }
-        //reply(code, 0, message.Content, message.FromUserName, 0)
+        reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
     }
 
     UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
@@ -243,7 +238,7 @@ async function userInfo(code, openid) {
     })
 }
 
-async function reply(code, type, param, openid, sex) {
+async function reply(req, res, message, code, type, param, openid, sex) {
     if (sex == 0) {
         let info = await ReplyModel.findOne({code: code})
         if (info && info.attribute) {
@@ -290,23 +285,19 @@ async function reply(code, type, param, openid, sex) {
             content = await MsgModel.findOne({msgId: reply.msg})
             if (content) {
                 await mem.set("cms_msg_" + reply.msg, content, 30);
-                replyMsg(content, code, openid)
+                replyMsg(req, res, message, content, code, openid)
             }
         } else {
-            replyMsg(content, code, openid)
+            replyMsg(req, res, message, content, code, openid)
         }
     }
 }
 
-async function replyMsg(content, code, openid) {
-    var client = await wechat_util.getClient(code);
-    var data = {}
+async function replyMsg(req, res, message, content, code, openid) {
     if (content.type == 0) {
-        client.sendText(openid, content.description, function (err, data) {
-        })
+        res.send(wxReplay.get_reply(req, content.description, message))
     } else if (content.type == 1) {
-        client.sendNews(openid, content.contents, function (err, data) {
-        })
+        res.send(wxReplay.get_reply(req, content.contents, message))
     }
     return
 }
