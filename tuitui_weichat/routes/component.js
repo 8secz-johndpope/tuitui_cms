@@ -190,8 +190,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         country: info.country,
         headimgurl: info.headimgurl,
     }
-    let userInfo = await UserinfoModel.findOneAndUpdate(code, data, {upsert: true})
-    console.log(userInfo, '------------------userInfo')
+    let infos = await UserinfoModel.findOneAndUpdate(code, data, {upsert: true})
+    console.log(infos, '------------------userInfo')
 
 
     let user = {
