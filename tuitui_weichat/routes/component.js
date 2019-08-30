@@ -161,15 +161,15 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let appid = req.params.appid;
     let code
     if (appid) {
-        code = await mem.get("configure_appid_" + appid)
-        if (!code) {
+        // code = await mem.get("configure_appid_" + appid)
+        // if (!code) {
             let conf = await ConfigModel.findOne({appid: appid})
             if (!conf) {
                 return res.send('')
             }
             code = conf.code
             await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
-        }
+        // }
     }
 
     if (!code) {
