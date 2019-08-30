@@ -12,15 +12,15 @@ var RecordModel = require('../model/Record')
 var WechatUtil = require('../util/get_weichat_client.js');
 var async = require('async');
 
-router.get('/', async (req, res, next) => {
+router.get('/', async(req, res, next) => {
     let account_id = req.session.account._id;
     let doc = await ConfigModel.find({account_id}).sort({_id: -1});
     res.send({code: 1, msg: "查询成功", data: doc})
 });
 
-router.get('/group', async (req, res, next) => {
+router.get('/group', async(req, res, next) => {
     let account_id = req.session.account._id;
-    let { group = "未分组" } = req.query;
+    let {group = "未分组"} = req.query;
     let doc = await ConfigModel.find({account_id, group}).sort({_id: -1});
     res.send({code: 1, msg: "查询成功", data: doc})
 });
@@ -43,22 +43,37 @@ router.get('/unbind', async(req, res, next) => {
     }
 });
 
-router.put('/', async (req, res, next) => {
-    let { id, group } = req.body;
+router.put('/', async(req, res, next) => {
+    let {id, group} = req.body;
     let result = await ConfigModel.findByIdAndUpdate(id, {group}, {new: true});
-    if(result) {
+    if (result) {
         res.send({code: 1, msg: "修改成功", data: result})
     } else {
         res.send({code: -1, msg: "修改失败，请重试"})
     }
 });
 
-router.put('/multi_select', async (req, res, next) => {
-   let { ids, group } = req.body ;
+router.post('/update', async(req, res, next) => {
+    let id = req.body._id
+    let data = {
+        attribute: parseInt(req.body.attribute)
+    }
+    let doc = await ConfigModel.findByIdAndUpdate(id, data, {new: true})
+    console.log('doc-conf', doc)
+    if (doc) {
+        await mem.set("configure_" + doc.code, doc, 30 * 24 * 3600)
+        res.send({success: '修改成功', data: doc})
+    } else {
+        res.send({err: '修改失败'})
+    }
+})
+
+router.put('/multi_select', async(req, res, next) => {
+    let {ids, group} = req.body;
     let result = await ids.map(async item => {
         await ConfigModel.findByIdAndUpdate(item, {group}, {new: true});
     });
-    if(result) {
+    if (result) {
         res.send({code: 1, msg: "修改成功", data: result})
     } else {
         res.send({code: -1, msg: "修改失败，请重试"})
@@ -76,9 +91,9 @@ router.get('/reset', async(req, res, next) => {
 
 router.get('/jieguan', async(req, res, next) => {
     let code = req.query.code
-    res.send({success: '设置接管成功'})
-    // let jieguan = await mem.get("jieguan_" + code)
-    // if (!jieguan) {
+    let jieguan = await mem.get("jieguan_" + code)
+    if (!jieguan) {
+        res.send({success: '设置接管成功'})
         await ConfigModel.findOneAndUpdate({code: code}, {status: -1})
         let client = await WechatUtil.getClient(code)
         async.waterfall([
@@ -134,9 +149,9 @@ router.get('/jieguan', async(req, res, next) => {
             }], async function (error) {
             // res.send({success: '设置接管成功'})
         })
-    // } else {
-    //     res.send({success: '已接管'})
-    // }
+    } else {
+        res.send({success: '已接管'})
+    }
 });
 
 module.exports = router;

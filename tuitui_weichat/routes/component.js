@@ -158,9 +158,9 @@ router.get('/unbind', async(req, res, next) => {
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //用户回复
     let appid = req.params.appid;
-    let code = 0
+    let code
     if (appid) {
-        let code = await mem.get("configure_appid_" + appid)
+        code = await mem.get("configure_appid_" + appid)
         if (!code) {
             let conf = await ConfigModel.findOne({appid: appid})
             if (!conf) {
@@ -179,8 +179,18 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    // let info = await userInfo(code, message)
-    // console.log(info, '------------------info')
+    let info = await userInfo(code, message.FromUserName)
+    console.log(info,'-------------------info')
+    let data = {
+        nickname: info.nickname,
+        sex: info.sex.toString,
+        province: info.province,
+        city: info.city,
+        country: info.country,
+        headimgurl: info.headimgurl,
+    }
+    let info = await userInfo.findOneAndUpdate(code, data, {upsert: true})
+    console.log(info, '------------------info')
 
 
     let user = {
@@ -222,10 +232,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         })
 })
 
-async function userInfo(code, message) {
+async function userInfo(code, openid) {
     let api = await wechat_util.getClient(code);
     return new Promise((resolve, reject) => {
-        api.getUser(message.FromUserName, function (err, info) {
+        api.getUser(openid, function (err, info) {
             resolve(info);
         })
     })
