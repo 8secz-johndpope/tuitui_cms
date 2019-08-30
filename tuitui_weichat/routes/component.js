@@ -179,7 +179,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    console.log(message,'---------------------------message')
+    console.log(appid,code,message,'---------------------------message')
     let info = await userInfo(code, message.FromUserName)
     let data = {}
     // console.log(appid,code,message,'---------------------------message1')
