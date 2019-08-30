@@ -3,6 +3,7 @@ const router = express.Router();
 const xmlUtil = require("../util/xmlUtil");
 const componentService = require('../util/component');
 const UserconfModel = require("../model/Userconf")
+const UserinfoModel = require("../model/Userinfo")
 const ConfigModel = require("../model/Config")
 const http = require("../util/httpUtils");
 const authorizer_info = require("../util/authorizer_info")
@@ -189,7 +190,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         country: info.country,
         headimgurl: info.headimgurl,
     }
-    let userInfo = await userInfo.findOneAndUpdate(code, data, {upsert: true})
+    let userInfo = await UserinfoModel.findOneAndUpdate(code, data, {upsert: true})
     console.log(userInfo, '------------------userInfo')
 
 
