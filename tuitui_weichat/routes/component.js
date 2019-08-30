@@ -219,6 +219,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             reply(code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
+        console.log(message,'------------------------------nessage')
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {

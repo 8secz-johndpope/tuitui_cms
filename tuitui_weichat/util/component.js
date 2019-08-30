@@ -29,7 +29,7 @@ module.exports.handleComponentMessage = async (requestMessage, query) => {
     let encryptMessage = requestMessage.Encrypt;
     let decryptMessage = cryptor.decrypt(encryptMessage);
 
-    console.log('Receive messasge from weixin decrypted :' + JSON.stringify(decryptMessage));
+    // console.log('Receive messasge from weixin decrypted :' + JSON.stringify(decryptMessage));
 
     var message = await resolveMessage(decryptMessage.message);
     let infoType = message.InfoType;
@@ -62,7 +62,7 @@ module.exports.handleMessage = async (requestMessage, query) => {
     let encryptMessage = requestMessage.Encrypt;
     let decryptMessage = cryptor.decrypt(encryptMessage);
 
-    console.log('Receive messasge from weixin decrypted :' + JSON.stringify(decryptMessage));
+    // console.log('Receive messasge from weixin decrypted :' + JSON.stringify(decryptMessage));
 
     var message = await resolveMessage(decryptMessage.message);
     
@@ -129,6 +129,6 @@ async function test(){
     let encryptMessage = requestMessage.Encrypt;
     let cryptor = new wechatCrypto('mingxingshuo', 'tw4a1yTUv0VJURGNif96ibI4z3oWPJJWpuo2mHTvzLb', 'wx4b715a7b61bfe0a4');
     let decryptMessage = cryptor.decrypt(encryptMessage);
-    console.log('Receive messasge from weixin decrypted :' + JSON.stringify(decryptMessage));
+    // console.log('Receive messasge from weixin decrypted :' + JSON.stringify(decryptMessage));
 }
 
