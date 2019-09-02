@@ -20,7 +20,7 @@ router.get('/', async(req, res, next) => {
             timing_time: -1
         });
     } else if(type === "manual") {
-        messages = await MessageModel.find({account_id, delay: {$gt: 0}, is_timing: false}).sort({
+        messages = await MessageModel.find({account_id, delay: {$gt: 0} || null, is_timing: null}).sort({
             timing_time: -1
         });
     }
