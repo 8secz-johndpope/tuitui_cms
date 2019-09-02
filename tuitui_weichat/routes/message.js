@@ -8,15 +8,19 @@ var wechat_util = require('../util/get_weichat_client.js')
 
 
 router.get('/', async(req, res, next) => {
-    let account_id = req.session.account._id;
-    let sort = req.query.sort
-    let messages = null
-    if (sort === "_id") {
-        messages = await MessageModel.find({account_id}).sort({
-            _id: -1
+    let {account_id} = req.session;
+    let { type = "manual" } = req.query;
+    let messages = [];
+    if (type === "is_timing") {
+        messages = await MessageModel.find({account_id, is_timing: true}).sort({
+            timing_time: -1
         });
-    } else if (sort === "timing_time") {
-        messages = await MessageModel.find({account_id}).sort({
+    } else if (type === "delay") {
+        messages = await MessageModel.find({account_id, delay: {$lte: 0}}).sort({
+            timing_time: -1
+        });
+    } else if(type === "manual") {
+        messages = await MessageModel.find({account_id, delay: {$gt: 0}, is_timing: false}).sort({
             timing_time: -1
         });
     }
@@ -77,7 +81,8 @@ router.post('/create', async(req, res, next) => {
         img: req.body.img,
         tagId: req.body.tagId,
         mediaId: mediaId,
-        account_id
+        account_id,
+        remarks: req.body.remarks
     };
     var docs = await MessageModel.create(message);
     if (docs) {
@@ -107,7 +112,8 @@ router.post('/update', async(req, res, next) => {
         contents: req.body.contents,
         img: req.body.img,
         tagId: req.body.tagId,
-        mediaId: mediaId
+        mediaId: mediaId,
+        remarks: req.body.remarks
     }
     if (parseInt(req.body.type) == 2) {
         for (let code of req.body.codes) {
