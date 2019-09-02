@@ -208,17 +208,20 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
             user.subscribe_flag = true;
+            user.action_type = 1;
             reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
         } else if (message.Event === 'unsubscribe') {
             user.unsubscribe_time = Date.now();
             user.subscribe_flag = false;
         } else if (message.Event.toLowerCase() == 'click') {
+            user.action_type = 2;
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
+            user.action_type = 3;
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
         }
     }
