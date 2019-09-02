@@ -20,7 +20,7 @@ router.get('/', async(req, res, next) => {
             _id: -1
         });
     } else if(type === "manual") {
-        messages = await MessageModel.find({}).sort({
+        messages = await MessageModel.find({account_id}).sort({
             _id: -1
         });
     }
