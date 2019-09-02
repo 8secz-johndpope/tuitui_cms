@@ -226,7 +226,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         }
     }
 
-    UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
+    let myuser = UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
+    console.log(myuser,'---------------------------myuser')
 })
 
 async function userInfo(code, openid) {
