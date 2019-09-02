@@ -8,7 +8,7 @@ var wechat_util = require('../util/get_weichat_client.js')
 
 
 router.get('/', async(req, res, next) => {
-    let {account_id} = req.session.account._id;
+    let {_id: account_id} = req.session.account;
     let { type = "manual" } = req.query;
     let messages = [];
     if (type === "is_timing") {
