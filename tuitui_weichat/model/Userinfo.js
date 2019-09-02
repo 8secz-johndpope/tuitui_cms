@@ -19,7 +19,7 @@ var UserinfoSchema = new Schema({
 UserinfoSchema.statics = {
     fetch(id, sex, tagId, codes, cb) {
         let sql = {
-            subscribe_flag: true,
+            // subscribe_flag: true,
             //$or: [{send_time: {$lt: Date.now() - 2 * 3600 * 1000}}, {send_time: 0},{send_time:{$exists:false}}],
             code: {$in: codes},
             action_time: {$gt: Date.now() - 48 * 3600 * 1000}
