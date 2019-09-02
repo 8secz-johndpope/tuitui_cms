@@ -17,11 +17,11 @@ router.get('/', async(req, res, next) => {
         });
     } else if (type === "delay") {
         messages = await MessageModel.find({account_id, delay: {$lte: 0}}).sort({
-            timing_time: -1
+            _id: -1
         });
     } else if(type === "manual") {
-        messages = await MessageModel.find({account_id, delay: {$gt: 0} || null, is_timing: null}).sort({
-            timing_time: -1
+        messages = await MessageModel.find({account_id, delay: null, is_timing: null}).sort({
+            _id: -1
         });
     }
     for (let i = 0; i < messages.length; i++) {
