@@ -27,8 +27,10 @@ async function uploadNews(code, messages) {
 async function uploadImage(url, code) {
   return new Promise(async (resolve, reject) => {
     var api = await weichat_util.getClient(code);
-    api.uploadImageMaterial(url, async function (error, result) {
+    api.uploadImage(url, async function (error, result) {
       if(error) reject(error);
+      console.log('----------image------------')
+      console.log(result)
       resolve(result.media_id);
     });
   })
