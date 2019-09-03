@@ -132,6 +132,7 @@ router.get('/jieguan', async(req, res, next) => {
                 exec(cmdStr, function () {
                 })
             }], async function (error) {
+            await mem.set("jieguan_" + code, 1, 30 * 60)
             // res.send({success: '设置接管成功'})
         })
     } else {
