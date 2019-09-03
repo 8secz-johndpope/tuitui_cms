@@ -1,9 +1,12 @@
-const weichat_util = require('../util/get_weichat_client.js')
+const weichat_util = require('../util/get_weichat_client.js');
+var fs = require('fs');
 
 async function uploadNews(code, messages) {
   return new Promise(async (resolve, reject) => {
     let articles = await messages.map(async item => {
-      item.thumb_media_id = await uploadImage(item.thumb_url, code)
+      let aaa = request(item.thumb_url).pipe(fs.createWriteStream('./' + Date.now() + '.jpg'));
+      // item.thumb_media_id = await uploadImage(item.thumb_url, code)
+      console.log(aaa)
     });
     let news = {articles};
     resolve(news);

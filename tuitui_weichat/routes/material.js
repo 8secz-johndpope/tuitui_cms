@@ -156,7 +156,6 @@ router.get('/syncMaterial', async (req, res, next) => {
       })
     }
   }
- console.log(docs)
 });
 
 module.exports = router;
