@@ -5,6 +5,8 @@ var MaterialModel = require('../model/Material');
 var MsgHistoryModel = require('../model/MsgHistory');
 var getMaterials = require('../script/get_material');
 var sendTag = require('../script/send_tag_message');
+var uploadNews = require("../script/uploadMaterial");
+const weichat_util = require('../util/get_weichat_client.js')
 
 router.get('/', async (req, res, next) => {
   let docs = getMaterials.get_aterials(req.query.code);
@@ -142,7 +144,18 @@ router.get('/syncMaterial', async (req, res, next) => {
     'update_time': -1
   })
  let code = 10000000003;
- // let news = docs[0].content;
+  if(docs.length > 0) {
+    let articles = docs[0].content.news_item;
+    let news = await uploadNews.uploadMaterial(code, articles);
+    if(news) {
+      await weichat_util.uploadNewsMaterial(news, (err, result) => {
+        if(err) throw err;
+        if(result.errcode === 0) {
+          res.send("素材同步成功")
+        }
+      })
+    }
+  }
  console.log(docs)
 });
 
