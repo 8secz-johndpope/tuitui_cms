@@ -68,9 +68,8 @@ router.get('/get_code', async(req, res, next) => {
 router.post('/create', async(req, res, next) => {
   var ab_img = __dirname + '/../' + req.body.img_path;
   var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
-    let account_id = req.session.account._id;
-    console.log(account_id,'------------------------account_id')
-    // let account_id = req.body.account_id;
+    // let account_id = req.session.account._id;
+    let account_id = req.body.account_id;
 
     var message = {
         codes: req.body.codes,
@@ -84,7 +83,7 @@ router.post('/create', async(req, res, next) => {
         img: req.body.img,
         tagId: req.body.tagId,
         mediaId: mediaId,
-        account_id,
+        account_id:account_id,
         remarks: req.body.remarks
     };
     var docs = await MessageModel.create(message);
