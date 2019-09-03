@@ -151,6 +151,7 @@ router.get('/syncMaterial', async (req, res, next) => {
       var api = await weichat_util.getClient(code);
       await api.uploadNewsMaterial(news, (err, result) => {
         if(err) throw err;
+        console.log(result, "22222222222222222222----------------------")
         if(result.errcode === 0) {
           res.send("素材同步成功")
         }
