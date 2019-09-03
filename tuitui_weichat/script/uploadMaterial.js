@@ -3,7 +3,7 @@ var fs = require('fs');
 var request = require('request');
 
 async function uploadNews(code, messages) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(function (resolve, reject) {
     let articles = messages.map(async item => {
       let url = __dirname + '/../public/uploads/' + Date.now() + 'aaa.jpg';
       let writeStream = fs.createWriteStream(url)
@@ -20,7 +20,7 @@ async function uploadNews(code, messages) {
       });
       return item
     });
-    resolve({articles});
+    resolve(articles);
   })
 }
 
