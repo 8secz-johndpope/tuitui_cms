@@ -20,7 +20,6 @@ async function uploadNews(code, messages) {
       });
       return item
     });
-    console.log("articles", articles, "======================articles===========================")
     resolve({articles});
   })
 }

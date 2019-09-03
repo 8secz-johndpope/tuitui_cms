@@ -147,15 +147,14 @@ router.get('/syncMaterial', async (req, res, next) => {
   if(docs.length > 0) {
     let articles = docs[0].content.news_item;
     let news = await uploadNews.uploadNews(code, articles);
-    res.send(news)
-    // if(news) {
-    //   await weichat_util.uploadNewsMaterial(news, (err, result) => {
-    //     if(err) throw err;
-    //     if(result.errcode === 0) {
-    //       res.send("素材同步成功")
-    //     }
-    //   })
-    // }
+    if(news) {
+      await weichat_util.uploadNewsMaterial(news, (err, result) => {
+        if(err) throw err;
+        if(result.errcode === 0) {
+          res.send("素材同步成功")
+        }
+      })
+    }
   }
 });
 
