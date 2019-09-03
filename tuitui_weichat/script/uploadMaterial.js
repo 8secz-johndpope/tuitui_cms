@@ -12,6 +12,8 @@ async function uploadNews(code, messages) {
       readStream.on('end', async function(response) {
         console.log('文件写入成功');
         item.thumb_media_id = await uploadImage(url, code);
+        console.log(url)
+        console.log(item.thumb_media_id)
         writeStream.end();
       });
 
