@@ -10,7 +10,7 @@ var wechat_util = require('../util/get_weichat_client.js')
 router.get('/', async(req, res, next) => {
     let {_id: account_id} = req.session.account;
     console.log(account_id)
-    let { type = "manual" } = req.query;
+    let {type = "manual"} = req.query;
     let messages = [];
     if (type === "is_timing") {
         messages = await MessageModel.find({account_id, is_timing: true}).sort({
@@ -20,7 +20,7 @@ router.get('/', async(req, res, next) => {
         messages = await MessageModel.find({account_id, delay: {$lte: 0}}).sort({
             _id: -1
         });
-    } else if(type === "manual") {
+    } else if (type === "manual") {
         messages = await MessageModel.find({account_id}).sort({
             _id: -1
         });
@@ -66,8 +66,8 @@ router.get('/get_code', async(req, res, next) => {
 
 
 router.post('/create', async(req, res, next) => {
-  var ab_img = __dirname + '/../' + req.body.img_path;
-  var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
+    var ab_img = __dirname + '/../' + req.body.img_path;
+    var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
     let account_id = req.session.account._id;
 
     var message = {
@@ -114,7 +114,8 @@ router.post('/update', async(req, res, next) => {
         img: req.body.img,
         tagId: req.body.tagId,
         mediaId: mediaId,
-        remarks: req.body.remarks
+        remarks: req.body.remarks,
+        updateAt: new Date()
     }
     if (parseInt(req.body.type) == 2) {
         for (let code of req.body.codes) {
@@ -191,7 +192,7 @@ router.get('/send', async(req, res, next) => {
 })
 
 async function upload(type, img_path, codes) {
-    if(type == 2) {
+    if (type == 2) {
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
             return new Promise((resolve, reject) => {
@@ -202,7 +203,7 @@ async function upload(type, img_path, codes) {
                 })
             })
         }
-    }else{
+    } else {
         return
     }
 }
