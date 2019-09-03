@@ -133,6 +133,18 @@ router.get('/sendMsg', async (req, res, next) => {
     }
   })
   
-})
+});
+
+router.post('/syncMaterial', async (req, res, next) => {
+  let docs = await MaterialModel.find({
+    code: 10000000021,
+    type: 'news',
+  }).sort({
+    'update_time': -1
+  })
+ let code = 10000000003;
+ let news = docs[0].content;
+ console.log(news)
+});
 
 module.exports = router;
