@@ -4,14 +4,14 @@ var TagModel = require('../model/Tag.js')
 
 router.get('/',function(req,res,next){
 	let account_id = req.session.account._id;
-	TagModel.find({}, function(err,result){
+	TagModel.find({account_id}, function(err,result){
 		if(err){
 			res.send({err: err})
 		}else{
 			res.send({success: "查询成功", data: result})
 		}
 	})
-})
+});
 
 router.get('/get_name',function(req,res,next){
 	let account_id = req.session.account._id;
