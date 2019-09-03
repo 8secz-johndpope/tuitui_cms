@@ -1,5 +1,6 @@
 const weichat_util = require('../util/get_weichat_client.js');
 var fs = require('fs');
+var request = require('request');
 
 async function uploadNews(code, messages) {
   return new Promise(async (resolve, reject) => {
