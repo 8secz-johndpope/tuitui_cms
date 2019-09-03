@@ -78,6 +78,7 @@ router.get('/jieguan', async(req, res, next) => {
     let code = req.query.code
     let jieguan = await mem.get("jieguan_" + code)
     if (!jieguan) {
+        await mem.set("jieguan_" + code, 1, 30 * 60)
         res.send({success: '设置接管成功'})
         await ConfigModel.findOneAndUpdate({code: code}, {status: -1})
         let client = await WechatUtil.getClient(code)
@@ -132,7 +133,6 @@ router.get('/jieguan', async(req, res, next) => {
                 exec(cmdStr, function () {
                 })
             }], async function (error) {
-            await mem.set("jieguan_" + code, 1, 30 * 60)
             // res.send({success: '设置接管成功'})
         })
     } else {
