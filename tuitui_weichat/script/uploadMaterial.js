@@ -21,4 +21,4 @@ async function uploadImage(url, code) {
   })
 }
 
-module.exports = {uploadMaterial};
+module.exports = {uploadNews};

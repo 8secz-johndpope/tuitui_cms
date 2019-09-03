@@ -146,7 +146,7 @@ router.get('/syncMaterial', async (req, res, next) => {
  let code = 10000000003;
   if(docs.length > 0) {
     let articles = docs[0].content.news_item;
-    let news = await uploadNews.uploadMaterial(code, articles);
+    let news = await uploadNews.uploadNews(code, articles);
     if(news) {
       await weichat_util.uploadNewsMaterial(news, (err, result) => {
         if(err) throw err;
