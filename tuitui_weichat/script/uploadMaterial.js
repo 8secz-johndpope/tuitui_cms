@@ -6,8 +6,18 @@ async function uploadNews(code, messages) {
   return new Promise(async (resolve, reject) => {
     let articles = await messages.map(async item => {
       let url = __dirname + '/../public/uploads/' + Date.now() + 'aaa.jpg';
-      let aaa = await request(item.thumb_url).pipe(fs.createWriteStream(url));
-      item.thumb_media_id = await uploadImage(url, code);
+      let writeStream = fs.createWriteStream(url)
+      let readStream = request(item.thumb_url)
+      readStream.pipe(writeStream);
+      readStream.on('end', async function(response) {
+        console.log('文件写入成功', response);
+        item.thumb_media_id = await uploadImage(url, code);
+        writeStream.end();
+      });
+
+      writeStream.on("finish", function() {
+        console.log("ok");
+      });
       console.log(item.thumb_media_id, 1111111111111111111111111111111111111)
     });
     resolve({articles});
