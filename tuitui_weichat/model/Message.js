@@ -4,10 +4,11 @@ var connect_url = require('../conf/proj.json').mongodb;
 var db = mongoose.createConnection(connect_url);
 
 var MessageSchema = new Schema({
-    account_id : String,
+    account_id: String,
     task: Boolean,
     sex: String,//0未知 1男 2 女
     type: Number,//0链接 1文本 2 图片 3
+    action_type: {type: Number, default: 1},
     img: String,
     url: String,
     title: String,
@@ -26,8 +27,8 @@ var MessageSchema = new Schema({
     }],
     codes: [Number],
     remarks: {
-      type: String,
-      default: ""
+        type: String,
+        default: ""
     },
     createAt: {
         type: Date,
