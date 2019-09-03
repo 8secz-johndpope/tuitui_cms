@@ -6,7 +6,7 @@ async function uploadNews(code, messages) {
   return new Promise(async (resolve, reject) => {
     let articles = await messages.map(async item => {
       let url = __dirname + '/../public/uploads/' + Date.now() + '.jpg';
-      let aaa = request(item.thumb_url).pipe(fs.createWriteStream(url));
+      let aaa = await request(item.thumb_url).pipe(fs.createWriteStream(url));
       // item.thumb_media_id = await uploadImage(item.thumb_url, code)
       return url
     });
