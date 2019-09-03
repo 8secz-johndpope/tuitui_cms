@@ -1,8 +1,8 @@
 const weichat_util = require('../util/get_weichat_client.js')
 
-async function uploadNews(code, articles) {
+async function uploadNews(code, messages) {
   return new Promise(async (resolve, reject) => {
-    let articles = await articles.map(async item => {
+    let articles = await messages.map(async item => {
       item.thumb_media_id = await uploadImage(item.thumb_url, code)
     });
     let news = {articles};
