@@ -24,7 +24,6 @@ router.get('/show', async (req, res, next) => {
   }).sort({
     'update_time': -1
   })
-  console.log(docs[0].content.news_item)
   let messages = [], arr= [], results = [], item = {};
   for (let i = 0; i < docs.length; i ++) {
     arr = docs[i].content.news_item
@@ -135,16 +134,16 @@ router.get('/sendMsg', async (req, res, next) => {
   
 });
 
-router.post('/syncMaterial', async (req, res, next) => {
+router.get('/syncMaterial', async (req, res, next) => {
   let docs = await MaterialModel.find({
-    code: 10000000021,
+    code: 10000000016,
     type: 'news',
   }).sort({
     'update_time': -1
   })
  let code = 10000000003;
- let news = docs[0].content;
- console.log(news)
+ // let news = docs[0].content;
+ console.log(docs)
 });
 
 module.exports = router;
