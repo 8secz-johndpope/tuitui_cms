@@ -4,7 +4,7 @@ var request = require('request');
 
 async function uploadNews(code, messages) {
   return new Promise(async (resolve, reject) => {
-    let articles = await messages.map(async item => {
+    let articles = messages.map(async item => {
       let url = __dirname + '/../public/uploads/' + Date.now() + 'aaa.jpg';
       let writeStream = fs.createWriteStream(url)
       let readStream = request(item.thumb_url)
@@ -18,6 +18,7 @@ async function uploadNews(code, messages) {
       writeStream.on("finish", function() {
         console.log("ok");
       });
+      return item
     });
     console.log("articles", articles, "======================articles===========================")
     resolve({articles});
