@@ -12,13 +12,13 @@ async function uploadNews(code, messages) {
       readStream.on('end', async function(response) {
         console.log('文件写入成功', response);
         item.thumb_media_id = await uploadImage(url, code);
+        console.log(item.thumb_media_id, 1111111111111111111111111111111111111)
         writeStream.end();
       });
 
       writeStream.on("finish", function() {
         console.log("ok");
       });
-      console.log(item.thumb_media_id, 1111111111111111111111111111111111111)
     });
     resolve({articles});
   })
@@ -28,7 +28,6 @@ async function uploadImage(url, code) {
   return new Promise(async (resolve, reject) => {
     var api = await weichat_util.getClient(code);
     api.uploadImageMaterial(url, async function (error, result) {
-      console.log(error,result,'---------------------result1111111');
       if(error) reject(error);
       resolve(result.media_id);
     });
