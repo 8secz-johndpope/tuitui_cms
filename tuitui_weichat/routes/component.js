@@ -3,7 +3,6 @@ const router = express.Router();
 const xmlUtil = require("../util/xmlUtil");
 const componentService = require('../util/component');
 const UserconfModel = require("../model/Userconf")
-const UserinfoModel = require("../model/Userinfo")
 const ConfigModel = require("../model/Config")
 const http = require("../util/httpUtils");
 const authorizer_info = require("../util/authorizer_info")
@@ -180,29 +179,27 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
     let info = await userInfo(code, message.FromUserName)
-    let data = {}
+
+    let user = {}
     if (info.sex) {
-        data = {
+        user = {
+            openid: message.FromUserName,
+            code: code,
             nickname: info.nickname,
+            headimgurl: info.headimgurl,
             sex: info.sex.toString(),
             province: info.province,
             city: info.city,
             country: info.country,
-            headimgurl: info.headimgurl,
             action_time: Date.now()
         }
-    } else {
-        data = {
+    }else{
+        user = {
+            openid: message.FromUserName,
+            code: code,
             sex: "0",
             action_time: Date.now()
         }
-    }
-    await UserinfoModel.findOneAndUpdate({code: code, openid: message.FromUserName}, data, {upsert: true})
-
-    let user = {
-        openid: message.FromUserName,
-        code: code,
-        action_time: Date.now(),
     }
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
