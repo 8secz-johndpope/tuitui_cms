@@ -25,6 +25,10 @@ var MessageSchema = new Schema({
         picurl: String
     }],
     codes: [Number],
+    remarks: {
+      type: String,
+      default: ""
+    },
     createAt: {
         type: Date,
         default: Date.now
