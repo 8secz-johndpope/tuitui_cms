@@ -24,7 +24,7 @@ router.get('/show', async (req, res, next) => {
   }).sort({
     'update_time': -1
   })
-  console.log(docs)
+  console.log(docs[0].content.news_item)
   let messages = [], arr= [], results = [], item = {};
   for (let i = 0; i < docs.length; i ++) {
     arr = docs[i].content.news_item
