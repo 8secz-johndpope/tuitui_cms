@@ -143,8 +143,8 @@ router.get('/syncMaterial', async (req, res, next) => {
     'update_time': -1
   })
  let code = 10000000003;
- let news = docs[0].content;
- console.log(news)
+ // let news = docs[0].content;
+ console.log(docs)
 });
 
 module.exports = router;
