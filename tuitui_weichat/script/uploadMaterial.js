@@ -10,9 +10,8 @@ async function uploadNews(code, messages) {
       let readStream = request(item.thumb_url)
       readStream.pipe(writeStream);
       readStream.on('end', async function(response) {
-        console.log('文件写入成功', response);
+        console.log('文件写入成功');
         item.thumb_media_id = await uploadImage(url, code);
-        console.log(item.thumb_media_id, 1111111111111111111111111111111111111)
         writeStream.end();
       });
 
@@ -20,6 +19,7 @@ async function uploadNews(code, messages) {
         console.log("ok");
       });
     });
+    console.log("articles", articles, "======================articles===========================")
     resolve({articles});
   })
 }
