@@ -22,6 +22,9 @@ async function uploadNews(code, messages) {
         "only_fans_can_comment": item.only_fans_can_comment
       } 
     },(err,results) => {
+      if(err){
+        console.error(err)
+      }
       console.log(results)
       resolve(results);
     })
