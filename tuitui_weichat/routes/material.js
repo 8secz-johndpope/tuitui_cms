@@ -155,7 +155,8 @@ router.get('/syncMaterial', async (req, res, next) => {
           console.error("err", err)
         }
         console.log(result, "22222222222222222222----------------------")
-        if(result.errcode === 0) {
+        if(result.media_id) {
+          //TODO   保存到自己的素材库
           res.send("素材同步成功")
         }
       })
