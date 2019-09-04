@@ -213,7 +213,7 @@ function mapCodes(codes, articles) {
 
 async function uploadMaterial(code, news) {
   var api = await weichat_util.getClient(code);
-  return Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     console.log(news, code)
     api.uploadNewsMaterial({"articles": news}, async (err, result) => {
       if(err) {
