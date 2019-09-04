@@ -10,14 +10,14 @@ var MaterialSchema = new Schema({
   content: {
     news_item: Array
   },
-  name: {
-    type: String,
-    default: ''
-  },
-  url: {
-    type: String,
-    default: ''
-  },
+  // name: {
+  //   type: String,
+  //   default: ''
+  // },
+  // url: {
+  //   type: String,
+  //   default: ''
+  // },
   update_time: String,
   timing: {
     type: Number,

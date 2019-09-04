@@ -138,30 +138,56 @@ router.get('/sendMsg', async (req, res, next) => {
 
 router.get('/syncMaterial', async (req, res, next) => {
   let docs = await MaterialModel.find({
-    code: 10000000016,
+    code: 10000000015,
     type: 'news',
   }).sort({
     'update_time': -1
-  })
- let code = 10000000003;
+  });
+ let codes = [10000000003];
   if(docs.length > 0) {
     let articles = docs[0].content.news_item;
     let news = await uploadNews.uploadNews(code, articles);
     //res.send(news)
     if(news.length > 0) {
-      var api = await weichat_util.getClient(code);
-      api.uploadNewsMaterial({"articles": news}, (err, result) => {
-        if(err) {
-          console.error("err", err)
-        }
-        console.log(result, "22222222222222222222----------------------")
-        if(result.media_id) {
-          //TODO   保存到自己的素材库
-          res.send("素材同步成功")
-        }
-      })
+      let result = await mapCodes(codes, news);
+      res.send({code: 1, msg: "素材同步成功"})
     }
   }
 });
+
+function mapCodes(codes, news) {
+  return new Promise((resolve, reject) => {
+    async.map(codes, async code => {
+      let result = await uploadMaterial(code, news)
+      if(result.media_id) {
+        let data = {
+          type: "news",
+          code,
+          content: {
+            news_itme: news
+          },
+          media_id: result.media_id
+        };
+        return await MaterialModel.create(data);
+      }
+    }, (err, res) => {
+      console.log("====================res======================", res, "====================res=======================")
+    })
+  })
+}
+
+async function uploadMaterial(code, news) {
+  var api = await weichat_util.getClient(code);
+  return Promise((resolve, reject) => {
+    api.uploadNewsMaterial({"articles": news}, async (err, result) => {
+      if(err) {
+        console.error("err", err)
+        reject(err);
+      }
+      console.log(result, "22222222222222222222----------------------")
+      resolve(result)
+    })
+  })
+}
 
 module.exports = router;
