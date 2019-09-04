@@ -19,13 +19,13 @@ async function uploadNews(code, messages) {
         console.log("ok");
       });
       return {
-        "title": item.title,
+        "title": encodeURIComponent(item.title),
         "thumb_media_id": item.thumb_media_id,
-        "author": item.author,
-        "digest": item.digest,
+        "author": encodeURIComponent(item.author),
+        "digest": encodeURIComponent(item.digest),
         "show_cover_pic": item.show_cover_pic,
-        "content": item.content,
-        "content_source_url": item.content_source_url,
+        "content": encodeURIComponent(item.content),
+        "content_source_url": encodeURIComponent(item.content_source_url),
         "need_open_comment": item.need_open_comment,
         "only_fans_can_comment": item.only_fans_can_comment
       }
@@ -34,12 +34,14 @@ async function uploadNews(code, messages) {
   })
 }
 
-async function uploadImage(url, code) {
-  return new Promise(async (resolve, reject) => {
-    var api = await weichat_util.getClient(code);
-    api.uploadThumbMaterial(url, async function (error, result) {
-      if(error) reject(error);
-      resolve(result.media_id);
+function uploadImage(url, code) {
+  return new Promise((resolve, reject) => {
+    weichat_util.getClient(code).then(function(api){
+      api.uploadThumbMaterial(url, function (error, result) {
+        console.log("======================third=============================")
+        if(error) reject(error);
+        resolve(result.media_id);
+      });
     });
   })
 }
