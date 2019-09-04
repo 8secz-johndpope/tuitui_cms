@@ -147,19 +147,19 @@ router.get('/syncMaterial', async (req, res, next) => {
   if(docs.length > 0) {
     let articles = docs[0].content.news_item;
     let news = await uploadNews.uploadNews(code, articles);
-    res.send(news)
-    // if(news.length > 0) {
-    //   var api = await weichat_util.getClient(code);
-    //   api.uploadNewsMaterial({"articles": news}, (err, result) => {
-    //     if(err) {
-    //       console.error("err", err)
-    //     }
-    //     console.log(result, "22222222222222222222----------------------")
-    //     if(result.errcode === 0) {
-    //       res.send("素材同步成功")
-    //     }
-    //   })
-    // }
+    //res.send(news)
+    if(news.length > 0) {
+      var api = await weichat_util.getClient(code);
+      api.uploadNewsMaterial({"articles": news}, (err, result) => {
+        if(err) {
+          console.error("err", err)
+        }
+        console.log(result, "22222222222222222222----------------------")
+        if(result.errcode === 0) {
+          res.send("素材同步成功")
+        }
+      })
+    }
   }
 });
 
