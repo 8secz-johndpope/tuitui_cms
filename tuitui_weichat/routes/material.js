@@ -164,8 +164,8 @@ function mapCodes(codes, articles) {
   return new Promise((resolve, reject) => {
     async.map(codes, async code => {
       let news = await uploadNews.uploadNews(code, articles);
-      console.log(news)
       if(news.length > 0) {
+        console.log(news, "news")
         let result = await uploadMaterial(code, news);
         console.log("result", result, "------------------result==========")
         if(result.media_id) {
