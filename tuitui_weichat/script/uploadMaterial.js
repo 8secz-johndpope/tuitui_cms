@@ -5,10 +5,11 @@ var async = require("async");
 
 async function uploadNews(code, messages) {
   return new Promise(function (resolve, reject) {
-    async.map(messages,async (item) =>{
-      // console.log("---------item.thumb_url----------------")
-      // console.log(item.thumb_url)
-      item.thumb_media_id = await handleImage(item.thumb_url)
+    async.map(messages,async function(item){
+      console.log("---------item.thumb_url----------------")
+      console.log(item.thumb_url)
+      let path = await handleImage(item.thumb_url)
+      item.thumb_media_id = await uploadImage(path, code);
       return {
         "title": encodeURIComponent(item.title),
         "thumb_media_id": item.thumb_media_id,
@@ -34,10 +35,9 @@ function handleImage(thumb_url){
       let readStream = request(thumb_url)
       readStream.pipe(writeStream);
       readStream.on('end', async function(response) {
-        // console.log('文件写入成功');
+        console.log('文件写入成功');
         writeStream.end();
-        let thumb_media_id = await uploadImage(path, code);
-        resolve(thumb_media_id)
+        resolve(path)
       });
 
       writeStream.on("finish", function() {
@@ -51,6 +51,7 @@ function uploadImage(url, code) {
     weichat_util.getClient(code).then(function(api){
       api.uploadThumbMaterial(url, function (error, result) {
         if(error) reject(error);
+        console.log('上传文件成功')
         resolve(result.media_id);
       });
     });
