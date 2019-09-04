@@ -38,7 +38,7 @@ async function uploadNews(code, messages) {
 async function uploadImage(url, code) {
   return new Promise(async (resolve, reject) => {
     var api = await weichat_util.getClient(code);
-    api.uploadMaterial(url, 'image', async function (error, result) {
+    api.uploadThumbMaterial(url, async function (error, result) {
       console.log("======================third=============================")
       if(error) reject(error);
       resolve(result.media_id);
