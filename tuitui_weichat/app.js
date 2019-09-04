@@ -7,6 +7,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var MemcachedStore = require('connect-memcached')(session);
 
+//监控
+const easyMonitor = require('easy-monitor');
+easyMonitor('tuitui_cms');
 
 var index = require('./routes/index');
 var qr_code = require('./routes/qr_code');
