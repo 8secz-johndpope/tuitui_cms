@@ -175,7 +175,9 @@ function mapCodes(codes, articles) {
             },
             media_id: result.media_id
           };
-          resolve(await MaterialModel.create(data));
+          let docs = await MaterialModel.create(data);
+          console.log("docs", docs, "11111111111__________")
+          resolve(docs);
         }
       }
     }, (err, res) => {
