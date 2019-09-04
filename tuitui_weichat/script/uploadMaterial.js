@@ -41,8 +41,6 @@ async function uploadImage(url, code) {
     var api = await weichat_util.getClient(code);
     api.uploadMedia(url, 'image', async function (error, result) {
       if(error) reject(error);
-      console.log('----------image------------')
-      console.log(result)
       resolve(result.media_id);
     });
   })
