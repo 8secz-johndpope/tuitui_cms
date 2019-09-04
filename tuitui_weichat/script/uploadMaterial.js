@@ -30,11 +30,12 @@ async function uploadNews(code, messages) {
 
 function handleImage(thumb_url){
   return new Promise((resolve,reject)=>{
+      console.log('-------download file---------')
       let path = __dirname + '/../public/uploads/' + Date.now() + index + Math.floor(Math.random() * 10000 + 1) + 'aaa.jpg';
       let writeStream = fs.createWriteStream(path)
       let readStream = request(thumb_url)
       readStream.pipe(writeStream);
-      readStream.on('end', async function(response) {
+      readStream.on('end', function(response) {
         console.log('文件写入成功');
         writeStream.end();
         resolve(path)
@@ -48,6 +49,7 @@ function handleImage(thumb_url){
 
 function uploadImage(url, code) {
   return new Promise((resolve, reject) => {
+    console.log('-------upload file---------')
     weichat_util.getClient(code).then(function(api){
       api.uploadThumbMaterial(url, function (error, result) {
         if(error) reject(error);
