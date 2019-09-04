@@ -12,7 +12,6 @@ async function uploadNews(code, messages) {
       readStream.on('end', async function(response) {
         console.log('文件写入成功');
         item.thumb_media_id = await uploadImage(url, code);
-        console.log("======================second=============================")
         writeStream.end();
       });
 
@@ -39,7 +38,6 @@ async function uploadImage(url, code) {
   return new Promise(async (resolve, reject) => {
     var api = await weichat_util.getClient(code);
     api.uploadThumbMaterial(url, async function (error, result) {
-      console.log("======================third=============================")
       if(error) reject(error);
       resolve(result.media_id);
     });
