@@ -190,9 +190,7 @@ function mapCodes(codes, articles) {
     codes.map(async code => {
       let news = await uploadNews.uploadNews(code, articles);
       if(news.length > 0) {
-        // console.log(news, "news")
         let result = await uploadMaterial(code, news);
-        console.log("result", result, "------------------result==========")
         if(result.media_id) {
           let data = {
             type: "news",
@@ -202,9 +200,7 @@ function mapCodes(codes, articles) {
             },
             media_id: result.media_id
           };
-          let docs = await MaterialModel.create(data);
-          console.log("docs", docs, "11111111111__________")
-          return docs
+          resolve(await MaterialModel.create(data));
         }
       }
     })
