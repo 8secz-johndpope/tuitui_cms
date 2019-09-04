@@ -34,7 +34,7 @@ async function uploadNews(code, messages) {
 function handleImage(thumb_url){
   return new Promise((resolve,reject)=>{
       console.log('-------download file---------')
-      let path = __dirname + '/../public/uploads/' + Date.now() + index + Math.floor(Math.random() * 10000 + 1) + 'aaa.jpg';
+      let path = __dirname + '/../public/uploads/' + Date.now() + Math.floor(Math.random() * 100000 + 1) + 'aaa.jpg';
       let writeStream = fs.createWriteStream(path)
       let readStream = request(thumb_url)
       readStream.pipe(writeStream);
