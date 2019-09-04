@@ -32,6 +32,7 @@ async function uploadNews(code, messages) {
         "only_fans_can_comment": item.only_fans_can_comment
       }
     });
+    console.log(articles, "2222222222222222222222--------------------------------------------")
     resolve(articles);
   })
 }
