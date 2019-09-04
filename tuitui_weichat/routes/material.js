@@ -149,7 +149,7 @@ router.get('/syncMaterial', async (req, res, next) => {
     let news = await uploadNews.uploadNews(code, articles);
     // console.log('--------------news----------------')
     // console.log(news)
-    if(news) {
+    if(news.length > 0) {
       var api = await weichat_util.getClient(code);
       await api.uploadNewsMaterial({'articles':news}, (err, result) => {
         if(err) {
