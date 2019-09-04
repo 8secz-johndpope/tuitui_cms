@@ -155,7 +155,7 @@ router.get('/syncMaterial', async (req, res, next) => {
       await api.uploadNewsMaterial({'articles':news}, (err, result) => {
         if(err) {
           console.error(err)
-        };
+        }
         console.log(result, "22222222222222222222----------------------")
         if(result.errcode === 0) {
           res.send("素材同步成功")
