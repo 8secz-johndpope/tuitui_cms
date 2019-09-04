@@ -32,6 +32,7 @@ async function getMaterial(code, client, type, offset) {
                 item.local_img_path = path.split('/public')[1];
                 return item
             });
+            console.log(data[0])
             await MaterialModel.findOneAndUpdate({media_id: data[j].media_id}, data[j], {new: true, upsert: true})
         }
         // if(docs) {
