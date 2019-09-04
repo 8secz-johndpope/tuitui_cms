@@ -37,7 +37,7 @@ async function getMaterial(code, client, type, offset) {
                     console.error(err)
                 }
                 console.log(results)
-                (results);
+                // (results);
             });
             data[j].content.news_item = messages;
             await MaterialModel.findOneAndUpdate({media_id: data[j].media_id}, data[j], {new: true, upsert: true})
