@@ -7,6 +7,7 @@ var getMaterials = require('../script/get_material');
 var sendTag = require('../script/send_tag_message');
 var uploadNews = require("../script/uploadMaterial");
 const weichat_util = require('../util/get_weichat_client.js')
+var async = require("async");
 
 router.get('/', async (req, res, next) => {
   let docs = getMaterials.get_aterials(req.query.code);
@@ -153,7 +154,7 @@ router.get('/syncMaterial', async (req, res, next) => {
 
 function mapMaterial(codes, docs) {
   return new Promise((resolve, reject) => {
-    async.map(docs, item => mapCodes(codes, item.content.news_item), (err, res) => {
+    async.map(docs, async item => await mapCodes(codes, item.content.news_item), (err, res) => {
       console.log("====================mapMaterial-res======================", res, "====================mapMaterial-res=======================")
     })
   })
