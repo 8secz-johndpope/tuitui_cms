@@ -20,7 +20,8 @@ async function uploadNews(code, messages) {
         "content": item.content,
         "content_source_url": item.content_source_url,
         "need_open_comment": item.need_open_comment,
-        "only_fans_can_comment": item.only_fans_can_comment
+        "only_fans_can_comment": item.only_fans_can_comment,
+        "local_img_path": path.split('/public')[1]
       } 
 
     },(err,results) => {
@@ -36,8 +37,8 @@ async function uploadNews(code, messages) {
 function handleImage(thumb_url){
   return new Promise((resolve,reject)=>{
       //console.log('-------download file---------')
-      let path = __dirname + '/../public/uploads/' + Date.now() + Math.floor(Math.random() * 100000 + 1) + 'aaa.jpg';
-      let writeStream = fs.createWriteStream(path)
+      let path = __dirname + '/../public/uploads/wechat/material/' + Date.now() + Math.floor(Math.random() * 100000 + 1) + '.jpg';
+      let writeStream = fs.createWriteStream(path);
       let readStream = request(thumb_url)
       readStream.pipe(writeStream);
       readStream.on('end', function(response) {
