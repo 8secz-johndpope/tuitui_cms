@@ -27,8 +27,7 @@ async function getMaterial(code, client, type, offset) {
         for(let j = 0; j < data.length; j ++) {
             data[j].type = type.split('_')[0];
             data[j].code = code;
-            let messages = data[j].content.news_item;
-            messages = async.map(messages,async function(item) {
+            async.map(data[j].content.news_item,async function(item) {
                 let path = await handleImage(item.thumb_url);
                 item.local_img_path = path.split('/public')[1];
                 return item
@@ -36,9 +35,8 @@ async function getMaterial(code, client, type, offset) {
                 if(err){
                     console.error(err)
                 }
-                return results
+                data[j].content.news_item = results
             });
-            data[j].content.news_item = messages;
             await MaterialModel.findOneAndUpdate({media_id: data[j].media_id}, data[j], {new: true, upsert: true})
         }
         // if(docs) {
