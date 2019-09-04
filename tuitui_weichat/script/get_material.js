@@ -30,7 +30,7 @@ async function getMaterial(code, client, type, offset) {
             async.map(data[j].content.news_item,async function(item) {
                 let path = await handleImage(item.thumb_url);
                 item.local_img_path = path.split('/public')[1];
-                console.log(item.local_img_path);
+                console.log(item);
                 return item
             });
             await MaterialModel.findOneAndUpdate({media_id: data[j].media_id}, data[j], {new: true, upsert: true})
