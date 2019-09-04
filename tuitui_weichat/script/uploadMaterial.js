@@ -10,6 +10,19 @@ async function uploadNews(code, messages) {
       //console.log(item.thumb_url)
       let path = await handleImage(item.thumb_url)
       item.thumb_media_id = await uploadImage(path, code);
+      
+      return {
+        "title": item.title,
+        "thumb_media_id": item.thumb_media_id,
+        "author": item.author,
+        "digest": item.digest,
+        "show_cover_pic": item.show_cover_pic,
+        "content": item.content,
+        "content_source_url": item.content_source_url,
+        "need_open_comment": item.need_open_comment,
+        "only_fans_can_comment": item.only_fans_can_comment
+      } 
+
       return {
         "title": encodeURIComponent(item.title),
         "thumb_media_id": item.thumb_media_id,
