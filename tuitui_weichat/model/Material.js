@@ -30,10 +30,6 @@ var MaterialSchema = new Schema({
   tagId: {
     type: Number,
     default: null
-  },
-  local_img_path: {
-    type: String,
-    default: ""
   }
 });
 
