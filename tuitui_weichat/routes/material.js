@@ -145,36 +145,44 @@ router.get('/syncMaterial', async (req, res, next) => {
   });
  let codes = [10000000003];
   if(docs.length > 0) {
-    let articles = docs[0].content.news_item;
-    let news = await uploadNews.uploadNews(code, articles);
-    //res.send(news)
-    if(news.length > 0) {
-      let result = await mapCodes(codes, news);
-      res.send({code: 1, msg: "素材同步成功"})
-    }
+    let result = await mapMaterial(codes, docs);
+    res.send({code: 1, msg: "素材同步成功"})
+
   }
 });
 
-function mapCodes(codes, news) {
+function mapMaterial(codes, docs) {
+  return new Promise((resolve, reject) => {
+    async.map(docs, async item => await mapCodes(codes, item.content.news_item), (err, res) => {
+      console.log("====================mapMaterial-res======================", res, "====================mapMaterial-res=======================")
+    })
+  })
+}
+
+function mapCodes(codes, articles) {
   return new Promise((resolve, reject) => {
     async.map(codes, async code => {
-      let result = await uploadMaterial(code, news)
-      if(result.media_id) {
-        let data = {
-          type: "news",
-          code,
-          content: {
-            news_itme: news
-          },
-          media_id: result.media_id
-        };
-        return await MaterialModel.create(data);
+      let news = await uploadNews.uploadNews(code, articles);
+      if(news.length > 0) {
+        let result = await uploadMaterial(code, news)
+        if(result.media_id) {
+          let data = {
+            type: "news",
+            code,
+            content: {
+              news_itme: news
+            },
+            media_id: result.media_id
+          };
+          resolve(await MaterialModel.create(data));
+        }
       }
     }, (err, res) => {
       console.log("====================res======================", res, "====================res=======================")
     })
   })
 }
+
 
 async function uploadMaterial(code, news) {
   var api = await weichat_util.getClient(code);
