@@ -165,13 +165,14 @@ function mapCodes(codes, articles) {
     async.map(codes, async code => {
       let news = await uploadNews.uploadNews(code, articles);
       if(news.length > 0) {
-        let result = await uploadMaterial(code, news)
+        let result = await uploadMaterial(code, news);
+        console.log("result", result, "------------------result==========")
         if(result.media_id) {
           let data = {
             type: "news",
             code,
             content: {
-              news_itme: news
+              news_item: news
             },
             media_id: result.media_id
           };
