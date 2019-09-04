@@ -38,7 +38,6 @@ function uploadImage(url, code) {
   return new Promise((resolve, reject) => {
     weichat_util.getClient(code).then(function(api){
       api.uploadThumbMaterial(url, function (error, result) {
-        console.log("======================third=============================")
         if(error) reject(error);
         resolve(result.media_id);
       });
