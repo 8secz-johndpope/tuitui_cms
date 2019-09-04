@@ -1,14 +1,13 @@
 const weichat_util = require('../util/get_weichat_client.js');
 var fs = require('fs');
 var request = require('request');
+var async = require("async");
 
 async function uploadNews(code, messages) {
   return new Promise(function (resolve, reject) {
-    let articles = messages.map((item, index) => {
-      let url = __dirname + '/../public/uploads/' + Date.now() + index + Math.floor(Math.random() * 10000 + 1) + 'aaa.jpg';
-      let writeStream = fs.createWriteStream(url)
-      console.log("---------item.thumb_url----------------")
-      console.log(item.thumb_url)
+    async.map(messages,async (item) =>{
+      // console.log("---------item.thumb_url----------------")
+      // console.log(item.thumb_url)
       item.thumb_media_id = await handleImage(item.thumb_url)
       return {
         "title": encodeURIComponent(item.title),
@@ -20,14 +19,17 @@ async function uploadNews(code, messages) {
         "content_source_url": encodeURIComponent(item.content_source_url),
         "need_open_comment": item.need_open_comment,
         "only_fans_can_comment": item.only_fans_can_comment
-      }
-    });
-    resolve(articles);
+      } 
+    },(err,results) => {
+      resolve(results);
+    })
   })
 }
 
 function handleImage(thumb_url){
   return new Promise((resolve,reject)=>{
+      let path = __dirname + '/../public/uploads/' + Date.now() + index + Math.floor(Math.random() * 10000 + 1) + 'aaa.jpg';
+      let writeStream = fs.createWriteStream(path)
       let readStream = request(thumb_url)
       readStream.pipe(writeStream);
       readStream.on('end', async function(response) {
