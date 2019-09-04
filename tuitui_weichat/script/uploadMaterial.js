@@ -7,17 +7,9 @@ async function uploadNews(code, messages) {
     let articles = messages.map((item, index) => {
       let url = __dirname + '/../public/uploads/' + Date.now() + index + Math.floor(Math.random() * 10000 + 1) + 'aaa.jpg';
       let writeStream = fs.createWriteStream(url)
-      let readStream = request(item.thumb_url)
-      readStream.pipe(writeStream);
-      readStream.on('end', async function(response) {
-        // console.log('文件写入成功');
-        item.thumb_media_id = await uploadImage(url, code);
-        writeStream.end();
-      });
-
-      writeStream.on("finish", function() {
-        // console.log("ok");
-      });
+      console.log("---------item.thumb_url----------------")
+      console.log(item.thumb_url)
+      item.thumb_media_id = await handleImage(item.thumb_url)
       return {
         "title": encodeURIComponent(item.title),
         "thumb_media_id": item.thumb_media_id,
@@ -31,6 +23,23 @@ async function uploadNews(code, messages) {
       }
     });
     resolve(articles);
+  })
+}
+
+function handleImage(thumb_url){
+  return new Promise((resolve,reject)=>{
+      let readStream = request(thumb_url)
+      readStream.pipe(writeStream);
+      readStream.on('end', async function(response) {
+        // console.log('文件写入成功');
+        writeStream.end();
+        let thumb_media_id = await uploadImage(url, code);
+        resolve(thumb_media_id)
+      });
+
+      writeStream.on("finish", function() {
+        // console.log("ok");
+      });
   })
 }
 
