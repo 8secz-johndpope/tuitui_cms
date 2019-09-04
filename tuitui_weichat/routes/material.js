@@ -153,7 +153,7 @@ router.get('/syncMaterial', async (req, res, next) => {
 
 function mapMaterial(codes, docs) {
   return new Promise((resolve, reject) => {
-    async.map(docs, async item => await mapCodes(codes, item.content.news_item), (err, res) => {
+    async.map(docs, item => mapCodes(codes, item.content.news_item), (err, res) => {
       console.log("====================mapMaterial-res======================", res, "====================mapMaterial-res=======================")
     })
   })
