@@ -21,6 +21,7 @@ async function uploadNews(code, messages) {
         "only_fans_can_comment": item.only_fans_can_comment
       } 
     },(err,results) => {
+      console.log(results)
       resolve(results);
     })
   })
@@ -35,7 +36,7 @@ function handleImage(thumb_url){
       readStream.on('end', async function(response) {
         // console.log('文件写入成功');
         writeStream.end();
-        let thumb_media_id = await uploadImage(url, code);
+        let thumb_media_id = await uploadImage(path, code);
         resolve(thumb_media_id)
       });
 
