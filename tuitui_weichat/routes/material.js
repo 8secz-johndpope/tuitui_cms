@@ -193,7 +193,7 @@ function uploadMaterial(code, news) {
   return Promise(async (resolve, reject) => {
     var api = await weichat_util.getClient(code);
     console.log(news, code)
-    api.uploadNewsMaterial({"articles": news}, async (err, result) => {
+    await api.uploadNewsMaterial({"articles": news}, async (err, result) => {
       if(err) {
         console.error("err", err)
         reject(err);
