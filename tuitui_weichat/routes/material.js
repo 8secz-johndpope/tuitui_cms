@@ -189,9 +189,9 @@ function mapCodes(codes, articles) {
 }
 
 
-async function uploadMaterial(code, news) {
-  var api = await weichat_util.getClient(code);
-  return Promise((resolve, reject) => {
+function uploadMaterial(code, news) {
+  return Promise(async (resolve, reject) => {
+    var api = await weichat_util.getClient(code);
     console.log(news, code)
     api.uploadNewsMaterial({"articles": news}, async (err, result) => {
       if(err) {
