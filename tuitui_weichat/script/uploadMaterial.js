@@ -10,13 +10,13 @@ async function uploadNews(code, messages) {
       let readStream = request(item.thumb_url)
       readStream.pipe(writeStream);
       readStream.on('end', async function(response) {
-        console.log('文件写入成功');
+        // console.log('文件写入成功');
         item.thumb_media_id = await uploadImage(url, code);
         writeStream.end();
       });
 
       writeStream.on("finish", function() {
-        console.log("ok");
+        // console.log("ok");
       });
       return {
         "title": encodeURIComponent(item.title),
