@@ -38,7 +38,7 @@ async function uploadNews(code, messages) {
       if(err){
         console.error(err)
       }
-      console.log(results)
+      //console.log(results)
       resolve(results);
     })
   })
