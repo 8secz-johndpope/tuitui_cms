@@ -136,9 +136,9 @@ router.get('/sendMsg', async (req, res, next) => {
   
 });
 
-router.post('/syncMaterial', async (req, res, next) => {
+router.get('/syncMaterial', async (req, res, next) => {
   let docs = await MaterialModel.find({
-    code: 10000000014,
+    code: 10000000017,
     type: 'news',
   }).sort({
     'update_time': -1
