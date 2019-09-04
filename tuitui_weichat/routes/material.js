@@ -178,7 +178,7 @@ function mapCodes(codes, articles) {
           };
           let docs = await MaterialModel.create(data);
           console.log("docs", docs, "11111111111__________")
-          resolve(docs);
+          return docs
         }
       }
     }, (err, res) => {
