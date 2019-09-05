@@ -139,6 +139,7 @@ router.get('/sendMsg', async (req, res, next) => {
 
 router.post('/syncMaterial', async (req, res, next) => {
   let { docs = [], codes = [] } = req.body;
+  console.log(docs, codes)
   if(docs.length > 0) {
     let result = await mapMaterial(codes, docs);
     res.send({code: 1, msg: "素材同步成功"})
