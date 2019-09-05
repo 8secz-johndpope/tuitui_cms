@@ -161,7 +161,7 @@ function mapCodes(codes, articles) {
     async.map(codes, async code => {
       let news = await uploadNews.uploadNews(code, articles);
       if(news.length > 0) {
-        // console.log(news, "news")
+        console.log(news, "news")
         let result = await uploadMaterial(code, news);
         console.log("result", result, "------------------result==========")
         if(result.media_id) {
@@ -208,7 +208,7 @@ async function uploadMaterial(code, news) {
   var api = await weichat_util.getClient(code);
   return new Promise((resolve, reject) => {
     console.log(news, code)
-    api.uploadNewsMaterial({"articles": news}, async (err, result) => {
+    api.uploadNewsMaterial({"articles": news}, (err, result) => {
       if(err) {
         console.error("err", err)
         reject(err);
