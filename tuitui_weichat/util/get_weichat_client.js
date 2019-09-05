@@ -4,6 +4,7 @@ var mem = require('../util/mem.js');
 
 async function getClient(code) {
     let appid = await mem.get("configure_" + code)
+    console.log(appid)
     if (!appid) {
         let conf = await ConfigModel.findOne({code: code})
         let appid = conf.appid
