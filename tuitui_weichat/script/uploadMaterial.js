@@ -6,8 +6,8 @@ var async = require("async");
 async function uploadNews(code, messages) {
   return new Promise(function (resolve, reject) {
     async.map(messages,async function(item){
-      //console.log("---------item.thumb_url----------------")
-      //console.log(item.thumb_url)
+      console.log("---------item.thumb_url----------------")
+      console.log(item.thumb_url)
       let path = await handleImage(item.thumb_url);
       item.thumb_media_id = await uploadImage(path, code);
       
@@ -28,7 +28,7 @@ async function uploadNews(code, messages) {
       if(err){
         console.error(err)
       }
-      //console.log(results)
+      console.log(results, "uploadMaterial results")
       resolve(results);
     })
   })

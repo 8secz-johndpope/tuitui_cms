@@ -181,6 +181,7 @@ function mapCodes(codes, articles) {
     }, (err, res) => {
       console.log(err)
       console.log("====================res======================", res, "====================res=======================")
+      resolve(res)
     })
     // codes.map(async code => {
     //   let news = await uploadNews.uploadNews(code, articles);
