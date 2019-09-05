@@ -4,6 +4,7 @@ var request = require('request');
 var async = require("async");
 
 async function uploadNews(code, messages) {
+  console.log(messages, "uploadMaterial messages")
   return new Promise(function (resolve, reject) {
     async.map(messages,async function(item){
       console.log("---------item.thumb_url----------------")
