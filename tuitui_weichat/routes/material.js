@@ -158,29 +158,6 @@ function mapMaterial(codes, docs) {
 
 function mapCodes(codes, articles) {
   return new Promise((resolve, reject) => {
-    // async.map(codes, async code => {
-    //   let news = await uploadNews.uploadNews(code, articles);
-    //   if(news.length > 0) {
-    //     // console.log(news, "news")
-    //     let result = await uploadMaterial(code, news);
-    //     console.log("result", result, "------------------result==========")
-    //     if(result.media_id) {
-    //       let data = {
-    //         type: "news",
-    //         code,
-    //         content: {
-    //           news_item: news
-    //         },
-    //         media_id: result.media_id
-    //       };
-    //       let docs = await MaterialModel.create(data);
-    //       console.log("docs", docs, "11111111111__________")
-    //       return docs
-    //     }
-    //   }
-    // }, (err, res) => {
-    //   console.log("====================res======================", res, "====================res=======================")
-    // })
     codes.map(async code => {
       let news = await uploadNews.uploadNews(code, articles);
       if(news.length > 0) {
@@ -192,7 +169,8 @@ function mapCodes(codes, articles) {
             content: {
               news_item: news
             },
-            media_id: result.media_id
+            media_id: result.media_id,
+            update_time: Date.now() / 1000
           };
           resolve(await MaterialModel.create(data));
         }
