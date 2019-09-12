@@ -174,31 +174,34 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     if (!code) {
         return res.send('')
     }
+
+
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    let info = await userInfo(code, message.FromUserName)
-
     let user = {}
-    if (info.sex) {
-        user = {
-            openid: message.FromUserName,
-            code: code,
-            nickname: info.nickname,
-            headimgurl: info.headimgurl,
-            sex: info.sex.toString(),
-            province: info.province,
-            city: info.city,
-            country: info.country,
-            action_time: Date.now()
-        }
-    }else{
-        user = {
-            openid: message.FromUserName,
-            code: code,
-            sex: "0",
-            action_time: Date.now()
+    let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
+    let sex = userSex.sex
+    if(sex && sex != "0"){
+        next()
+    }else {
+        let info = await userInfo(code, message.FromUserName)
+        if (info.sex) {
+            user = {
+                nickname: info.nickname,
+                headimgurl: info.headimgurl,
+                sex: info.sex.toString(),
+                province: info.province,
+                city: info.city,
+                country: info.country,
+                action_time: Date.now()
+            }
+        } else {
+            user = {
+                sex: "0",
+                action_time: Date.now()
+            }
         }
     }
     if (message.MsgType === 'event') {
