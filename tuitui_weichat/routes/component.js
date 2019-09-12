@@ -175,7 +175,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         return res.send('')
     }
 
-
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
@@ -277,6 +276,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     }
 
     reply = JSON.parse(reply)
+    console.log(reply,'-------------------------reply1')
     if (reply.type == 1) {
         res.send(reply.msg)
     } else {
@@ -294,6 +294,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 }
 
 async function replyMsg(req, res, message, content, code, openid) {
+    console.log(content,'-------------------------content')
     if (content.type == 0) {
         res.send(wxReplay.get_reply(req, content.contents[0].description, message))
     } else if (content.type == 1) {
