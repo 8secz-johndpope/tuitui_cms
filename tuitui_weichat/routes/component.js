@@ -182,7 +182,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let user = {}
     let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
     if(userSex && userSex.sex && userSex.sex != "0"){
-        next()
     }else {
         let info = await userInfo(code, message.FromUserName)
         if (info.sex) {
