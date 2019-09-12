@@ -272,7 +272,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         } else if (reply && reply.replyType == 1) {
             reply = JSON.stringify({type: 1, msg: reply.media})
         } else {
-            res.send('')
+            return res.send('')
         }
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
     }
