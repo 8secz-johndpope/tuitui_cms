@@ -13,6 +13,7 @@ var ConfigSchema = new Schema({
     refresh_token: String,
     func_info: String,
     nick_name: String,
+    head_img: String,
     qrcode_url: String,
     user_name: String,//原始id
     service_type_info_id: Number,//授权方公众号类型，0代表订阅号，1代表由历史老帐号升级后的订阅号，2代表服务号
