@@ -296,9 +296,9 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 async function replyMsg(req, res, message, content, code, openid) {
     console.log(content,'-------------------------content')
     if (content.type == 0) {
-        res.send(wxReplay.get_reply(req, content.contents[0].description, message))
+        wxReplay.get_reply(req, content.contents[0].description, message)
     } else if (content.type == 1) {
-        res.send(wxReplay.get_reply(req, content.contents, message))
+        wxReplay.get_reply(req, content.contents, message)
     }
     return
 }
