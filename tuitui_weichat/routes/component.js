@@ -267,6 +267,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         } else if (type == 3) {
             reply = await ReplyModel.findOne({code: code, type: type})
         }
+        console.log(reply,'--------------------------reply1')
         if (reply && reply.replyType == 0) {
             reply = JSON.stringify({type: 0, msg: reply.msgId})
         } else if (reply && reply.replyType == 1) {
@@ -277,6 +278,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
     }
 
+    console.log(reply,'--------------------------reply2')
     reply = JSON.parse(reply)
     if (reply.type == 1) {
         res.send(reply.msg)
