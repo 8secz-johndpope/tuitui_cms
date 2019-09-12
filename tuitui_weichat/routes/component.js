@@ -182,6 +182,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let user = {}
     let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
     if(userSex && userSex.sex && userSex.sex != "0"){
+        user = {
+            action_time: Date.now()
+        }
     }else {
         let info = await userInfo(code, message.FromUserName)
         if (info.sex) {
@@ -275,7 +278,6 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     }
 
     reply = JSON.parse(reply)
-    console.log(reply,'-------------------------reply1')
     if (reply.type == 1) {
         res.send(reply.msg)
     } else {
@@ -293,7 +295,6 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 }
 
 async function replyMsg(req, res, message, content, code, openid) {
-    console.log(content,'-------------------------content')
     if (content.type == 0) {
         res.send(wxReplay.get_reply(req, content.contents[0].description, message))
     } else if (content.type == 1) {
