@@ -182,8 +182,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let message = await componentService.handleMessage(requestMessage, query);
     let user = {}
     let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
-    let sex = userSex.sex
-    if(sex && sex != "0"){
+    if(userSex && userSex.sex && sex != "0"){
         next()
     }else {
         let info = await userInfo(code, message.FromUserName)
