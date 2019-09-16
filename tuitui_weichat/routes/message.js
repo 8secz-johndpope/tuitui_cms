@@ -84,7 +84,8 @@ router.post('/create', async(req, res, next) => {
         tagId: req.body.tagId,
         mediaId: mediaId,
         account_id,
-        remarks: req.body.remarks
+        remarks: req.body.remarks,
+        gonghaoList: req.body.gonghaoList
     };
     var docs = await MessageModel.create(message);
     if (docs) {
@@ -116,7 +117,8 @@ router.post('/update', async(req, res, next) => {
         img: req.body.img,
         tagId: req.body.tagId,
         mediaId: mediaId,
-        remarks: req.body.remarks
+        remarks: req.body.remarks,
+        gonghaoList: req.body.gonghaoList
     }
     if (parseInt(req.body.type) == 2) {
         for (let code of req.body.codes) {
