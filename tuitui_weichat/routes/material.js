@@ -154,7 +154,8 @@ router.put('/contentSourceUrl', async (req, res, next) => {
   if(result) {
     let data = await MaterialModel.findById(id);
     data.content.news_item[index] = articles;
-    console.log(data, "--------------data----------------------")
+    let docs = await MaterialModel.findByIdAndUpdate(id, data);
+    console.log(data.content.news_item[index], "--------------data----------------------")
     res.send({code: 1, msg: "原文链接修改成功"})
   } else {
     res.send({code: -1, msg: "原文链接修改失败，请重试"})
