@@ -148,11 +148,13 @@ router.post('/syncMaterial', async (req, res, next) => {
 });
 
 router.put('/contentSourceUrl', async (req, res, next) => {
-  let { media_id, index, articles, code } = req.body;
+  let { media_id, index, articles, code, id } = req.body;
   let updateInfo = { media_id, index, articles };
   let result = await updateContentSourceUrl(updateInfo, code);
-  console.log(result)
   if(result) {
+    let data = await MaterialModel.findById(id);
+    data.content.news_item[index] = articles;
+    console.log(data, "--------------data----------------------")
     res.send({code: 1, msg: "原文链接修改成功"})
   } else {
     res.send({code: -1, msg: "原文链接修改失败，请重试"})
