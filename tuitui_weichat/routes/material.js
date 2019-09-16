@@ -147,6 +147,12 @@ router.post('/syncMaterial', async (req, res, next) => {
   }
 });
 
+router.put('/contentSourceUrl', async (req, res, next) => {
+  let { media_id, index, articles } = req.body;
+  let updateInfo = { media_id, index, articles };
+  console.log(updateInfo)
+});
+
 function mapMaterial(codes, docs) {
   return new Promise((resolve, reject) => {
     async.map(docs, async item => await mapCodes(codes, item.content.news_item), (err, res) => {
