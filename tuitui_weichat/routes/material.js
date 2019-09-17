@@ -147,6 +147,22 @@ router.post('/syncMaterial', async (req, res, next) => {
   }
 });
 
+router.put('/contentSourceUrl', async (req, res, next) => {
+  let { media_id, index, articles, code, id } = req.body;
+  let updateInfo = { media_id, index, articles };
+  let result = await updateContentSourceUrl(updateInfo, code);
+  if(result) {
+    let data = await MaterialModel.findById(id);
+    data.content.news_item[index] = articles;
+    let docs = await MaterialModel.findByIdAndUpdate(id, data);
+    if(docs) {
+      res.send({code: 1, msg: "原文链接修改成功"})
+    }
+  } else {
+    res.send({code: -1, msg: "原文链接修改失败，请重试"})
+  }
+});
+
 function mapMaterial(codes, docs) {
   return new Promise((resolve, reject) => {
     async.map(docs, async item => await mapCodes(codes, item.content.news_item), (err, res) => {
@@ -191,6 +207,20 @@ async function uploadMaterial(code, news) {
         reject(err);
       }
       console.log(result, "22222222222222222222----------------------")
+      resolve(result)
+    })
+  })
+}
+
+async function updateContentSourceUrl(updateInfo, code) {
+  var api = await weichat_util.getClient(code);
+  return new Promise((resolve, reject) => {
+    api.updateNewsMaterial({...updateInfo}, (err, result) => {
+      if(err) {
+        console.error("err", err)
+        reject(err);
+      }
+      console.log(result, "-------------------------------修改原文链接---------------------")
       resolve(result)
     })
   })

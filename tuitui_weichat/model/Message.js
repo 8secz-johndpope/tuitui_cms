@@ -26,6 +26,10 @@ var MessageSchema = new Schema({
         picurl: String
     }],
     codes: [Number],
+    gonghaoList: {
+        default: [],
+        type: Array
+    },
     remarks: {
         type: String,
         default: ""
