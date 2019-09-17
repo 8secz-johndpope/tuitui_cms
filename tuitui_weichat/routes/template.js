@@ -11,7 +11,10 @@ router.get('/list', async(req, res, next) => {
         console.log(lists, '-----------------------------list')
         for (let list of lists.template_list) {
             console.log(list.content, '-----------------------------content')
-            await mem.set(code + '_' + list.template_id, list.content, 30)
+            let body = list.content.match(/\W\n\W.*\W {/g).toString()
+            body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/ /g, '')
+            console.log(body, '-----------------------------body')
+            await mem.set(code + '_' + list.template_id, body, 30)
         }
         res.send(lists)
     })
@@ -26,14 +29,14 @@ router.post('/send', async(req, res, next) => {
     let client = await wechat_util.getClient(code);
     send_template('', code, client, templateId, url, content)
     let tem = mem.get(code + '_' + templateId)
-    let body = tem.match(/\W\n\W.*\W {/g).toString()
-    body = body.replace(/\n/g,'').replace(/{/g,'').replace(/}/g,'').replace(/ /g,'')
-    let obj = {}
-    for(let i=0;i<content.length;i++){
-        obj[body[i]] = content[i]
+    let body = tem.split(',')
+    let obj = {"开始": content.first || ""}
+    for (let i = 0; i < body.length; i++) {
+        obj[body[i]] = content['keyword' + (i + 1)]
     }
-    console.log(obj,'---------------------obj')
-    await TemplateModel.create({account_id: account_id, code: code, templateId: templateId, content: obj})
+    obj['结束'] = content.remark || ""
+    console.log(obj, '---------------------obj')
+    await TemplateModel.create({account_id: account_id, code: code, templateId: templateId, url: url, content: obj})
     res.send('已发送')
 })
 
