@@ -7,8 +7,8 @@ const mem = require('../util/mem');
 router.get('/list', async(req, res, next) => {
     let code = req.query.code;
     let api = await wechat_util.getClient(code);
-    api.getAllPrivateTemplate(async function (lists) {
-        console.log(lists, '-----------------------------list')
+    api.getAllPrivateTemplate(async function (err,lists) {
+        console.log(err,lists, '-----------------------------list')
         for (let list of lists.template_list) {
             console.log(list.content, '-----------------------------content')
             let body = list.content.match(/\W\n\W.*\W {/g).toString()
