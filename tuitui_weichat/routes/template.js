@@ -7,12 +7,12 @@ const mem = require('../util/mem');
 router.get('/list', async(req, res, next) => {
     let code = req.query.code;
     let api = await wechat_util.getClient(code);
-    api.getAllPrivateTemplate(async function (err,lists) {
+    api.getAllPrivateTemplate(async function (err, lists) {
         for (let list of lists.template_list) {
             console.log(list.content, '-----------------------------content')
             let body = ''
             let reg = /\n\W.*\{/g
-            if(reg.test(list)){
+            if (reg.test(list)) {
                 body = list.content.match(/\W\n\W.*\W {/g)
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/ /g, '')
             }
@@ -34,7 +34,7 @@ router.post('/send', async(req, res, next) => {
     let body = await mem.get(code + '_' + templateId)
     body = body.split(',')
     let obj = {"开始": content.first || ""}
-    for (let i = 0; i < body.length; i++) {
+    for (let i = 0; i < body.length - 1; i++) {
         obj[body[i]] = content['keyword' + (i + 1)]
     }
     obj['结束'] = content.remark || ""
