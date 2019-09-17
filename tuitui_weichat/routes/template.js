@@ -50,3 +50,5 @@ async function send_template(openid, code, client, templateId, url, data) {
         }
     })
 }
+
+module.exports = router;
