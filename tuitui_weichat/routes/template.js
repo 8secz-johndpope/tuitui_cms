@@ -12,12 +12,12 @@ router.get('/list', async(req, res, next) => {
             console.log(list.content, '-----------------------------content')
             let body = ''
             let reg = /\n\W.*\{/g
-            if (reg.test(list)) {
+            if (reg.test(list.content)) {
                 body = list.content.match(/\W\n\W.*\W {/g)
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/ /g, '')
-                console.log(body, '-----------------------------body')
-                await mem.set(code + '_' + list.template_id, body, 30)
             }
+            console.log(body, '-----------------------------body')
+            await mem.set(code + '_' + list.template_id, body, 30)
         }
         res.send(lists)
     })
