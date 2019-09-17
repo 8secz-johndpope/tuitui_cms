@@ -12,7 +12,7 @@ router.get('/list', async(req, res, next) => {
     api.getAllPrivateTemplate(async function (lists) {
         console.log(lists, '-----------------------------list')
         for (let list of lists.template_list) {
-            await mem.set(code + '_' + list.template_id, list.content, 24 * 60 * 60)
+            await mem.set(code + '_' + list.template_id, list.content, 30)
         }
         res.send(lists)
     })
