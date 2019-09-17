@@ -13,7 +13,7 @@ router.get('/list', async(req, res, next) => {
             let body = ''
             let reg = /\n\W.*\{/g
             if (reg.test(list.content)) {
-                body = list.content.match(/\W\n\W.*\W {/g).toString()
+                body = list.content.match(/\n\W.*\{/g).toString()
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/ /g, '')
             }
             console.log(body, '-----------------------------body')
