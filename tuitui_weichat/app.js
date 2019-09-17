@@ -82,7 +82,7 @@ app.use('/history',msgHistory)
 app.use('/component',component)
 app.use('/account',account)
 app.use('/tuiguangTag',tuiguangTag)
-app.use('/template',template)
+// app.use('/template',template)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
