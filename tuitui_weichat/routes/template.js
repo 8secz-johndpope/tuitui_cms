@@ -7,8 +7,9 @@ const mem = require('../util/mem');
 router.get('/list', async(req, res, next) => {
     let code = req.params.code;
     let api = await wechat_util.getClient(code);
+    console.log(api, '-----------------------------api')
     api.getAllPrivateTemplate(async function (lists) {
-        console.log(list, '-----------------------------list')
+        console.log(lists, '-----------------------------list')
         for (let list of lists.template_list) {
             await mem.set(code + '_' + list.template_id, list.content, 24 * 60 * 60)
         }
@@ -16,17 +17,17 @@ router.get('/list', async(req, res, next) => {
     })
 })
 
-router.post('/send', async(req, res, next) => {
-    let code = req.body.code;
-    let templateId = req.body.templateId
-    let url = req.body.url
-    let content = req.body.content
-    let client = await wechat_util.getClient(code);
-    send_template('', code, client, templateId)
-    let tem = mem.get(code + '_' + templateId)
-    await TemplateModel.create({code: code, templateId: templateId}, {content: list.content})
-    res.send('已发送')
-})
+// router.post('/send', async(req, res, next) => {
+//     let code = req.body.code;
+//     let templateId = req.body.templateId
+//     let url = req.body.url
+//     let content = req.body.content
+//     let client = await wechat_util.getClient(code);
+//     send_template('', code, client, templateId)
+//     let tem = mem.get(code + '_' + templateId)
+//     await TemplateModel.create({code: code, templateId: templateId}, {content: list.content})
+//     res.send('已发送')
+// })
 
 async function send_template(openid, code, client, templateId, url, data) {
     client.getFollowers(openid, async function (err, result) {
