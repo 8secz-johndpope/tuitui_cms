@@ -15,9 +15,9 @@ router.get('/list', async(req, res, next) => {
             if (reg.test(list)) {
                 body = list.content.match(/\W\n\W.*\W {/g)
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/ /g, '')
+                console.log(body, '-----------------------------body')
+                await mem.set(code + '_' + list.template_id, body, 30)
             }
-            console.log(body, '-----------------------------body')
-            await mem.set(code + '_' + list.template_id, body, 30)
         }
         res.send(lists)
     })
@@ -30,8 +30,9 @@ router.post('/send', async(req, res, next) => {
     let url = req.body.url
     let content = req.body.content
     let client = await wechat_util.getClient(code);
-    send_template('', code, client, templateId, url, content)
+    // send_template('', code, client, templateId, url, content)
     let body = await mem.get(code + '_' + templateId)
+    console.log(body, '-----------------------------body')
     body = body.split(',')
     let obj = {"开始": content.first || ""}
     for (let i = 0; i < body.length - 1; i++) {
