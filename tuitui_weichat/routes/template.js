@@ -28,8 +28,8 @@ router.post('/send', async(req, res, next) => {
     let content = req.body.content
     let client = await wechat_util.getClient(code);
     send_template('', code, client, templateId, url, content)
-    let tem = mem.get(code + '_' + templateId)
-    let body = tem.split(',')
+    let body = await mem.get(code + '_' + templateId)
+    body = body.split(',')
     let obj = {"开始": content.first || ""}
     for (let i = 0; i < body.length; i++) {
         obj[body[i]] = content['keyword' + (i + 1)]
