@@ -5,7 +5,8 @@ const wechat_util = require('../util/get_weichat_client.js');
 const mem = require('../util/mem');
 
 router.get('/list', async(req, res, next) => {
-    let code = req.params.code;
+    let code = req.query.code;
+    console.log(code, '-----------------------------code')
     let api = await wechat_util.getClient(code);
     console.log(api, '-----------------------------api')
     api.getAllPrivateTemplate(async function (lists) {
