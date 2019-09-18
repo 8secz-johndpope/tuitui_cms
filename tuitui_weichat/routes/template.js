@@ -27,15 +27,21 @@ router.get('/list', async(req, res, next) => {
                         color: ''
                     }
                 }else{
-                    if(i.split('_')[0]=='first') {
+                    if(list.content.indexOf('first')) {
                         obj['first'] = {
-                            pre: 'first',
+                            pre: '',
                             value: '',
                             color: ''
                         }
-                    }else {
+                    }else if(list.content.indexOf('remark')){
                         obj['remark'] = {
-                            pre: 'remark',
+                            pre: '',
+                            value: '',
+                            color: ''
+                        }
+                    }else if(list.content.indexOf('content')){
+                        obj['content'] = {
+                            pre: '',
                             value: '',
                             color: ''
                         }
