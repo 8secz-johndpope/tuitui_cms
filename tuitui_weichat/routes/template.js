@@ -28,6 +28,7 @@ router.post('/send', async(req, res, next) => {
     let url = req.body.url
     let content = req.body.content
     let client = await wechat_util.getClient(code);
+    console.log(client, '-----------------------------client')
     send_template('', code, client, templateId, url, content)
     let body = await mem.get(code + '_' + templateId)
     console.log(body, '-----------------------------body')
