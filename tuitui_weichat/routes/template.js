@@ -33,13 +33,15 @@ router.get('/list', async(req, res, next) => {
                             value: '',
                             color: ''
                         }
-                    } else if (list.content.indexOf('remark') != -1) {
+                    }
+                    if (list.content.indexOf('remark') != -1) {
                         obj['remark'] = {
                             pre: '',
                             value: '',
                             color: ''
                         }
-                    } else if (list.content.indexOf('content') != -1) {
+                    }
+                    if (list.content.indexOf('content') != -1) {
                         obj['content'] = {
                             pre: '',
                             value: '',
