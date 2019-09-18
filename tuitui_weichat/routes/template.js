@@ -11,7 +11,7 @@ router.get('/list', async(req, res, next) => {
     api.getAllPrivateTemplate(async function (err, lists) {
         console.log(lists.template_list, '---------------------')
         for (let list of lists.template_list) {
-            let obj = {}
+            let obj = {template_id: list.template_id, title: title}
             let body = ''
             let reg = /\n\W.*\}/g
             if (reg.test(list.content)) {
@@ -56,8 +56,60 @@ router.get('/list', async(req, res, next) => {
     })
 })
 
+router.get('/', async(req, res, next) => {
+    let account_id = req.session.account._id;
+
+    let doc = await MsgModel.find({account_id})
+    res.send({data: doc})
+})
+
+router.post('/create', async(req, res, next) => {
+    let account_id = req.session.account._id;
+
+    let data = {
+        type: req.body.type,
+        description: req.body.description,
+        contents: req.body.contents,
+        account_id
+    }
+    let doc = await MsgModel.create(data)
+    if (doc) {
+        await mem.set("msg_" + doc.msgId, doc, 30 * 24 * 3600)
+        res.send({success: '创建成功', data: doc})
+    } else {
+        res.send({err: '创建失败'})
+    }
+})
+
+router.post('/update', async(req, res, next) => {
+    let id = req.body.id
+    let data = {
+        type: req.body.type,
+        description: req.body.description,
+        contents: req.body.contents
+    }
+    let doc = await MsgModel.findByIdAndUpdate(id, data, {new: true})
+    if (doc) {
+        await mem.set("msg_" + doc.msgId, doc, 30 * 24 * 3600)
+        res.send({success: '修改成功', data: doc})
+    } else {
+        res.send({err: '修改失败'})
+    }
+})
+
+router.get('/del', async(req, res, next) => {
+    let id = req.query.id
+    var doc = await MsgModel.findByIdAndRemove(id)
+    if (doc) {
+        await mem.set("msg_" + doc.msgId, '', 1)
+        res.send({success: '删除成功', data: doc})
+    } else {
+        res.send({err: '删除失败'})
+    }
+})
+
 router.post('/send', async(req, res, next) => {
-    // let account_id = req.session.account._id;
+    let account_id = req.session.account._id;
     let code = req.body.code;
     let templateId = req.body.templateId
     let url = req.body.url
