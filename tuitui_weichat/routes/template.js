@@ -36,7 +36,7 @@ router.post('/send', async(req, res, next) => {
     body = body.split(',')
     let obj = {"开始": content.first || ""}
     for (let i = 0; i < body.length - 1; i++) {
-        obj[body[i]] = content['keyword' + (i + 1)]
+        obj[body[i]] = content['keynote' + (i + 1)]
     }
     obj['结束'] = content.remark || ""
     console.log(obj, '---------------------obj')
