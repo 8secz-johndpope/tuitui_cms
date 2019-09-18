@@ -17,13 +17,21 @@ router.get('/list', async(req, res, next) => {
                 body = list.content.match(/\n\W.*\}/g).toString()
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/：/g, '：_').replace(/.DATA/g, '')
             }
+            console.log(list.content,'--------------------------------')
             await mem.set(code + '_' + list.template_id, body, 24 * 60 * 60)
-            console.log(body.split(','),'--------------------------------')
             for (let i of body.split(',')) {
-                obj[i.split('_')[1]] = {
-                    pre: i.split('_')[0],
-                    value: '',
-                    color: ''
+                if(i.split('_')[1]) {
+                    obj[i.split('_')[1]] = {
+                        pre: i.split('_')[0],
+                        value: '',
+                        color: ''
+                    }
+                }else{
+                    obj['first'] = {
+                        pre: i.split('_')[0],
+                        value: '',
+                        color: ''
+                    }
                 }
             }
             arr.push(obj)
