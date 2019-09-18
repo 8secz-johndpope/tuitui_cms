@@ -24,7 +24,7 @@ router.get('/list', async(req, res, next) => {
 })
 
 router.post('/send', async(req, res, next) => {
-    let account_id = req.session.account._id;
+    // let account_id = req.session.account._id;
     let code = req.body.code;
     let templateId = req.body.templateId
     let url = req.body.url
@@ -40,7 +40,7 @@ router.post('/send', async(req, res, next) => {
     }
     obj['结束'] = content.remark || ""
     console.log(obj, '---------------------obj')
-    await TemplateModel.create({account_id: account_id, code: code, templateId: templateId, url: url, content: obj})
+    await TemplateModel.create({code: code, templateId: templateId, url: url, content: obj})
     res.send('已发送')
 })
 
