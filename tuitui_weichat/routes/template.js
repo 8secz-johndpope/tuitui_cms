@@ -7,17 +7,27 @@ const mem = require('../util/mem');
 router.get('/list', async(req, res, next) => {
     let code = req.query.code;
     let api = await wechat_util.getClient(code);
+    let arr = []
     api.getAllPrivateTemplate(async function (err, lists) {
         for (let list of lists.template_list) {
+            let obj = {}
             let body = ''
             let reg = /\n\W.*\}/g
             if (reg.test(list.content)) {
                 body = list.content.match(/\n\W.*\}/g).toString()
-                body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/ /g, '').replace(/：/g, '_').replace(/.DATA/g, '')
+                body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/：/g, '：_').replace(/.DATA/g, '')
             }
             await mem.set(code + '_' + list.template_id, body, 24 * 60 * 60)
+            for (let i of body.split(',')) {
+                obj[i.split('_')[1]] = {
+                    pre: i.split('_')[0],
+                    value: '',
+                    color: ''
+                }
+            }
+            arr.push(obj)
         }
-        res.send(lists)
+        res.send(arr)
     })
 })
 
