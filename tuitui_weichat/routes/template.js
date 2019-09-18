@@ -9,6 +9,7 @@ router.get('/list', async(req, res, next) => {
     let api = await wechat_util.getClient(code);
     let arr = []
     api.getAllPrivateTemplate(async function (err, lists) {
+        console.log(lists.template_list,'---------------------')
         for (let list of lists.template_list) {
             let obj = {}
             let body = ''
@@ -26,16 +27,15 @@ router.get('/list', async(req, res, next) => {
                         color: ''
                     }
                 }else{
-                    console.log(i,i.split('_')[0],'-------------------------')
                     if(i.split('_')[0]=='first') {
                         obj['first'] = {
-                            pre: i.split('_')[0],
+                            pre: 'first',
                             value: '',
                             color: ''
                         }
                     }else {
                         obj['remark'] = {
-                            pre: i.split('_')[0],
+                            pre: 'remark',
                             value: '',
                             color: ''
                         }
