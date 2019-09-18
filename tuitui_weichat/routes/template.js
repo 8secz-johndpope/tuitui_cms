@@ -9,14 +9,12 @@ router.get('/list', async(req, res, next) => {
     let api = await wechat_util.getClient(code);
     api.getAllPrivateTemplate(async function (err, lists) {
         for (let list of lists.template_list) {
-            console.log(list.content, '-----------------------------content')
             let body = ''
             let reg = /\n\W.*\{/g
             if (reg.test(list.content)) {
                 body = list.content.match(/\n\W.*\{/g).toString()
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/ /g, '').replace(/：/g, '')
             }
-            console.log(body, '-----------------------------body')
             await mem.set(code + '_' + list.template_id, body, 24 * 60 * 60)
         }
         res.send(lists)
@@ -45,25 +43,26 @@ router.post('/send', async(req, res, next) => {
 })
 
 async function send_template(openid, code, client, templateId, url, data) {
-    client.getFollowers(openid, async function (err, result) {
-        if (err) {
-            console.log(err, '------------------send template err')
-        } else {
-            if (result.errcode) {
-                console.log(result.errcode, '------------------send template error')
-            }
-            if (result && result.data && result.data.openid) {
-                for (let sendopenid of result.data.openid) {
-                    client.sendTemplate(sendopenid, templateId, url, data, function (err, result) {
-                    })
-                }
-                send_template(result.next_openid, code, client, templateId, url, data)
-            } else {
-                console.log(code + '-------------send template end')
-                return
-            }
-        }
-    })
+    console.log(data,'-------------------------data')
+    // client.getFollowers(openid, async function (err, result) {
+    //     if (err) {
+    //         console.log(err, '------------------send template err')
+    //     } else {
+    //         if (result.errcode) {
+    //             console.log(result.errcode, '------------------send template error')
+    //         }
+    //         if (result && result.data && result.data.openid) {
+    //             for (let sendopenid of result.data.openid) {
+    //                 client.sendTemplate(sendopenid, templateId, url, data, function (err, result) {
+    //                 })
+    //             }
+    //             send_template(result.next_openid, code, client, templateId, url, data)
+    //         } else {
+    //             console.log(code + '-------------send template end')
+    //             return
+    //         }
+    //     }
+    // })
 }
 
 module.exports = router;
