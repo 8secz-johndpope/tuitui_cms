@@ -30,7 +30,7 @@ router.post('/send', async(req, res, next) => {
     let url = req.body.url
     let content = req.body.content
     let client = await wechat_util.getClient(code);
-    // send_template('', code, client, templateId, url, content)
+    send_template('', code, client, templateId, url, content)
     let body = await mem.get(code + '_' + templateId)
     console.log(body, '-----------------------------body')
     body = body.split(',')
