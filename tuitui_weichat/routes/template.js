@@ -17,7 +17,6 @@ router.get('/list', async(req, res, next) => {
                 body = list.content.match(/\n\W.*\}/g).toString()
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/：/g, '：_').replace(/.DATA/g, '')
             }
-            console.log(list.content,'--------------------------------')
             await mem.set(code + '_' + list.template_id, body, 24 * 60 * 60)
             for (let i of body.split(',')) {
                 if(i.split('_')[1]) {
@@ -27,10 +26,18 @@ router.get('/list', async(req, res, next) => {
                         color: ''
                     }
                 }else{
-                    obj['first'] = {
-                        pre: i.split('_')[0],
-                        value: '',
-                        color: ''
+                    if(i.split('_')[0]=='first') {
+                        obj['first'] = {
+                            pre: i.split('_')[0],
+                            value: '',
+                            color: ''
+                        }
+                    }else {
+                        obj['remark'] = {
+                            pre: i.split('_')[0],
+                            value: '',
+                            color: ''
+                        }
                     }
                 }
             }
