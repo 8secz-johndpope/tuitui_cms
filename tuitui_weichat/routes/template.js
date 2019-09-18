@@ -11,6 +11,7 @@ router.get('/list', async(req, res, next) => {
     let api = await wechat_util.getClient(code);
     let arr = []
     api.getAllPrivateTemplate(async function (err, lists) {
+        console.log(lists.template_list,'------------------------')
         for (let list of lists.template_list) {
             let obj = {template_id: list.template_id, title: list.title}
             let body = ''
