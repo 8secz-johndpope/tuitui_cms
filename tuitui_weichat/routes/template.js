@@ -26,6 +26,7 @@ router.get('/list', async(req, res, next) => {
                         color: ''
                     }
                 }else{
+                    console.log(i,i.split('_')[0],'-------------------------')
                     if(i.split('_')[0]=='first') {
                         obj['first'] = {
                             pre: i.split('_')[0],
