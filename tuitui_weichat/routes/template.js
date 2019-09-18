@@ -17,7 +17,7 @@ router.get('/list', async(req, res, next) => {
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/ /g, '').replace(/：/g, '')
             }
             console.log(body, '-----------------------------body')
-            await mem.set(code + '_' + list.template_id, body, 30)
+            await mem.set(code + '_' + list.template_id, body, 24 * 60 * 60)
         }
         res.send(lists)
     })
