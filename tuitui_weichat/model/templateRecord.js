@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var connect_url = require('../conf/proj.json').mongodb;
 var db = mongoose.createConnection(connect_url);
 
-var TemplateSchema = new Schema({
+var TemplateRecordSchema = new Schema({
     account_id : String,
     code : Number,
     templateId: String,
@@ -15,6 +15,6 @@ var TemplateSchema = new Schema({
     }
 });
 
-var TemplateModel = db.model('Template', TemplateSchema);
-module.exports = TemplateModel;
+var TemplateRecordModel = db.model('TemplateRecord', TemplateRecordSchema);
+module.exports = TemplateRecordModel;
 

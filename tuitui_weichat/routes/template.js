@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const TemplateModel = require('../model/template');
+const templateRecordModel = require('../model/templateRecord');
+const templateMsgModel = require('../model/templateMsg');
+const ConfigModel = require('../model/Config');
 const wechat_util = require('../util/get_weichat_client.js');
 const mem = require('../util/mem');
 
@@ -9,7 +11,6 @@ router.get('/list', async(req, res, next) => {
     let api = await wechat_util.getClient(code);
     let arr = []
     api.getAllPrivateTemplate(async function (err, lists) {
-        console.log(lists.template_list, '---------------------')
         for (let list of lists.template_list) {
             let obj = {template_id: list.template_id, title: list.title}
             let body = ''
@@ -56,57 +57,66 @@ router.get('/list', async(req, res, next) => {
     })
 })
 
-// router.get('/', async(req, res, next) => {
-//     let account_id = req.session.account._id;
-//
-//     let doc = await MsgModel.find({account_id})
-//     res.send({data: doc})
-// })
-//
-// router.post('/create', async(req, res, next) => {
-//     let account_id = req.session.account._id;
-//
-//     let data = {
-//         type: req.body.type,
-//         description: req.body.description,
-//         contents: req.body.contents,
-//         account_id
-//     }
-//     let doc = await MsgModel.create(data)
-//     if (doc) {
-//         await mem.set("msg_" + doc.msgId, doc, 30 * 24 * 3600)
-//         res.send({success: '创建成功', data: doc})
-//     } else {
-//         res.send({err: '创建失败'})
-//     }
-// })
-//
-// router.post('/update', async(req, res, next) => {
-//     let id = req.body.id
-//     let data = {
-//         type: req.body.type,
-//         description: req.body.description,
-//         contents: req.body.contents
-//     }
-//     let doc = await MsgModel.findByIdAndUpdate(id, data, {new: true})
-//     if (doc) {
-//         await mem.set("msg_" + doc.msgId, doc, 30 * 24 * 3600)
-//         res.send({success: '修改成功', data: doc})
-//     } else {
-//         res.send({err: '修改失败'})
-//     }
-// })
-//
-// router.get('/del', async(req, res, next) => {
-//     let id = req.query.id
-//     var doc = await MsgModel.findByIdAndRemove(id)
-//     if (doc) {
-//         await mem.set("msg_" + doc.msgId, '', 1)
-//         res.send({success: '删除成功', data: doc})
-//     } else {
-//         res.send({err: '删除失败'})
-//     }
-// })
+router.get('/', async(req, res, next) => {
+    let account_id = req.session.account._id;
+    let doc = await templateMsgModel.find({account_id})
+    res.send({data: doc})
+})
+
+router.post('/create', async(req, res, next) => {
+    let account_id = req.session.account._id;
+    let code = req.body.code
+    let conf = await ConfigModel.findOne({code:code})
+    let confName = conf.nick_name
+    let data = {
+        code: code,
+        confName: confName,
+        name: req.body.name,
+        templateId: req.body.templateId,
+        templateName: req.body.templateName,
+        url: req.body.url,
+        content: req.body.content,
+        account_id
+    }
+    let doc = await templateMsgModel.create(data)
+    if (doc) {
+        res.send({success: '创建成功', data: doc})
+    } else {
+        res.send({err: '创建失败'})
+    }
+})
+
+router.post('/update', async(req, res, next) => {
+    let id = req.body.id
+    let code = req.body.code
+    let conf = await ConfigModel.findOne({code:code})
+    let confName = conf.nick_name
+    let data = {
+        code: code,
+        confName: confName,
+        name: req.body.name,
+        templateId: req.body.templateId,
+        templateName: req.body.templateName,
+        url: req.body.url,
+        content: req.body.content,
+    }
+    let doc = await templateMsgModel.findByIdAndUpdate(id, data, {new: true})
+    if (doc) {
+        res.send({success: '修改成功', data: doc})
+    } else {
+        res.send({err: '修改失败'})
+    }
+})
+
+router.get('/del', async(req, res, next) => {
+    let id = req.query.id
+    var doc = await templateMsgModel.findByIdAndRemove(id)
+    if (doc) {
+        res.send({success: '删除成功', data: doc})
+    } else {
+        res.send({err: '删除失败'})
+    }
+})
 
 router.post('/send', async(req, res, next) => {
     let account_id = req.session.account._id;
@@ -125,7 +135,13 @@ router.post('/send', async(req, res, next) => {
         obj[key] = content[value].value
     }
     obj['结束'] = content.remark.value || ""
-    await TemplateModel.create({code: code, templateId: templateId, url: url, content: obj})
+    await templateRecordModel.create({
+        code: code,
+        templateId: templateId,
+        url: url,
+        content: obj,
+        account_id
+    })
     res.send('已发送')
 })
 
