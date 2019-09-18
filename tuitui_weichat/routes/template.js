@@ -18,6 +18,7 @@ router.get('/list', async(req, res, next) => {
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/：/g, '：_').replace(/.DATA/g, '')
             }
             await mem.set(code + '_' + list.template_id, body, 24 * 60 * 60)
+            console.log(body.split(','),'--------------------------------')
             for (let i of body.split(',')) {
                 obj[i.split('_')[1]] = {
                     pre: i.split('_')[0],
