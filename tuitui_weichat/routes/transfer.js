@@ -42,7 +42,7 @@ router.post('/create', async(req, res, next)=> {
     console.log(req.session.account, "req.session.account----------------------------------")
     let account_id = req.session.account._id;
     var message = {
-        id:req.body.id,
+        id:randomWord(false,10),
         title: req.body.title,
         links: req.body.links,
         type: req.body.type,
@@ -54,17 +54,17 @@ router.post('/create', async(req, res, next)=> {
         back_urls: req.body.back_urls,
         account_id
     }
-    var result = await TransferModel.find({id: message.id})
-    if(result.length !== 0) {
-      res.send({err: "创建失败，该id已存在"})
-    } else {
+    // var result = await TransferModel.find({id: message.id})
+    // if(result.length !== 0) {
+    //   res.send({err: "创建失败，该id已存在"})
+    // } else {
       var docs = await TransferModel.create(message);
       if (docs) {
           res.send({success: '成功', data: docs})
       } else {
           res.send({err: '创建失败，请检查输入是否有误'})
       }
-    }
+    //}
 })
 
 router.post('/update', async(req, res, next) => {
@@ -104,5 +104,20 @@ router.get('/delete', async(req, res, next) => {
     
 })
 
+function randomWord(randomFlag, min, max){
+    var str = "",
+        range = min,
+        arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+ 
+    // 随机产生
+    if(randomFlag){
+        range = Math.round(Math.random() * (max-min)) + min;
+    }
+    for(var i=0; i<range; i++){
+        pos = Math.round(Math.random() * (arr.length-1));
+        str += arr[pos];
+    }
+    return str;
+}
 
 module.exports = router
