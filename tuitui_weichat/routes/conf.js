@@ -31,7 +31,7 @@ router.get('/find_one', async(req, res, next) => {
     res.send({code: 1, msg: "查询成功", data: doc})
 });
 
-router.get('/unbind', async(req, res, next) => {
+router.get('/del', async(req, res, next) => {
     let id = req.query.id;
     var doc = await ConfigModel.findByIdAndRemove(id);
     if (doc) {
