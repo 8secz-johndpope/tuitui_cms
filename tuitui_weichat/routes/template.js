@@ -64,6 +64,13 @@ router.get('/', async(req, res, next) => {
     res.send({data: doc})
 })
 
+router.get('/search', async(req, res, next) => {
+    let reg = new RegExp(req.query.confName), account_id = req.session.account._id;
+    let doc = await templateMsgModel.find({confName: {$regex: reg}, account_id});
+    res.send({msg: "查询成功", data: doc})
+})
+
+
 router.post('/create', async(req, res, next) => {
     let account_id = req.session.account._id;
     let code = req.body.code
