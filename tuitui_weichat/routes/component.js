@@ -204,6 +204,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             }
         }
     }
+    console.log('--------component message------------')
+    console.log(message)
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
