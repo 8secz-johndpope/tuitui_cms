@@ -204,8 +204,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             }
         }
     }
-    console.log('--------component message------------')
-    console.log(message)
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
@@ -223,6 +221,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
+            console.log('--------component message------------')
+            console.log(message)
             user.action_type = 3;
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
         }
