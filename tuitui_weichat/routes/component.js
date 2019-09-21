@@ -274,11 +274,14 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         } else if (reply && reply.replyType == 1) {
             reply = JSON.stringify({type: 1, msg: reply.media})
         } else {
+            console.log('----匹配不到规则----')
             return res.send('')
         }
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
     }
 
+    console.log('----发送----')
+    console.log(reply)
     reply = JSON.parse(reply)
     if (reply.type == 1) {
         res.send(reply.msg)
