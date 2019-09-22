@@ -180,12 +180,12 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
     let user = {}
-    let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
-    if(userSex && userSex.sex && userSex.sex != "0"){
-        user = {
-            action_time: Date.now()
-        }
-    }else {
+    // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
+    // if(userSex && userSex.sex && userSex.sex != "0"){
+    //     user = {
+    //         action_time: Date.now()
+    //     }
+    // }else {
         let info = await userInfo(code, message.FromUserName)
         if (info.sex) {
             user = {
@@ -203,19 +203,19 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
                 action_time: Date.now()
             }
         }
-    }
+    // }
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
             user.subscribe_flag = true;
             user.action_type = 1;
             reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
-        } else if (message.Event === 'unsubscribe') {
-            user.unsubscribe_time = Date.now();
-            user.subscribe_flag = false;
+        // } else if (message.Event === 'unsubscribe') {
+        //     user.unsubscribe_time = Date.now();
+        //     user.subscribe_flag = false;
         } else if (message.Event.toLowerCase() == 'click') {
             user.action_type = 2;
-            console.loog(message,'--------------------message')
+            console.log(message,'--------------------message')
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
