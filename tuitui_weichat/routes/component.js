@@ -213,9 +213,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         // } else if (message.Event === 'unsubscribe') {
         //     user.unsubscribe_time = Date.now();
         //     user.subscribe_flag = false;
-        } else if (message.Event.toLowerCase() == 'click') {
+        } else if (message.Event.toLowerCase() == 'click' && message.EventKey) {
             user.action_type = 2;
-            console.log(message,'--------------------message')
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
