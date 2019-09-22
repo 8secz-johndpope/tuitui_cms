@@ -197,12 +197,12 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
                 country: info.country,
                 action_time: Date.now()
             }
-        } else {
-            user = {
-                sex: "0",
-                action_time: Date.now()
-            }
-        }
+        // } else {
+        //     user = {
+        //         sex: "0",
+        //         action_time: Date.now()
+        //     }
+        // }
     }
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
@@ -215,6 +215,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             user.subscribe_flag = false;
         } else if (message.Event.toLowerCase() == 'click') {
             user.action_type = 2;
+            console.log(message,'-------------------------message')
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
