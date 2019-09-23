@@ -12,10 +12,16 @@ redis_client.on("message", async function (channel, message) {
     console.log("sub channel " + channel + ": " + message);
     let appid = message;
     let token = await mem.get('access_token_' + appid)
-    let access_token = token.split('!@#')[0]
-    let expires_in = token.split('!@#')[1]
-    let saveToken = await Singleton.getInterface(appid)
-    saveToken.setToken(appid,access_token,expires_in)
+    if(token.indexOf('!@#') != -1){
+        let access_token = token.split('!@#')[0]
+        let expires_in = token.split('!@#')[1]
+        let saveToken = await Singleton.getInterface(appid)
+        saveToken.setToken(appid,access_token,expires_in)
+    }else{
+        console.log('------access_token err---------')
+        console.log(token)
+        return
+    }
 });
 
 async function subscribeAccessToken(){

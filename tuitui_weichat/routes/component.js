@@ -170,7 +170,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             await mem.set("configure_appid_" + appid, code, 30 * 24 * 3600)
         }
     }
-
     if (!code) {
         return res.send('')
     }
@@ -181,6 +180,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let message = await componentService.handleMessage(requestMessage, query);
     // console.log(message,'-------------------message')
     if(message.Event === 'unsubscribe'){
+        return res.send('')
+    }
+    if(message.Event.toLowerCase() == 'view'){
         return res.send('')
     }
     let user = {}
