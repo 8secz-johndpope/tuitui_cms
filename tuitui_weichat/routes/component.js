@@ -179,7 +179,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    console.log(message,'-------------------message')
+    // console.log(message,'-------------------message')
     if(message.Event === 'unsubscribe'){
         return res.send('')
     }
