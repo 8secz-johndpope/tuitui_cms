@@ -179,6 +179,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
+    console.log(message,'-------------------message')
     if(message.Event === 'unsubscribe'){
         return res.send('')
     }
@@ -224,8 +225,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
-            console.log('--------component message------------')
-            console.log(message)
+            // console.log('--------component message------------')
+            // console.log(message)
             user.action_type = 3;
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
         }
