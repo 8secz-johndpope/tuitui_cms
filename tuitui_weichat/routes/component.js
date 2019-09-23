@@ -180,12 +180,12 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
     let user = {}
-    let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
-    if(userSex && userSex.sex && userSex.sex != "0"){
-        user = {
-            action_time: Date.now()
-        }
-    }else {
+    // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
+    // if(userSex && userSex.sex && userSex.sex != "0"){
+    //     user = {
+    //         action_time: Date.now()
+    //     }
+    // }else {
         let info = await userInfo(code, message.FromUserName)
         if (info.sex) {
             user = {
@@ -203,17 +203,17 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
                 action_time: Date.now()
             }
         }
-    }
+    // }
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
             user.subscribe_flag = true;
             user.action_type = 1;
             reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
-        } else if (message.Event === 'unsubscribe') {
-            user.unsubscribe_time = Date.now();
-            user.subscribe_flag = false;
-        } else if (message.Event.toLowerCase() == 'click') {
+        // } else if (message.Event === 'unsubscribe') {
+        //     user.unsubscribe_time = Date.now();
+        //     user.subscribe_flag = false;
+        } else if (message.Event.toLowerCase() == 'click' && message.EventKey) {
             user.action_type = 2;
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
@@ -221,6 +221,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
+            console.log('--------component message------------')
+            console.log(message)
             user.action_type = 3;
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
         }
@@ -272,11 +274,14 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         } else if (reply && reply.replyType == 1) {
             reply = JSON.stringify({type: 1, msg: reply.media})
         } else {
+            console.log('----匹配不到规则----')
             return res.send('')
         }
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
     }
 
+    console.log('----发送----')
+    console.log(reply)
     reply = JSON.parse(reply)
     if (reply.type == 1) {
         res.send(reply.msg)
