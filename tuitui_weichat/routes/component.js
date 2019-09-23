@@ -182,9 +182,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     if(message.Event === 'unsubscribe'){
         return res.send('')
     }
-    if(message.Event.toLowerCase() == 'view'){
-        return res.send('')
-    }
+    // if(message.Event.toLowerCase() == 'view'){
+    //     return res.send('')
+    // }
     let user = {}
     // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
     // if(userSex && userSex.sex && userSex.sex != "0"){
