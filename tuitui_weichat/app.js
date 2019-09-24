@@ -14,10 +14,9 @@ easyMonitor('tuitui_cms');
 var index = require('./routes/index');
 var qr_code = require('./routes/qr_code');
 var transfer = require('./routes/transfer');
-var tag = require('./routes/tag')
+var tag = require('./routes/tag');
 var conf = require('./routes/conf');
 var menu = require('./routes/menu');
-var msg = require('./routes/msg');
 var reply = require('./routes/reply');
 var message = require('./routes/message');
 var material = require('./routes/material');
@@ -73,7 +72,6 @@ app.use('/transfer', transfer);
 app.use('/tag',tag);
 app.use('/conf',conf);
 app.use('/menu',menu);
-app.use('/msg',msg);
 app.use('/reply',reply)
 app.use('/message',message)
 app.use('/material',material)
