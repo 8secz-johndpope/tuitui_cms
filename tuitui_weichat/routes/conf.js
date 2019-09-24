@@ -76,7 +76,7 @@ router.get('/reset', async(req, res, next) => {
 
 router.get('/jieguan', async(req, res, next) => {
     let code = req.query.code
-    await ConfigModel.updata({code:code},{status:0})
+    await ConfigModel.update({code:code},{status:0})
     res.send('设置成功')
 });
 
