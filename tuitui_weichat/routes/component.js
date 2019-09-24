@@ -7,7 +7,7 @@ const ConfigModel = require("../model/Config")
 const http = require("../util/httpUtils");
 const authorizer_info = require("../util/authorizer_info")
 const ReplyModel = require('../model/Reply');
-const MsgModel = require('../model/Msg');
+// const MsgModel = require('../model/Msg');
 const mem = require('../util/mem');
 const wechat_util = require('../util/get_weichat_client')
 const wxReplay = require('../util/wxReplay')
@@ -294,7 +294,8 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     } else {
         var content = await mem.get("cms_msg_" + reply.msg);
         if (!content) {
-            let content = await MsgModel.findOne({msgId: reply.msg})
+            let content;
+            // = await MsgModel.findOne({msgId: reply.msg})
             if (content) {
                 await mem.set("cms_msg_" + reply.msg, content, 30);
                 replyMsg(req, res, message, content, code, openid)
