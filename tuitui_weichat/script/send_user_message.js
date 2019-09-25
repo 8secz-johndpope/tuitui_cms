@@ -4,12 +4,12 @@ var UserModel = require('../model/Userconf');
 var async = require('async');
 var flags = {};
 
-function get_message(id,tagId) {
+function get_message(id, tagId) {
     if (!flags[id]) {
         flags[id] = true;
         MessageModel.findById(id).exec(function (err, message) {
             if (message) {
-                send_users(null, message,tagId);
+                send_users(null, message, tagId);
             } else {
                 flags[id] = false;
                 console.log('============= 未找到信息 ==========')
@@ -20,24 +20,25 @@ function get_message(id,tagId) {
     }
 }
 
-async function send_users(user_id, message,tagId) {
-    console.log(message,'-------------------')
+async function send_users(user_id, message, tagId) {
+    console.log(message, '-------------------')
     UserModel.fetch(user_id, message.sex, message.tagId, message.codes, function (err, users) {
         console.log('-------客̀服̀消̀息̀--------')
-        console.log(users,'-----------------------users')
+        console.log(users, '-----------------------users')
         var l = []
         async.eachLimit(users, 10, function (user, callback) {
-            wechat_util.getClient(user.code).then(function(client){
-                l.push(user._id) 
+            wechat_util.getClient(user.code).then(function (client) {
+                l.push(user._id)
                 if (message.type == 0) {
                     client.sendNews(user.openid, message.contents, function (err, res) {
                         console.log(err);
-                        callback(null,null)
+                        callback(null, null)
                     });
                 } else if (message.type == 1) {
+                    let description = message.contents[0].description.replace('{{nick_name}}', user.nickname || "")
                     client.sendText(user.openid, message.contents[0].description, function (error, res) {
                         console.log(error);
-                        callback(null,null)
+                        callback(null, null)
                     })
                 } else if (message.type == 2) {
                     client.sendImage(user.openid, message.mediaId, function (error, res) {
@@ -45,7 +46,7 @@ async function send_users(user_id, message,tagId) {
                         console.log("message.mediaId", message.mediaId);
                         console.log("res", res);
                         console.log("error", error);
-                        callback(null,null)
+                        callback(null, null)
                     })
                 }
             });

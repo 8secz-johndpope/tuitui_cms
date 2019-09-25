@@ -180,18 +180,18 @@ router.get('/remove', async(req, res, next) => {
 
 router.get('/send', async(req, res, next) => {
     var id = req.query.id;
-    var take_over = req.query.take_over;
-    if (take_over) {
-        sendUser.get_message(id);
-        res.send({
-            success: '发送成功'
-        })
-    } else {
-        send.get_message(id);
-        res.send({
-            success: '发送成功'
-        })
-    }
+    // var take_over = req.query.take_over;
+    // if (take_over) {
+    sendUser.get_message(id);
+    res.send({
+        success: '发送成功'
+    })
+    // } else {
+    //     send.get_message(id);
+    //     res.send({
+    //         success: '发送成功'
+    //     })
+    // }
 })
 
 async function upload(type, img_path, codes) {
