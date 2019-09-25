@@ -7,6 +7,7 @@ async function a() {
     for(let config of configs){
         await mem.set("configure_appid_" + config.appid, 0, 1)
         await mem.set("configure_" + config.code, 0, 1)
+        console.log(config,'---------------config')
     }
 
     // var access_token = await mem.get("cms_component_access_token");
