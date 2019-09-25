@@ -1,9 +1,14 @@
 var mem = require('../util/mem.js');
+const ConfigModel = require("../model/Config")
 
 async function a() {
-    let code = process.argv.slice(2)[0]
 
-    await mem.set("jieguan_" + code, 0, 1)
+    let configs = await ConfigModel.find()
+    for(let config of configs){
+        await mem.set("configure_appid_" + config.appid, 0, 1)
+        await mem.set("configure_" + config.code, 0, 1)
+    }
+
     // var access_token = await mem.get("cms_component_access_token");
     // console.log(access_token,'------------------------------access_token')
     // await mem.set("cms_component_access_token",'',1);
