@@ -3,9 +3,9 @@ var ConfigModel = require('../model/Config');
 var mem = require('../util/mem.js');
 
 async function getClient(code) {
-    let appid = await mem.get("configure_" + code)
-    // let appid = ""
     try{
+        let appid = await mem.get("configure_" + code)
+        // let appid = ""
         if (!appid) {
             let conf = await ConfigModel.findOne({code: code})
             appid = conf.appid
