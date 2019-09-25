@@ -36,7 +36,7 @@ async function send_users(user_id, message, tagId) {
                     });
                 } else if (message.type == 1) {
                     let description = message.contents[0].description.replace('{{nick_name}}', user.nickname || "")
-                    client.sendText(user.openid, message.contents[0].description, function (error, res) {
+                    client.sendText(user.openid, description, function (error, res) {
                         console.log(error);
                         callback(null, null)
                     })
