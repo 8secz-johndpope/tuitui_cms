@@ -33,7 +33,7 @@ router.get('/', async(req, res, next) => {
 router.post('/create', async(req, res, next) => {
     let account_id = req.session.account._id;
     const {codes, type, text = "", key = "", sex, attribute, replyType, content = "", articles = []} = req.body;
-    let data = {codes, type, text, key, url, showUrl, sex, attribute, replyType, content, articles, account_id};
+    let data = {codes, type, text, key, sex, attribute, replyType, content, articles, account_id};
     let doc = await ReplyModel.create(data);
     if (doc) {
         // await setMem1(doc);
