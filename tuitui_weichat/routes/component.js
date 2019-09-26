@@ -192,23 +192,23 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //         action_time: Date.now()
     //     }
     // }else {
-        let info = await userInfo(code, message.FromUserName)
-        if (info && info.sex) {
-            user = {
-                nickname: info.nickname,
-                headimgurl: info.headimgurl,
-                sex: info.sex.toString(),
-                province: info.province,
-                city: info.city,
-                country: info.country,
-                action_time: Date.now()
-            }
-        } else {
-            user = {
-                sex: "0",
-                action_time: Date.now()
-            }
-        }
+    //     let info = await userInfo(code, message.FromUserName)
+    //     if (info && info.sex) {
+    //         user = {
+    //             nickname: info.nickname,
+    //             headimgurl: info.headimgurl,
+    //             sex: info.sex.toString(),
+    //             province: info.province,
+    //             city: info.city,
+    //             country: info.country,
+    //             action_time: Date.now()
+    //         }
+    //     } else {
+    //         user = {
+    //             sex: "0",
+    //             action_time: Date.now()
+    //         }
+    //     }
     // }
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
