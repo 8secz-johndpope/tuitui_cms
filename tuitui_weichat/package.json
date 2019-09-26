@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "alipay-mobile": "^2.2.6",
+    "amqplib": "^0.5.5",
     "async": "~2.6.0",
     "async-redis": "^1.1.7",
     "body-parser": "^1.18.3",

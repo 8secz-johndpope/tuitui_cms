@@ -14,6 +14,31 @@ const wxReplay = require('../util/wxReplay')
 const asyncRedis = require("async-redis");
 const redis_client = asyncRedis.createClient();
 
+
+/**
+  消息队列
+*/
+const q = 'user_tasks';
+const amqplib = require('amqplib');
+let ch;
+getChannel();
+async function getChannel(){
+    console.log('----- getChannel ----')
+    try{
+        let conn = await amqplib.connect('amqp://localhost')
+        ch = await conn.createChannel();
+        //sendMQ('openid,code')
+    }catch(e){
+        console.log(e)
+    }
+}
+
+async function sendMQ(msg){
+    await ch.assertQueue(q);
+    ch.sendToQueue(q, Buffer.from(msg)); 
+    console.log('用户信息放到队列中')
+}
+
 var xml_msg = async function (req, res, next) {
     if (req.method == 'POST' && req.is('text/xml')) {
         let promise = new Promise(function (resolve, reject) {
