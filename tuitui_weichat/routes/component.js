@@ -238,7 +238,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
 })
 
 async function userInfo(code, openid) {
-    console.log(code,'-------------------------code')
+    // console.log(code,'-------------------------code')
     let api = await wechat_util.getClient(code);
     return new Promise((resolve, reject) => {
         api.getUser(openid, function (err, info) {

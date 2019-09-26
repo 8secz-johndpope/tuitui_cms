@@ -8,7 +8,7 @@ async function getClient(code) {
         // let appid = ""
         if (!appid) {
             let conf = await ConfigModel.findOne({code: code})
-            console.log(code,conf,'--------------------------conf')
+            // console.log(code,conf,'--------------------------conf')
             appid = conf.appid
             await mem.set("configure_" + code, appid, 60)
         }
