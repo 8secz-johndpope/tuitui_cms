@@ -193,7 +193,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //     }
     // }else {
         let info = await userInfo(code, message.FromUserName)
-        if (info.sex) {
+        if (info && info.sex) {
             user = {
                 nickname: info.nickname,
                 headimgurl: info.headimgurl,
