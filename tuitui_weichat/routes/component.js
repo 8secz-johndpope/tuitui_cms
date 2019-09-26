@@ -179,13 +179,13 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
     // console.log(message,'-------------------message')
-    if(message.Event === 'unsubscribe'){
+    if (message.Event === 'unsubscribe') {
         return res.send('')
     }
     // if(message.Event.toLowerCase() == 'view'){
     //     return res.send('')
     // }
-    let user = {openid: message.FromUserName, code: code,action_time: Date.now()}
+    let user = {openid: message.FromUserName, code: code, action_time: Date.now(), sex: '0'}
     // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
     // if(userSex && userSex.sex && userSex.sex != "0"){
     //     user = {
@@ -216,9 +216,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             user.subscribe_flag = true;
             user.action_type = 1;
             reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
-        // } else if (message.Event === 'unsubscribe') {
-        //     user.unsubscribe_time = Date.now();
-        //     user.subscribe_flag = false;
+            // } else if (message.Event === 'unsubscribe') {
+            //     user.unsubscribe_time = Date.now();
+            //     user.subscribe_flag = false;
         } else if (message.Event.toLowerCase() == 'click') {
             user.action_type = 2;
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
