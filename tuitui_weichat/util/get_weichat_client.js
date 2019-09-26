@@ -3,7 +3,7 @@ var ConfigModel = require('../model/Config');
 var mem = require('../util/mem.js');
 
 async function getClient(code) {
-    try{
+    try {
         let appid = await mem.get("configure_" + code)
         // let appid = ""
         if (!appid) {
@@ -15,8 +15,8 @@ async function getClient(code) {
         let api = await Singleton.getInterface(appid)
         // console.log(api.api, '----------------------api')
         return api.api;
-    }catch(e){
-        console.log(e,'-----------------------api exception')
+    } catch (e) {
+        console.log(e, '-----------------------api exception')
     }
 }
 
@@ -30,9 +30,13 @@ class Singleton {
         if (!Singleton[appid]) {
             Singleton[appid] = new Singleton(appid)
             let token = await mem.get('access_token_' + appid)
-            console.log(token, '======================================')
-            let access_token = token.split('!@#')[0]
-            let expires_in = token.split('!@#')[1]
+            console.log(token, appid, '======================================')
+            let access_token = ""
+            let expires_in = ""
+            if(token){
+                access_token = token.split('!@#')[0]
+                expires_in = token.split('!@#')[1]
+            }
             Singleton[appid].setToken(appid, access_token, expires_in)
         }
         return Singleton[appid];
