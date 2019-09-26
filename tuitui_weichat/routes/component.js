@@ -204,10 +204,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //             action_time: Date.now()
     //         }
     //     } else {
-    //         user = {
-    //             sex: "0",
-    //             action_time: Date.now()
-    //         }
+            user = {
+                sex: "0",
+                action_time: Date.now()
+            }
     //     }
     // }
     if (message.MsgType === 'event') {
