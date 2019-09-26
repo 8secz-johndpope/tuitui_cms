@@ -185,7 +185,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     // if(message.Event.toLowerCase() == 'view'){
     //     return res.send('')
     // }
-    let user = {}
+    let user = {openid: message.FromUserName, code: code,action_time: Date.now()}
     // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
     // if(userSex && userSex.sex && userSex.sex != "0"){
     //     user = {
@@ -204,10 +204,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //             action_time: Date.now()
     //         }
     //     } else {
-            user = {
-                sex: "0",
-                action_time: Date.now()
-            }
+    //         user = {
+    //             sex: "0",
+    //             action_time: Date.now()
+    //         }
     //     }
     // }
     if (message.MsgType === 'event') {
