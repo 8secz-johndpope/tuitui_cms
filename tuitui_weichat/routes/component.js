@@ -36,7 +36,7 @@ async function getChannel(){
 async function sendMQ(msg){
     await ch.assertQueue(q);
     ch.sendToQueue(q, Buffer.from(msg)); 
-    console.log('用户信息放到队列中')
+    //console.log('用户信息放到队列中')
 }
 
 var xml_msg = async function (req, res, next) {
