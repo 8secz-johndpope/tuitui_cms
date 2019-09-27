@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var MessageModel = require('../model/Message');
 var ConfigModel = require('../model/Config');
+var UserModel = require('../model/Userconf');
 var send = require('../script/send_message');
 var sendUser = require('../script/send_user_message');
 var wechat_util = require('../util/get_weichat_client.js')
@@ -196,6 +197,7 @@ router.get('/send', async(req, res, next) => {
 
 router.post('/preview', async (req, res, next) => {
     let {codes, openid, type, contents, img_path} = req.body;
+    let user = await UserModel.findOne({openid:openid},{nickname:1,openid:1})
     for (let code of codes) {
         let client = await wechat_util.getClient(code);
         type === 0 && client.sendNews(openid, contents, async function (error, result) {
@@ -203,7 +205,7 @@ router.post('/preview', async (req, res, next) => {
             console.log("result", result, "----------图文-------------")
             res.send({code: 1, msg: "发送成功"})
         });
-        type === 1 && client.sendText(openid, contents[0].description, async (error, result) => {
+        type === 1 && client.sendText(openid, contents[0].description.replace('{{nickname}}',user.nickname), async (error, result) => {
             console.log("error", error, "-----------文本------------")
             console.log("result", result, "----------文本-------------")
             res.send({code: 1, msg: "发送成功"})
