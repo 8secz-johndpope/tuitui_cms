@@ -36,7 +36,9 @@ async function send_users(user_id, message, tagId) {
                     });
                 } else if (message.type == 1) {
                     let description = message.contents[0].description.replace('{{nick_name}}', user.nickname || "")
+                    console.log('客服消息发送给------',user.openid)
                     client.sendText(user.openid, description, function (error, res) {
+                        console.log('-----发送客服消息 error----')
                         console.log(error);
                         console.log('-----发送客服消息 res----')
                         console.log(res);
