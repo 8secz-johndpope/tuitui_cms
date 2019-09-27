@@ -76,7 +76,7 @@ router.post('/create', async(req, res, next) => {
         action_type: req.body.action_type,
         task: req.body.task,
         is_timing: req.body.is_timing,
-        delay: req.body.delay,
+        delay: req.body.isHour ? req.body.delay * 60 : req.body.delay,
         timing_time: req.body.timing_time,
         type: parseInt(req.body.type),
         contents: req.body.contents,
@@ -87,6 +87,7 @@ router.post('/create', async(req, res, next) => {
         remarks: req.body.remarks,
         gonghaoList: req.body.gonghaoList
     };
+    console.log(message.delay)
     var docs = await MessageModel.create(message);
     if (docs) {
         res.send({
