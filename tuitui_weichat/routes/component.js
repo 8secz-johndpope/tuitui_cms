@@ -287,19 +287,17 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 
         if (type == 0) {
             console.log(new Date(), "lixin0", param)
-            let aa = await ReplyModel.find({codes: {$elemMatch: {$eq: code}}})
-console.log(aa, "------------------lixin-----------------aa------------------")
             reply = await ReplyModel.findOne({
                 $or: [
-                    {code: code, type: type, text: param},
-                    {code: code, type: 4}
+                    {codes: {$elemMatch: {$eq: code}}, type: type, text: param},
+                    {codes: {$elemMatch: {$eq: code}}, type: 4}
                 ]
             }).sort({type: 1})
             console.log(reply, "----------------lixin------------------")
         } else if (type == 1) {
             console.log(new Date(), "lixin1")
 
-            reply = await ReplyModel.findOne({code: code, type: type, key: param})
+            reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type, key: param})
         } else if (type == 2) {
             console.log(new Date(), "lixin2")
 
@@ -307,12 +305,12 @@ console.log(aa, "------------------lixin-----------------aa------------------")
                 $or: [
                     {sex: sex},
                     {sex: 3}
-                ], code: code, type: type
+                ], codes: {$elemMatch: {$eq: code}}, type: type
             })
         } else if (type == 3) {
             console.log(new Date(), "lixin3")
 
-            reply = await ReplyModel.findOne({code: code, type: type})
+            reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type})
         }
         if (reply && reply.replyType == 0) {
             reply = JSON.stringify({type: 0, content: reply.content})
