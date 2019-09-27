@@ -317,6 +317,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     console.log(reply)
     reply = JSON.parse(reply)
     if (reply.type == 1) {
+        await mem.set("cms_articles_" + reply.articles[0]._id, "",30);
         var articles = await mem.get("cms_articles_" + reply.articles[0]._id);
         if (!articles) {
             let articles = reply.articles;
