@@ -283,24 +283,16 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     }
     var reply = await mem.get("cms_reply_" + code + "_" + param);
     if (!reply) {
-        console.log(new Date(), "lixin")
-
         if (type == 0) {
-            console.log(new Date(), "lixin0", param)
             reply = await ReplyModel.findOne({
                 $or: [
                     {codes: {$elemMatch: {$eq: code}}, type: type, text: param},
                     {codes: {$elemMatch: {$eq: code}}, type: 4}
                 ]
             }).sort({type: 1})
-            console.log(reply, "----------------lixin------------------")
         } else if (type == 1) {
-            console.log(new Date(), "lixin1")
-
             reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type, key: param})
         } else if (type == 2) {
-            console.log(new Date(), "lixin2")
-
             reply = await ReplyModel.findOne({
                 $or: [
                     {sex: sex},
@@ -308,8 +300,6 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 ], codes: {$elemMatch: {$eq: code}}, type: type
             })
         } else if (type == 3) {
-            console.log(new Date(), "lixin3")
-
             reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type})
         }
         if (reply && reply.replyType == 0) {
