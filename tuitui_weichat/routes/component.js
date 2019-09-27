@@ -320,14 +320,12 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         var articles = await mem.get("cms_articles_" + JSON.stringify({articles: reply.articles}));
         if (!articles) {
             let articles = reply.articles;
-            console.log(articles, "111111111111111-----------------------------1111111111111111111111")
             if (articles.length > 0) {
                 await mem.set("cms_articles_" + JSON.stringify({articles}), JSON.stringify({articles}),30);
                 replyMsg(req, res, message, articles, code, openid)
             }
         } else {
             articles = JSON.parse(articles).articles;
-            console.log(articles, "2222222-----------------------------222222222222222")
             replyMsg(req, res, message, articles, code, openid)
         }
     } else {
@@ -345,6 +343,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 }
 
 async function replyMsg(req, res, message, content, code, openid) {
+    console.log(content, "lixin---------------")
     res.send(wxReplay.get_reply(req, content, message))
     return
 }
