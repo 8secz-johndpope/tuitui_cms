@@ -203,7 +203,7 @@ router.post('/preview', async (req, res, next) => {
             console.log("result", result, "----------图文-------------")
             res.send({code: 1, msg: "发送成功"})
         });
-        type === 1 && client.sendText(openid, contents[0].description.replace('{{nick_name}}', user.nickname || ""), async (err, result) => {
+        type === 1 && client.sendText(openid, contents[0].description.replace('{{nick_name}}', user.nickname || ""), async (error, result) => {
             console.log("error", error, "-----------文本------------")
             console.log("result", result, "----------文本-------------")
             res.send({code: 1, msg: "发送成功"})
@@ -211,7 +211,7 @@ router.post('/preview', async (req, res, next) => {
         if(type === 2) {
             var ab_img = __dirname + '/../' + img_path;
             var mediaId = await upload(parseInt(req.body.type), ab_img, codes)
-            client.sendImage(openid, mediaId, async (err, result) => {
+            client.sendImage(openid, mediaId, async (error, result) => {
                 console.log("error", error, "-----------图片------------")
                 console.log("result", result, "----------图片-------------")
                 res.send({code: 1, msg: "发送成功"})
