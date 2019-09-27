@@ -254,8 +254,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         } else if(message.Content == 'openid'){
             res.send(wxReplay.get_reply(req,message.FromUserName,message))
         }else {
-            // console.log('--------component message------------')
-            // console.log(message)
+            console.log('--------component message------------')
+            console.log(message)
             user.action_type = 3;
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
         }
@@ -275,7 +275,6 @@ async function userInfo(code, openid) {
 }
 
 async function reply(req, res, message, code, type, param, openid, sex) {
-    console.log(new Date(), "lixin")
     if (sex == 0) {
         let info = await ReplyModel.findOne({code: code})
         if (info && info.attribute) {
@@ -284,7 +283,11 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     }
     var reply = await mem.get("cms_reply_" + code + "_" + param);
     if (!reply) {
+        console.log(new Date(), "lixin")
+
         if (type == 0) {
+            console.log(new Date(), "lixin0")
+
             reply = await ReplyModel.findOne({
                 $or: [
                     {code: code, type: type, text: param},
@@ -292,8 +295,12 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 ]
             }).sort({type: 1})
         } else if (type == 1) {
+            console.log(new Date(), "lixin0")
+
             reply = await ReplyModel.findOne({code: code, type: type, key: param})
         } else if (type == 2) {
+            console.log(new Date(), "lixin0")
+
             reply = await ReplyModel.findOne({
                 $or: [
                     {sex: sex},
