@@ -316,9 +316,6 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             reply = JSON.stringify({type: 0, content: reply.content})
         } else if (reply && reply.replyType == 1) {
             reply = JSON.stringify({type: 1, articles: reply.articles})
-        } else {
-            console.log('----匹配不到规则----')
-            return res.send('')
         }
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
     }
