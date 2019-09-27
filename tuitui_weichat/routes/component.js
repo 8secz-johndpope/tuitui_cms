@@ -251,7 +251,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     } else if (message.MsgType === 'text') {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
-        } else {
+        } else if(message.Content == 'openid'){
+            res.send(wxReplay.get_reply(req,message.FromUserName))
+        }else {
             // console.log('--------component message------------')
             // console.log(message)
             user.action_type = 3;
