@@ -26,6 +26,7 @@ async function send_users(user_id, message, tagId) {
         console.log('-------客̀服̀消̀息̀--------')
         //console.log(users, '-----------------------users')
         var l = []
+        //eachLimit 并行发送有些问题
         async.eachSeries(users,function (user, callback) {
             wechat_util.getClient(user.code).then(function (client) {
                 l.push(user._id)
