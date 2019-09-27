@@ -288,7 +288,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         if (type == 0) {
             console.log(new Date(), "lixin0", param)
             let aa = await ReplyModel.find({account_id: req.session.account._id})
-
+console.log(aa, "------------------lixin-----------------aa------------------")
             reply = await ReplyModel.findOne({
                 $or: [
                     {code: code, type: type, text: param},
