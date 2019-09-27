@@ -98,7 +98,6 @@ module.exports.queryAuthorizeInfo = async (account_id,auth_code) => {
     let appid = authorization_info.authorizer_appid;
     let authorizer_access_token = authorization_info.authorizer_access_token;
     let expires_in = authorization_info.expires_in;
-    await mem.set('access_token_' + appid, authorizer_access_token + '!@#' + expires_in, 2 * 60 * 60)
     let refresh_token = authorization_info.authorizer_refresh_token;
     let func_info = JSON.stringify(authorization_info.func_info);
     let conf = await ConfigModel.findOne({"appid":appid})
