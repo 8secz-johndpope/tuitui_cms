@@ -11,7 +11,10 @@ var MessageSchema = new Schema({
     action_type: {type: Number, default: 0},
     img: String,
     url: String,
-
+    isHour: { // 0 分钟 1 小时
+        type: Number,
+        default: 0
+    },
     title: String,
     delay: Number,
     des: String,
