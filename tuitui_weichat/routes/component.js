@@ -286,7 +286,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         console.log(new Date(), "lixin")
 
         if (type == 0) {
-            console.log(new Date(), "lixin0")
+            console.log(new Date(), "lixin0", param)
 
             reply = await ReplyModel.findOne({
                 $or: [
