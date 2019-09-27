@@ -254,8 +254,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         } else if(message.Content == 'openid'){
             res.send(wxReplay.get_reply(req,message.FromUserName,message))
         }else {
-            console.log('--------component message------------')
-            console.log(message)
+            // console.log('--------component message------------')
+            // console.log(message)
             user.action_type = 3;
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
         }
@@ -294,6 +294,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                     {code: code, type: 4}
                 ]
             }).sort({type: 1})
+            console.log(reply, "----------------lixin------------------")
         } else if (type == 1) {
             console.log(new Date(), "lixin1")
 
@@ -312,7 +313,6 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 
             reply = await ReplyModel.findOne({code: code, type: type})
         }
-    console.log(reply, "----------------lixin------------------")
         if (reply && reply.replyType == 0) {
             reply = JSON.stringify({type: 0, content: reply.content})
         } else if (reply && reply.replyType == 1) {
