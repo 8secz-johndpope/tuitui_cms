@@ -32,8 +32,8 @@ router.get('/', async(req, res, next) => {
 
 router.post('/create', async(req, res, next) => {
     let account_id = req.session.account._id;
-    const {codes, type, text = "", key = "", sex, attribute, replyType, content = "", articles = []} = req.body;
-    let data = {codes, type, text, key, sex, attribute, replyType, content, articles, account_id};
+    const {codes, type, text = "", key = "", sex, attribute, replyType, content = "", articles = [], name} = req.body;
+    let data = {codes, type, text, key, sex, attribute, replyType, content, articles, account_id, name};
     let doc = await ReplyModel.create(data);
     if (doc) {
         // await setMem1(doc);
@@ -44,8 +44,8 @@ router.post('/create', async(req, res, next) => {
 });
 
 router.post('/update', async(req, res, next) => {
-    const {codes, type, text = "", key = "", url = "", showUrl = "", sex, attribute, replyType, content = "", articles = [], _id} = req.body;
-    let data = {codes, type, text, key, sex, attribute, replyType, content, articles};
+    const {codes, type, text = "", key = "", url = "", showUrl = "", sex, attribute, replyType, content = "", articles = [], _id, name} = req.body;
+    let data = {codes, type, text, key, sex, attribute, replyType, content, articles, name};
     let doc = await ReplyModel.findByIdAndUpdate(_id, data, {new: true});
     if (doc) {
         // await setMem (doc);
