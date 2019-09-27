@@ -275,6 +275,7 @@ async function userInfo(code, openid) {
 }
 
 async function reply(req, res, message, code, type, param, openid, sex) {
+    console.log(new Date(), "lixin")
     if (sex == 0) {
         let info = await ReplyModel.findOne({code: code})
         if (info && info.attribute) {
