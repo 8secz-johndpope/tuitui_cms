@@ -322,7 +322,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             let articles = reply.articles;
             console.log(articles, "111111111111111-----------------------------1111111111111111111111")
             if (articles.length > 0) {
-                await mem.set("cms_content_" + JSON.stringify({articles: reply.articles}), JSON.stringify({articles}), 30);
+                await mem.set("cms_content_" + JSON.stringify({articles: reply.articles}), JSON.stringify({articles}), 30000);
                 replyMsg(req, res, message, articles, code, openid)
             }
         } else {
