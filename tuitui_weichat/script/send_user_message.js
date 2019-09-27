@@ -24,7 +24,7 @@ async function send_users(user_id, message, tagId) {
     console.log(message, '-------------------')
     UserModel.fetch(user_id, message.sex, message.tagId, message.codes, function (err, users) {
         console.log('-------客̀服̀消̀息̀--------')
-        console.log(users, '-----------------------users')
+        //console.log(users, '-----------------------users')
         var l = []
         async.eachLimit(users, 10, function (user, callback) {
             wechat_util.getClient(user.code).then(function (client) {
@@ -38,6 +38,8 @@ async function send_users(user_id, message, tagId) {
                     let description = message.contents[0].description.replace('{{nick_name}}', user.nickname || "")
                     client.sendText(user.openid, description, function (error, res) {
                         console.log(error);
+                        console.log('-----发送客服消息 res----')
+                        console.log(res);
                         callback(null, null)
                     })
                 } else if (message.type == 2) {
