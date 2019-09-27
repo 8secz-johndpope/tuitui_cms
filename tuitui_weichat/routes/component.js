@@ -320,6 +320,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         var articles = await mem.get("cms_articles_" + reply.articles);
         if (!articles) {
             let articles = reply.articles;
+            console.log(articles, "111111111111111-----------------------------1111111111111111111111")
             if (content) {
                 await mem.set("cms_content_" + reply.content, articles.toString(), 30);
                 replyMsg(req, res, message, articles, code, openid)
