@@ -303,9 +303,9 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             reply = await ReplyModel.findOne({code: code, type: type})
         }
         if (reply && reply.replyType == 0) {
-            reply = JSON.stringify({type: 0, msg: reply.msgId})
+            reply = JSON.stringify({type: 0, content: reply.content})
         } else if (reply && reply.replyType == 1) {
-            reply = JSON.stringify({type: 1, msg: reply.media})
+            reply = JSON.stringify({type: 1, articles: reply.articles})
         } else {
             console.log('----匹配不到规则----')
             return res.send('')
@@ -317,14 +317,14 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     console.log(reply)
     reply = JSON.parse(reply)
     if (reply.type == 1) {
+
         res.send(reply.msg)
     } else {
-        var content = await mem.get("cms_msg_" + reply.msg);
+        var content = await mem.get("cms_content_" + reply.content);
         if (!content) {
-            let content;
-            // = await MsgModel.findOne({msgId: reply.msg})
+            let content = reply.content;
             if (content) {
-                await mem.set("cms_msg_" + reply.msg, content, 30);
+                await mem.set("cms_content_" + reply.content, content, 30);
                 replyMsg(req, res, message, content, code, openid)
             }
         } else {
