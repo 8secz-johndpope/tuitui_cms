@@ -295,11 +295,11 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 ]
             }).sort({type: 1})
         } else if (type == 1) {
-            console.log(new Date(), "lixin0")
+            console.log(new Date(), "lixin1")
 
             reply = await ReplyModel.findOne({code: code, type: type, key: param})
         } else if (type == 2) {
-            console.log(new Date(), "lixin0")
+            console.log(new Date(), "lixin2")
 
             reply = await ReplyModel.findOne({
                 $or: [
@@ -308,8 +308,11 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 ], code: code, type: type
             })
         } else if (type == 3) {
+            console.log(new Date(), "lixin3")
+
             reply = await ReplyModel.findOne({code: code, type: type})
         }
+    console.log(reply, "----------------lixin------------------")
         if (reply && reply.replyType == 0) {
             reply = JSON.stringify({type: 0, content: reply.content})
         } else if (reply && reply.replyType == 1) {
