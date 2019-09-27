@@ -197,9 +197,8 @@ router.get('/send', async(req, res, next) => {
 
 router.post('/preview', async (req, res, next) => {
     let {codes, openid, type, contents, img_path} = req.body;
-    let user = await UserModel.find({openid:openid},{nickname:1,openid:1}).sort({updateAt:-1}).limit(1)[0]
-    console.log('---user----')
-    console.log(user)
+    let users = await UserModel.find({openid:openid},{nickname:1,openid:1}).sort({updateAt:-1}).limit(1)
+    let user = users[0]
     for (let code of codes) {
         let client = await wechat_util.getClient(code);
         type === 0 && client.sendNews(openid, contents, async function (error, result) {
