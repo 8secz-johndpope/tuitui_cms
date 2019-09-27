@@ -194,6 +194,29 @@ router.get('/send', async(req, res, next) => {
     // }
 })
 
+router.post('/preview', async (req, res, next) => {
+    let {codes, openid, type, contents, img_path} = req.body;
+    for (let code of codes) {
+        let client = await wechat_util.getClient(code);
+        type === 0 && client.sendNews(openid, contents, async function (error, result) {
+            console.log("error", error, "----------图文-------------")
+            console.log("result", result, "----------图文-------------")
+        });
+        type === 1 && client.sendText(openid, contents[0].description.replace('{{nick_name}}', user.nickname || ""), async (err, result) => {
+            console.log("error", error, "-----------文本------------")
+            console.log("result", result, "----------文本-------------")
+        });
+        if(type === 2) {
+            var ab_img = __dirname + '/../' + img_path;
+            var mediaId = await upload(parseInt(req.body.type), ab_img, codes)
+            client.sendImage(openid, mediaId, async (err, result) => {
+                console.log("error", error, "-----------图片------------")
+                console.log("result", result, "----------图片-------------")
+            })
+        }
+    }
+});
+
 async function upload(type, img_path, codes) {
     if (type == 2) {
         for (let code of codes) {
