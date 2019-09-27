@@ -1,5 +1,5 @@
 const UserconfModel = require("../model/Userconf")
-const wechat_util = require('./get_weichat_client')
+const wechat_util = require('../util/get_weichat_client')
 
 /**
   消息队列
