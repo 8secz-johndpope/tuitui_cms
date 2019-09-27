@@ -286,28 +286,28 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         if (type == 0) {
             reply = await ReplyModel.findOne({
                 $or: [
-                    {code: code, type: type, text: param},
-                    {code: code, type: 4}
+                    {codes: {$elemMatch: {$eq: code}}, type: type, text: param},
+                    {codes: {$elemMatch: {$eq: code}}, type: 4}
                 ]
             }).sort({type: 1})
         } else if (type == 1) {
-            reply = await ReplyModel.findOne({code: code, type: type, key: param})
+            reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type, key: param})
         } else if (type == 2) {
             reply = await ReplyModel.findOne({
                 $or: [
                     {sex: sex},
                     {sex: 3}
-                ], code: code, type: type
+                ], codes: {$elemMatch: {$eq: code}}, type: type
             })
         } else if (type == 3) {
-            reply = await ReplyModel.findOne({code: code, type: type})
+            reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type})
         }
         if (reply && reply.replyType == 0) {
             reply = JSON.stringify({type: 0, content: reply.content})
         } else if (reply && reply.replyType == 1) {
             reply = JSON.stringify({type: 1, articles: reply.articles})
         } else {
-            console.log('----匹配不到规则----')
+            // console.log('----匹配不到规则----')
             return res.send('')
         }
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
@@ -317,8 +317,19 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     console.log(reply)
     reply = JSON.parse(reply)
     if (reply.type == 1) {
-
-        res.send(reply.msg)
+        var articles = await mem.get("cms_articles_" + JSON.stringify({articles: reply.articles}));
+        if (!articles) {
+            let articles = reply.articles;
+            console.log(articles, "111111111111111-----------------------------1111111111111111111111")
+            if (articles.length > 0) {
+                await mem.set("cms_content_" + JSON.stringify({articles: reply.articles}), JSON.stringify({articles}), 30);
+                replyMsg(req, res, message, articles, code, openid)
+            }
+        } else {
+            articles = JSON.parse(articles).articles;
+            console.log(articles, "2222222-----------------------------222222222222222")
+            replyMsg(req, res, message, articles, code, openid)
+        }
     } else {
         var content = await mem.get("cms_content_" + reply.content);
         if (!content) {
@@ -334,11 +345,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 }
 
 async function replyMsg(req, res, message, content, code, openid) {
-    if (content.type == 0) {
-        res.send(wxReplay.get_reply(req, content.contents[0].description, message))
-    } else if (content.type == 1) {
-        res.send(wxReplay.get_reply(req, content.contents, message))
-    }
+    res.send(wxReplay.get_reply(req, content, message))
     return
 }
 

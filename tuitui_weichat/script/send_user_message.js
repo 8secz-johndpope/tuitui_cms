@@ -26,7 +26,7 @@ async function send_users(user_id, message, tagId) {
         console.log('-------客̀服̀消̀息̀--------')
         //console.log(users, '-----------------------users')
         var l = []
-        async.eachLimit(users, 10, function (user, callback) {
+        async.eachSeries(users,function (user, callback) {
             wechat_util.getClient(user.code).then(function (client) {
                 l.push(user._id)
                 if (message.type == 0) {
