@@ -317,8 +317,18 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     console.log(reply)
     reply = JSON.parse(reply)
     if (reply.type == 1) {
-
-        res.send(reply.msg)
+        var articles = await mem.get("cms_articles_" + reply.articles);
+        if (!articles) {
+            let articles = reply.articles;
+            if (content) {
+                await mem.set("cms_content_" + reply.content, articles.toString(), 30);
+                replyMsg(req, res, message, articles, code, openid)
+            }
+        } else {
+            articles.split(",")
+            console.log(articles, "2222222-----------------------------222222222222222")
+            replyMsg(req, res, message, articles, code, openid)
+        }
     } else {
         var content = await mem.get("cms_content_" + reply.content);
         if (!content) {
@@ -334,11 +344,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 }
 
 async function replyMsg(req, res, message, content, code, openid) {
-    if (content.type == 0) {
-        res.send(wxReplay.get_reply(req, content.contents[0].description, message))
-    } else if (content.type == 1) {
-        res.send(wxReplay.get_reply(req, content.contents, message))
-    }
+    res.send(wxReplay.get_reply(req, content, message))
     return
 }
 
