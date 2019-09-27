@@ -325,8 +325,8 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 replyMsg(req, res, message, articles, code, openid)
             }
         } else {
-            articles = JSON.parse(articles).articles;
-            replyMsg(req, res, message, articles, code, openid)
+            let articles1 = JSON.parse(articles);
+            replyMsg(req, res, message, articles1.articles, code, openid)
         }
     } else {
         var content = await mem.get("cms_content_" + reply.content);
