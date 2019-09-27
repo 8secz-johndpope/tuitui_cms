@@ -252,7 +252,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else if(message.Content == 'openid'){
-            res.send(wxReplay.get_reply(req,message.FromUserName))
+            res.send(wxReplay.get_reply(req,message.FromUserName,message))
         }else {
             // console.log('--------component message------------')
             // console.log(message)
