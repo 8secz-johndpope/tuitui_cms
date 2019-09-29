@@ -27,20 +27,22 @@ async function getMaterial(code, client, type, offset) {
         for(let j = 0; j < data.length; j ++) {
             data[j].type = type.split('_')[0];
             data[j].code = code;
-            async.map(data[j].content.news_item,async function(item) {
-                let path = await handleImage(item.thumb_url);
-                item.local_img_path = path.split('/public')[1];
-                return item
-            },async (err,results) => {
-                if(err){
-                    console.error(err)
-                }
-                data[j].content.news_item = results
-                console.log("---------------------start----------------------------")
-                console.log(data[j].content.news_item)
-                console.log("--------------------end-----------------------------")
-                await MaterialModel.findOneAndUpdate({media_id: data[j].media_id}, data[j], {new: true, upsert: true})
-            });
+            if(data[j].content.news_item.length && data[j].content.news_item[0] && data[j].content.news_item[0]!='null'){
+                async.map(data[j].content.news_item,async function(item) {
+                    let path = await handleImage(item.thumb_url);
+                    item.local_img_path = path.split('/public')[1];
+                    return item
+                    },async (err,results) => {
+                        if(err){
+                            console.error(err)
+                        }
+                        data[j].content.news_item = results
+                        console.log("---------------------start----------------------------")
+                        console.log(data[j].content.news_item)
+                        console.log("--------------------end-----------------------------")
+                        await MaterialModel.findOneAndUpdate({media_id: data[j].media_id}, data[j], {new: true, upsert: true})
+                    });
+            }
         }
         // if(docs) {
         //     return docs
