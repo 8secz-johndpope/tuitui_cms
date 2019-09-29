@@ -206,8 +206,8 @@ router.get('/remove', async(req, res, next) => {
 
 router.get('/send', async(req, res, next) => {
     var id = req.query.id;
-    // sendMQ.send(id, 'message_tasks')
-    sendUser.get_message(id);
+    sendMQ(id)
+    // sendUser.get_message(id);
     res.send({
         success: '发送成功'
     })
