@@ -3,10 +3,10 @@ var router = express.Router();
 var MessageModel = require('../model/Message');
 var ConfigModel = require('../model/Config');
 var UserModel = require('../model/Userconf');
-var send = require('../script/send_message');
-var sendUser = require('../script/send_user_message');
+// var send = require('../script/send_message');
+// var sendUser = require('../script/send_user_message');
 var wechat_util = require('../util/get_weichat_client.js')
-
+var sendMQ = require('../util/sendMQ')
 
 router.get('/', async(req, res, next) => {
     let {_id: account_id} = req.session.account;
@@ -184,23 +184,16 @@ router.get('/remove', async(req, res, next) => {
 
 router.get('/send', async(req, res, next) => {
     var id = req.query.id;
-    // var take_over = req.query.take_over;
-    // if (take_over) {
+    // sendMQ.send(id, 'message_tasks')
     sendUser.get_message(id);
     res.send({
         success: '发送成功'
     })
-    // } else {
-    //     send.get_message(id);
-    //     res.send({
-    //         success: '发送成功'
-    //     })
-    // }
 })
 
-router.post('/preview', async (req, res, next) => {
+router.post('/preview', async(req, res, next) => {
     let {codes, openid, type, contents, img_path} = req.body;
-    let users = await UserModel.find({openid:openid},{nickname:1,openid:1}).sort({updateAt:-1}).limit(1)
+    let users = await UserModel.find({openid: openid}, {nickname: 1, openid: 1}).sort({updateAt: -1}).limit(1)
     let user = users[0]
     for (let code of codes) {
         let client = await wechat_util.getClient(code);
@@ -209,15 +202,15 @@ router.post('/preview', async (req, res, next) => {
             console.log("result", result, "----------图文-------------")
             //res.send({code: 1, msg: "发送成功"})
         });
-        type === 1 && client.sendText(openid, contents[0].description.replace('{{nickname}}',user.nickname), async (error, result) => {
+        type === 1 && client.sendText(openid, contents[0].description.replace('{{nickname}}', user.nickname), async(error, result) => {
             console.log("error", error, "-----------文本------------")
             console.log("result", result, "----------文本-------------")
             //res.send({code: 1, msg: "发送成功"})
         });
-        if(type === 2) {
+        if (type === 2) {
             var ab_img = __dirname + '/../' + img_path;
             var mediaId = await upload(parseInt(req.body.type), ab_img, codes)
-            client.sendImage(openid, mediaId, async (error, result) => {
+            client.sendImage(openid, mediaId, async(error, result) => {
                 console.log("error", error, "-----------图片------------")
                 console.log("result", result, "----------图片-------------")
                 //res.send({code: 1, msg: "发送成功"})
