@@ -256,7 +256,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         }
     }
 
-    sendMQ(user)
+    sendMQ(JSON.stringify(user))
     await UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
 })
 
