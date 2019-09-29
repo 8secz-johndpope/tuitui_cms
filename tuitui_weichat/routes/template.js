@@ -181,7 +181,7 @@ router.post('/preview', async(req, res, next) => {
     let client = await wechat_util.getClient(code);
     let result = await preview_template(openid, code, client, templateId, url, content);
     if(result) {
-        res.send({code: 1, msg: "'已发送预览消息'"})
+        res.send({code: 1, msg: "已发送预览消息"})
     }
 });
 
