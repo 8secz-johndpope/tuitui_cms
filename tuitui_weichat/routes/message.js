@@ -6,7 +6,7 @@ var UserModel = require('../model/Userconf');
 // var send = require('../script/send_message');
 // var sendUser = require('../script/send_user_message');
 var wechat_util = require('../util/get_weichat_client.js')
-var sendMQ = require('../util/sendMQ')
+var sendMQ = require('../script/sendMQ')
 
 router.get('/', async(req, res, next) => {
     let {_id: account_id} = req.session.account;
