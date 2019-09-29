@@ -12,6 +12,7 @@ async function getChannel() {
 }
 
 module.exports.send = async function (msg,q) {
+    console.log(ch,'-----------------ch')
     await ch.assertQueue(q);
     ch.sendToQueue(q, Buffer.from(msg));
     return
