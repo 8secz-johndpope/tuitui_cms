@@ -24,12 +24,12 @@ async function onMQ() {
     ch.consume(q, async function (msg) {
         if (msg !== null) {
             let handle_str = msg.content.toString()
-            console.log(handle_str, '-------------------handle_str');
             let data = JSON.parse(handle_str)
             let info = await userInfo(data.code, data.openid)
             data.nickname = info.nickname
             data.headimgurl = info.headimgurl
             data.sex = info.sex.toString()
+            console.log(data, '-------------------data');
             await UserconfModel.findOneAndUpdate({openid: data.openid, code: data.code}, data, {upsert: true})
             /**
              待查询用户信息  写入数据库
