@@ -1,10 +1,10 @@
 var mem = require('../util/mem.js');
 const ConfigModel = require("../model/Config")
-var sendMQ = require('../util/sendMQ')
+var sendMQ = require('./sendMQ')
 
 async function a() {
 
-    sendMQ.send(JSON.stringify({a:'test'}),'message_tasks')
+    sendMQ.send('aaa','message_tasks')
 
     // let configs = await ConfigModel.find()
     // for(let config of configs){

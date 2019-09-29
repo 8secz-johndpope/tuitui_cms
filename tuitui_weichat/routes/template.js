@@ -5,7 +5,7 @@ const templateMsgModel = require('../model/templateMsg');
 const ConfigModel = require('../model/Config');
 const wechat_util = require('../util/get_weichat_client.js');
 const mem = require('../util/mem');
-const sendMQ = require('../util/sendMQ')
+const sendMQ = require('../script/sendMQ')
 
 router.get('/list', async(req, res, next) => {
     let code = req.query.code;
