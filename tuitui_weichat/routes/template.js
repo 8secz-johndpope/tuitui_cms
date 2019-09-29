@@ -5,7 +5,29 @@ const templateMsgModel = require('../model/templateMsg');
 const ConfigModel = require('../model/Config');
 const wechat_util = require('../util/get_weichat_client.js');
 const mem = require('../util/mem');
-const sendMQ = require('../script/sendMQ')
+
+/**
+ 消息队列
+ */
+const q = 'template_tasks';
+const amqplib = require('amqplib');
+let ch;
+getChannel();
+async function getChannel(){
+    console.log('----- getChannel ----')
+    try{
+        let conn = await amqplib.connect('amqp://localhost')
+        ch = await conn.createChannel();
+        //sendMQ('openid,code')
+    }catch(e){
+        console.log(e)
+    }
+}
+
+async function sendMQ(msg){
+    await ch.assertQueue(q);
+    ch.sendToQueue(q, Buffer.from(msg));
+}
 
 router.get('/list', async(req, res, next) => {
     let code = req.query.code;

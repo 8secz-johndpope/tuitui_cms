@@ -36,7 +36,6 @@ async function getChannel(){
 async function sendMQ(msg){
     await ch.assertQueue(q);
     ch.sendToQueue(q, Buffer.from(msg)); 
-    //console.log('用户信息放到队列中')
 }
 
 var xml_msg = async function (req, res, next) {
@@ -203,13 +202,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    // console.log(message,'-------------------message')
     if (message.Event === 'unsubscribe') {
         return res.send('')
     }
-    // if(message.Event.toLowerCase() == 'view'){
-    //     return res.send('')
-    // }
     let user = {openid: message.FromUserName, code: code, action_time: Date.now(), sex: '0'}
     // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
     // if(userSex && userSex.sex && userSex.sex != "0"){
@@ -261,6 +256,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         }
     }
 
+    sendMQ(user)
     await UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
 })
 
