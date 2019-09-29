@@ -29,7 +29,6 @@ async function onMQ() {
             data.nickname = info.nickname
             data.headimgurl = info.headimgurl
             data.sex = info.sex.toString()
-            console.log(data, '-------------------data');
             await UserconfModel.findOneAndUpdate({openid: data.openid, code: data.code}, data, {upsert: true})
             /**
              待查询用户信息  写入数据库
