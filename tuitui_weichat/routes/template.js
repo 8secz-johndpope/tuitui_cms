@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const templateRecordModel = require('../model/templateRecord');
 const templateMsgModel = require('../model/templateMsg');
 const ConfigModel = require('../model/Config');
 const wechat_util = require('../util/get_weichat_client.js');
@@ -13,18 +12,18 @@ const q = 'template_tasks';
 const amqplib = require('amqplib');
 let ch;
 getChannel();
-async function getChannel(){
+async function getChannel() {
     console.log('----- getChannel ----')
-    try{
+    try {
         let conn = await amqplib.connect('amqp://localhost')
         ch = await conn.createChannel();
         //sendMQ('openid,code')
-    }catch(e){
+    } catch (e) {
         console.log(e)
     }
 }
 
-async function sendMQ(msg){
+async function sendMQ(msg) {
     await ch.assertQueue(q);
     ch.sendToQueue(q, Buffer.from(msg));
 }
@@ -150,29 +149,13 @@ router.get('/del', async(req, res, next) => {
 })
 
 router.post('/send', async(req, res, next) => {
-    let account_id = req.session.account._id;
-    let code = req.body.code;
-    let templateId = req.body.templateId
-    let url = req.body.url
-    let content = req.body.content
-    let client = await wechat_util.getClient(code);
-    send_template('', code, client, templateId, url, content)
-    let body = await mem.get(code + '_' + templateId)
-    body = body.split(',')
-    let obj = {"开始": content.first.value || ""}
-    for (let i = 0; i < body.length - 1; i++) {
-        let key = body[i].split('_')[0]
-        let value = body[i].split('_')[1]
-        obj[key] = content[value].value
+    let data = {
+        code: req.body.code,
+        templateId: req.body.templateId,
+        url: req.body.url,
+        content: req.body.content
     }
-    obj['结束'] = content.remark.value || ""
-    await templateRecordModel.create({
-        code: code,
-        templateId: templateId,
-        url: url,
-        content: obj,
-        account_id
-    })
+    sendMQ(JSON.stringify(data))
     res.send('已发送')
 })
 
@@ -180,42 +163,20 @@ router.post('/preview', async(req, res, next) => {
     let {code, templateId, url, content, openid} = req.body;
     let client = await wechat_util.getClient(code);
     let result = await preview_template(openid, code, client, templateId, url, content);
-    if(result) {
+    if (result) {
         res.send({code: 1, msg: "已发送预览消息"})
     }
 });
 
-async function send_template(openid, code, client, templateId, url, data) {
-    client.getFollowers(openid, async function (err, result) {
-        if (err) {
-            console.log(err, '------------------send template err')
-        } else {
-            if (result.errcode) {
-                console.log(result.errcode, '------------------send template error')
-            }
-            if (result && result.data && result.data.openid) {
-                for (let sendopenid of result.data.openid) {
-                    client.sendTemplate(sendopenid, templateId, url, data, function (err, result) {
-                    })
-                }
-                send_template(result.next_openid, code, client, templateId, url, data)
-            } else {
-                console.log(code + '-------------send template end')
-                return
-            }
-        }
-    })
-}
-
 async function preview_template(openid, code, client, templateId, url, content) {
-   return new Promise((resolve, reject) => {
-       client.sendTemplate(openid, templateId, url, content, function (err, result) {
-            if(err) {
+    return new Promise((resolve, reject) => {
+        client.sendTemplate(openid, templateId, url, content, function (err, result) {
+            if (err) {
                 reject(err)
             }
             resolve(result)
-       })
-   })
+        })
+    })
 }
 
 module.exports = router;
