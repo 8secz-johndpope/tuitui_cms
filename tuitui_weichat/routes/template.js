@@ -153,6 +153,15 @@ router.post('/send', async(req, res, next) => {
     res.send('已发送')
 })
 
+router.post('/preview', async(req, res, next) => {
+    let {code, templateId, url, content, openid} = req.body;
+    let client = await wechat_util.getClient(code);
+    let result = await preview_template(openid, code, client, templateId, url, content);
+    if(result) {
+        res.send('已发送预览消息')
+    }
+});
+
 async function send_template(openid, code, client, templateId, url, data) {
     client.getFollowers(openid, async function (err, result) {
         if (err) {
@@ -173,6 +182,17 @@ async function send_template(openid, code, client, templateId, url, data) {
             }
         }
     })
+}
+
+async function preview_template(openid, code, client, templateId, url, content) {
+   return new Promise((resolve, reject) => {
+       client.sendTemplate(openid, templateId, url, content, function (err, result) {
+            if(err) {
+                reject(err)
+            }
+            resolve(result)
+       })
+   })
 }
 
 module.exports = router;
