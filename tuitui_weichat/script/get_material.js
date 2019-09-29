@@ -28,18 +28,21 @@ async function getMaterial(code, client, type, offset) {
             data[j].type = type.split('_')[0];
             data[j].code = code;
             if(data[j].content.news_item.length && data[j].content.news_item[0] && data[j].content.news_item[0]!='null'){
+                console.log('----------',j,'-------------')
+                console.log(data[j].content.news_item.length)
+                console.log(data[j].content.news_item[0])
                 async.map(data[j].content.news_item,async function(item) {
                     let path = await handleImage(item.thumb_url);
-                    item.local_img_path = path.split('/public')[1];
+                    item.local_img_path = path.split('/public')[1]; 
                     return item
                     },async (err,results) => {
                         if(err){
                             console.error(err)
                         }
                         data[j].content.news_item = results
-                        console.log("---------------------start----------------------------")
-                        console.log(data[j].content.news_item)
-                        console.log("--------------------end-----------------------------")
+                        //console.log("---------------------start----------------------------")
+                        //console.log(data[j].content.news_item)
+                        //console.log("--------------------end-----------------------------")
                         await MaterialModel.findOneAndUpdate({media_id: data[j].media_id}, data[j], {new: true, upsert: true})
                     });
             }
