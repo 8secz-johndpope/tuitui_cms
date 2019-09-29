@@ -205,7 +205,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     if (message.Event === 'unsubscribe') {
         return res.send('')
     }
-    let user = {openid: message.FromUserName, code: code, action_time: Date.now(), sex: '0'}
+    let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
     // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
     // if(userSex && userSex.sex && userSex.sex != "0"){
     //     user = {
@@ -257,18 +257,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     }
 
     sendMQ(JSON.stringify(user))
-    await UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
+    // await UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
 })
 
-async function userInfo(code, openid) {
-    // console.log(code,'-------------------------code')
-    let api = await wechat_util.getClient(code);
-    return new Promise((resolve, reject) => {
-        api.getUser(openid, function (err, info) {
-            resolve(info);
-        })
-    })
-}
 
 async function reply(req, res, message, code, type, param, openid, sex) {
     if (sex == 0) {
