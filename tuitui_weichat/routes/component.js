@@ -36,7 +36,6 @@ async function getChannel(){
 async function sendMQ(msg){
     await ch.assertQueue(q);
     ch.sendToQueue(q, Buffer.from(msg)); 
-    //console.log('用户信息放到队列中')
 }
 
 var xml_msg = async function (req, res, next) {
@@ -203,14 +202,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    // console.log(message,'-------------------message')
     if (message.Event === 'unsubscribe') {
         return res.send('')
     }
-    // if(message.Event.toLowerCase() == 'view'){
-    //     return res.send('')
-    // }
-    let user = {openid: message.FromUserName, code: code, action_time: Date.now(), sex: '0'}
+    let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
     // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
     // if(userSex && userSex.sex && userSex.sex != "0"){
     //     user = {
@@ -261,18 +256,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         }
     }
 
-    await UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
+    sendMQ(JSON.stringify(user))
+    // await UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
 })
 
-async function userInfo(code, openid) {
-    // console.log(code,'-------------------------code')
-    let api = await wechat_util.getClient(code);
-    return new Promise((resolve, reject) => {
-        api.getUser(openid, function (err, info) {
-            resolve(info);
-        })
-    })
-}
 
 async function reply(req, res, message, code, type, param, openid, sex) {
     if (sex == 0) {

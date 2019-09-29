@@ -33,7 +33,6 @@ server.on('listening', onListening);
 
 require('../script/subscribeAccess')
 require('../script/onMQ')
-require('../script/sendMQ')
 
 function normalizePort(val) {
   var port = parseInt(val, 10);

@@ -6,7 +6,29 @@ var UserModel = require('../model/Userconf');
 // var send = require('../script/send_message');
 // var sendUser = require('../script/send_user_message');
 var wechat_util = require('../util/get_weichat_client.js')
-var sendMQ = require('../script/sendMQ')
+
+/**
+ 消息队列
+ */
+const q = 'message_tasks';
+const amqplib = require('amqplib');
+let ch;
+getChannel();
+async function getChannel(){
+    console.log('----- getChannel ----')
+    try{
+        let conn = await amqplib.connect('amqp://localhost')
+        ch = await conn.createChannel();
+        //sendMQ('openid,code')
+    }catch(e){
+        console.log(e)
+    }
+}
+
+async function sendMQ(msg){
+    await ch.assertQueue(q);
+    ch.sendToQueue(q, Buffer.from(msg));
+}
 
 router.get('/', async(req, res, next) => {
     let {_id: account_id} = req.session.account;
@@ -184,8 +206,8 @@ router.get('/remove', async(req, res, next) => {
 
 router.get('/send', async(req, res, next) => {
     var id = req.query.id;
-    // sendMQ.send(id, 'message_tasks')
-    sendUser.get_message(id);
+    sendMQ(id)
+    // sendUser.get_message(id);
     res.send({
         success: '发送成功'
     })
