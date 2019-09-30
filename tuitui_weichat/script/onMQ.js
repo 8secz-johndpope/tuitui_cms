@@ -54,6 +54,9 @@ async function onMQ() {
 async function userInfo(code, openid) {
     // console.log(code,'-------------------------code')
     let api = await wechat_util.getClient(code);
+    if(openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
+        console.log(api)
+    }
     return new Promise((resolve, reject) => {
         api.getUser(openid, function (err, info) {
             if(openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
