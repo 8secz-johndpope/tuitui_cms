@@ -22,10 +22,10 @@ async function getChannel() {
 async function onMQ() {
     await ch.assertQueue(q);
     ch.consume(q, async function (msg) {
-        ch.ack(msg);
         if (msg !== null) {
             let handle_str = msg.content.toString()
             let data = JSON.parse(handle_str)
+            console.log(handle_str)
             let info = await userInfo(data.code, data.openid)
             data.nickname = info.nickname
             data.headimgurl = info.headimgurl
@@ -38,7 +38,9 @@ async function onMQ() {
             /**
              待查询用户信息  写入数据库
              */
-
+            ch.ack(msg);
+        }else{
+            ch.ack(msg);
         }
     });
 }
