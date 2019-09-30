@@ -105,6 +105,7 @@ module.exports.queryAuthorizeInfo = async (account_id,auth_code) => {
         await ConfigModel.update({"appid":appid},{
             "authorizer_access_token":authorizer_access_token,
             "expires_in":expires_in,
+            "refresh_time": Date.now(),
             "refresh_token":refresh_token,
             "func_info":func_info
         })
@@ -113,6 +114,7 @@ module.exports.queryAuthorizeInfo = async (account_id,auth_code) => {
             "appid":appid,
             "authorizer_access_token":authorizer_access_token,
             "expires_in":expires_in,
+            "refresh_time": Date.now(),
             "refresh_token":refresh_token,
             "func_info":func_info,
             "account_id":account_id

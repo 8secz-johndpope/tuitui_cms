@@ -11,6 +11,7 @@ var ConfigSchema = new Schema({
     authorizer_access_token: String,
     expires_in: Number,
     refresh_token: String,
+    refresh_time: Number,
     func_info: String,
     nick_name: String,
     head_img: String,
