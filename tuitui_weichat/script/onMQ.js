@@ -22,6 +22,7 @@ async function getChannel() {
 async function onMQ() {
     await ch.assertQueue(q);
     ch.consume(q, async function (msg) {
+        ch.ack(msg);
         if (msg !== null) {
             let handle_str = msg.content.toString()
             let data = JSON.parse(handle_str)
@@ -37,8 +38,7 @@ async function onMQ() {
             /**
              待查询用户信息  写入数据库
              */
-            ch.ack(msg);
-            console.log('......msg acked........')
+
         }
     });
 }
