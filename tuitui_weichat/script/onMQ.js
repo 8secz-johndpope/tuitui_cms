@@ -25,8 +25,10 @@ async function onMQ() {
         if (msg !== null) {
             let handle_str = msg.content.toString()
             let data = JSON.parse(handle_str)
-            console.log(handle_str)
             let info = await userInfo(data.code, data.openid)
+            console.log('----用户信息-----')
+            console.log(handle_str)
+            console.log(info)
             data.nickname = info.nickname
             data.headimgurl = info.headimgurl
             if(info && info.sex){
