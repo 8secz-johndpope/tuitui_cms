@@ -25,10 +25,14 @@ async function onMQ() {
         if (msg !== null) {
             let handle_str = msg.content.toString()
             let data = JSON.parse(handle_str)
+            if(data.openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
+                console.log('----用户信息-----')
+                console.log(handle_str)
+            }
             let info = await userInfo(data.code, data.openid)
-            console.log('----用户信息-----')
-            console.log(handle_str)
-            console.log(info)
+            if(data.openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
+                console.log(info)
+            }
             data.nickname = info.nickname
             data.headimgurl = info.headimgurl
             if(info && info.sex){
@@ -52,6 +56,11 @@ async function userInfo(code, openid) {
     let api = await wechat_util.getClient(code);
     return new Promise((resolve, reject) => {
         api.getUser(openid, function (err, info) {
+            if(openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
+                console.log('获取微信用户信息')
+                console.log(err)
+                console.log(info)
+            }
             resolve(info);
         })
     })
