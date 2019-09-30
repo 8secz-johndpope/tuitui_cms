@@ -24,8 +24,6 @@ async function onMQ() {
     ch.consume(q, async function (msg) {
         if (msg !== null) {
             let handle_str = msg.content.toString()
-            console.log('------收到消息-----')
-            console.log(handle_str)
             let data = JSON.parse(handle_str)
             let info = await userInfo(data.code, data.openid)
             data.nickname = info.nickname
@@ -40,6 +38,7 @@ async function onMQ() {
              待查询用户信息  写入数据库
              */
             ch.ack(msg);
+            console.log('......msg acked........')
         }
     });
 }
