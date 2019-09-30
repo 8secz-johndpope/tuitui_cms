@@ -28,7 +28,11 @@ async function onMQ() {
             let info = await userInfo(data.code, data.openid)
             data.nickname = info.nickname
             data.headimgurl = info.headimgurl
-            data.sex = info.sex.toString()
+            if(info && info.sex){
+                data.sex = info.sex.toString()
+            }else{
+                data.sex = "0"
+            }
             await UserconfModel.findOneAndUpdate({openid: data.openid, code: data.code}, data, {upsert: true})
             /**
              待查询用户信息  写入数据库
