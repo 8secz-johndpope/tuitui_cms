@@ -8,8 +8,8 @@ redis_client.on("subscribe", function (channel, count) {
 });
 
 redis_client.on("message", async function (channel, message) {
-    console.log('监听到发布事件')
-    console.log("sub channel " + channel + ": " + message);
+    //console.log('监听到发布事件')
+    //console.log("sub channel " + channel + ": " + message);
     let appid = message;
     let token = await mem.get('access_token_' + appid)
     if(token && token.indexOf('!@#') != -1){

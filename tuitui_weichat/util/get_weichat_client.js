@@ -30,7 +30,7 @@ class Singleton {
         if (!Singleton[appid]) {
             Singleton[appid] = new Singleton(appid)
             let token = await mem.get('access_token_' + appid)
-            console.log(token, appid, '======================================')
+            //console.log(token, appid, '======================================')
             let access_token = ""
             let expires_in = ""
             if(token){
@@ -43,7 +43,7 @@ class Singleton {
     }
 
     setToken(appid, token, expires_in) {
-        console.log(token, expires_in, '------------------------token')
+        //console.log(token, expires_in, '------------------------token')
         this.api.store = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
         this.api.token = {accessToken: token, expireTime: Date.now() + (expires_in - 10) * 1000}
     }
