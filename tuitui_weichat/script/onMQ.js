@@ -57,6 +57,10 @@ async function userInfo(code, openid) {
     if(openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
         console.log(api)
     }
+    if(api.store.accessToken==''){
+        console.log('----accessToken 为空------')
+        console.log(code)
+    }
     return new Promise((resolve, reject) => {
         api.getUser(openid, function (err, info) {
             if(openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
