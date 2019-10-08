@@ -57,8 +57,8 @@ async function userInfo(code, openid) {
     if(openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
         console.log(api)
     }
-    console.log('-------获取用户信息  api---------')
-    console.log(api.store)
+    //console.log('-------获取用户信息  api---------')
+    //console.log(api.store)
     return new Promise((resolve, reject) => {
         api.getUser(openid, function (err, info) {
             if(openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
