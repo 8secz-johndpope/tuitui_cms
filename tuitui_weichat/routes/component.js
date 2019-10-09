@@ -7,6 +7,7 @@ const ConfigModel = require("../model/Config")
 const http = require("../util/httpUtils");
 const authorizer_info = require("../util/authorizer_info")
 const ReplyModel = require('../model/Reply');
+const MenuModel = require('../model/Menu')
 // const MsgModel = require('../model/Msg');
 const mem = require('../util/mem');
 const wechat_util = require('../util/get_weichat_client')
@@ -16,26 +17,26 @@ const redis_client = asyncRedis.createClient();
 
 
 /**
-  消息队列
-*/
+ 消息队列
+ */
 const q = 'user_tasks';
 const amqplib = require('amqplib');
 let ch;
 getChannel();
-async function getChannel(){
+async function getChannel() {
     console.log('----- getChannel ----')
-    try{
+    try {
         let conn = await amqplib.connect('amqp://localhost')
         ch = await conn.createChannel();
         //sendMQ('openid,code')
-    }catch(e){
+    } catch (e) {
         console.log(e)
     }
 }
 
-async function sendMQ(msg){
+async function sendMQ(msg) {
     await ch.assertQueue(q);
-    ch.sendToQueue(q, Buffer.from(msg)); 
+    ch.sendToQueue(q, Buffer.from(msg));
 }
 
 var xml_msg = async function (req, res, next) {
@@ -246,9 +247,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     } else if (message.MsgType === 'text') {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
-        } else if(message.Content == 'openid'){
-            res.send(wxReplay.get_reply(req,message.FromUserName,message))
-        }else {
+        } else if (message.Content == 'openid') {
+            res.send(wxReplay.get_reply(req, message.FromUserName, message))
+        } else {
             // console.log('--------component message------------')
             // console.log(message)
             user.action_type = 3;
@@ -278,7 +279,9 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 ]
             }).sort({type: 1})
         } else if (type == 1) {
-            reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type, key: param})
+            reply = await MenuModel.find({codes: {$elemMatch: {$eq: code}}}).sort({createAt: -1})
+            reply = reply[0][param]
+            // reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type, key: param})
         } else if (type == 2) {
             reply = await ReplyModel.findOne({
                 $or: [
@@ -308,7 +311,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         if (!articles) {
             let articles = reply.articles;
             if (articles.length > 0) {
-                await mem.set("cms_articles_" + JSON.stringify({articles}), JSON.stringify({articles}),30);
+                await mem.set("cms_articles_" + JSON.stringify({articles}), JSON.stringify({articles}), 30);
                 replyMsg(req, res, message, articles, code, openid)
             }
         } else {
