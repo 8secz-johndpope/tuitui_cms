@@ -24,6 +24,10 @@ var MenuSchema = new Schema({
     createAt: {
         type: Date,
         default: Date.now
+    },
+    updateAt: {
+        type: Date,
+        default: Date.now
     }
 });
 
