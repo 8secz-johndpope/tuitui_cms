@@ -17,7 +17,7 @@ router.post('/create', async(req, res, next) => {
         values: req.body.values,
         individual: req.body.individual,
         sex: req.body.sex,
-        contents: req.body.contents,
+        contents: JSON.stringify(req.body.contents),
         account_id
     };
     let doc = await MenuModel.create(data);
@@ -44,7 +44,7 @@ router.post('/update', async(req, res, next) => {
         values: req.body.values,
         individual: req.body.individual,
         sex: req.body.sex,
-        contents: req.body.contents,
+        contents: JSON.stringify(req.body.contents),
     };
     let doc = await MenuModel.findByIdAndUpdate(id, data, {new: true});
     if (doc) {

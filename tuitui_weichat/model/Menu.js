@@ -20,7 +20,10 @@ var MenuSchema = new Schema({
         type: String,
         default: null
     },
-    contents: Object,
+    contents: {
+        type: String,
+        default: ""
+    },
     createAt: {
         type: Date,
         default: Date.now
