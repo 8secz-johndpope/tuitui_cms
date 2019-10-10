@@ -10,6 +10,7 @@ router.get('/', async(req, res, next) => {
 });
 
 router.post('/create', async(req, res, next) => {
+    console.log(req.body, "2019-10-10 19:05")
     let account_id = req.session.account._id;
     let data = {
         title: req.body.title,
@@ -20,7 +21,6 @@ router.post('/create', async(req, res, next) => {
         contents: JSON.stringify(req.body.contents),
         account_id
     };
-    console.log(req.body, "2019-10-10 19:05")
     let doc = await MenuModel.create(data);
 
     if (doc) {
