@@ -20,6 +20,7 @@ router.post('/create', async(req, res, next) => {
         contents: JSON.stringify(req.body.contents),
         account_id
     };
+    console.log(req.body.contents)
     let doc = await MenuModel.create(data);
 
     if (doc) {
