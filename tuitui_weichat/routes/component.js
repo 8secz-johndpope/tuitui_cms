@@ -280,6 +280,9 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             }).sort({type: 1})
         } else if (type == 1) {
             reply = await MenuModel.find({codes: {$elemMatch: {$eq: code}}}).sort({updateAt: -1}).limit(1);
+            console.log("----------------------------reply=============================");
+            console.log(reply)
+            console.log("----------------------------reply=============================")
             if(reply[0]) {
                 reply = reply[0][param]
             } else {
