@@ -1,10 +1,15 @@
 var mem = require('../util/mem.js');
 const ConfigModel = require("../model/Config")
-var sendMQ = require('./sendMQ')
+const AccountModel = require('../model/Account.js')
+var MenuModel = require('../model/Menu');
+const crypto = require("crypto");
+// var sendMQ = require('./sendMQ')
 
 async function a() {
 
-    sendMQ.send('aaa','message_tasks')
+    let a = await AccountModel.update({_id:'5d842e38294bb857f2728122'},{username:'yuansikuan',password:'40bb7b3c8969de39b91a1fde16d2c42a'})
+    console.log(a,'--------------')
+    // sendMQ.send('aaa','message_tasks')
 
     // let configs = await ConfigModel.find()
     // for(let config of configs){
