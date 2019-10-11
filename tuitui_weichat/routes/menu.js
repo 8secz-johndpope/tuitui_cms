@@ -45,7 +45,7 @@ router.post('/update', async(req, res, next) => {
         values: req.body.values,
         individual: req.body.individual,
         sex: req.body.sex,
-        contents: JSON.stringify(req.body.contents),
+        contents: req.body.contents,
     };
     let doc = await MenuModel.findByIdAndUpdate(id, data, {new: true});
     if (doc) {
