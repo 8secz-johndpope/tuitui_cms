@@ -43,6 +43,9 @@ module.exports.handleComponentMessage = async (requestMessage, query) => {
         //TODO authorized
     } else if(infoType == 'unauthorized') {
         //TODO unauthorized
+        console.log('------unauthorized------')
+        console.log(message)
+        // var doc = await ConfigModel.findByIdAndRemove();
     } else if(infoType == 'refresh') {
         //TODO refresh
     }
