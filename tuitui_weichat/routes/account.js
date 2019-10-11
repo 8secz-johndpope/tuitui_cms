@@ -54,6 +54,8 @@ router.delete('/', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   let { username, password } = req.body;
   let result = await AccountModel.find({username, password});
+  console.log(username, password, "-----------------username, password----------------")
+  console.log(result, "-----------------result----------------")
   if(result.length > 0) {
     req.session.account = result[0];
     console.log(req.session.account, "---------------------------------req.session.account----------------------------------")

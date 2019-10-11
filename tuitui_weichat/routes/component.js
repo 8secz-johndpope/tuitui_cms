@@ -279,8 +279,13 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 ]
             }).sort({type: 1})
         } else if (type == 1) {
-            reply = await MenuModel.find({codes: {$elemMatch: {$eq: code}}}).sort({updateAt: -1}).limit(1)
-            reply = reply[0][param]
+            reply = await MenuModel.find({codes: {$elemMatch: {$eq: code}}}).sort({updateAt: -1}).limit(1);
+            console.log(reply[0], 12222222222)
+            if(Object.keys(reply[0]).indexOf(param) > -1) {
+                reply = reply[0][param]
+            } else {
+                return
+            }
             // reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type, key: param})
         } else if (type == 2) {
             reply = await ReplyModel.findOne({
