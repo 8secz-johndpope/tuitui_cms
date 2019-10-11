@@ -21,8 +21,8 @@ var MenuSchema = new Schema({
         default: null
     },
     contents: {
-        type: String,
-        default: ""
+        type: Object,
+        default: {}
     },
     createAt: {
         type: Date,

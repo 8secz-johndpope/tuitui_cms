@@ -279,10 +279,14 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 ]
             }).sort({type: 1})
         } else if (type == 1) {
+            code === 10000000245 && console.log(code)
             reply = await MenuModel.find({codes: {$elemMatch: {$eq: code}}}).sort({updateAt: -1}).limit(1);
-            console.log(reply[0], 12222222222)
-            if(Object.keys(reply[0]).indexOf(param) > -1) {
-                reply = reply[0][param]
+
+            if(reply[0]) {
+                console.log("----------------------------reply=============================");
+                console.log(reply, param)
+                console.log("----------------------------reply=============================")
+                reply = reply[0].contents[param]
             } else {
                 return
             }
