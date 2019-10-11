@@ -288,7 +288,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 console.log("----------------------------reply=============================")
                 reply = reply[0].contents[param]
             } else {
-                return
+                return res.send('')
             }
             // reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type, key: param})
         } else if (type == 2) {
