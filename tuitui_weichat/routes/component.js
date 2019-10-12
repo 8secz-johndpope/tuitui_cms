@@ -195,7 +195,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             await mem.set("configure_appid_" + appid, code, 60)
         }
     }
-    console.log(code+'--------'+appid)
+    //console.log(code+'--------'+appid)
     if (!code) {
         return res.send('')
     }
@@ -204,6 +204,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
+    if(message.Content == 'openid'){
+        console.log('-----123 回复------')
+        console.log(message)
+    }
     if (message.Event === 'unsubscribe') {
         return res.send('')
     }
