@@ -33,9 +33,9 @@ async function onMQ() {
             if(data.openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
                 console.log(info)
             }
-            data.nickname = info.nickname
-            data.headimgurl = info.headimgurl
             if(info && info.sex){
+                data.nickname = info.nickname
+                data.headimgurl = info.headimgurl
                 data.sex = info.sex.toString()
             }else{
                 data.sex = "0"
@@ -60,13 +60,17 @@ async function userInfo(code, openid) {
     //console.log('-------获取用户信息  api---------')
     //console.log(api.store)
     return new Promise((resolve, reject) => {
-        api.getUser(openid, function (err, info) {
-            if(openid=='oxH2t1fMyotDLwBhxQMzAvmAqoF8'){
-                console.log('获取微信用户信息')
-                console.log(err)
-                console.log(info)
-            }
-            resolve(info);
-        })
+        if(!api){
+            resolve('');
+        }else {
+            api.getUser(openid, function (err, info) {
+                if (openid == 'oxH2t1fMyotDLwBhxQMzAvmAqoF8') {
+                    console.log('获取微信用户信息')
+                    console.log(err)
+                    console.log(info)
+                }
+                resolve(info);
+            })
+        }
     })
 }

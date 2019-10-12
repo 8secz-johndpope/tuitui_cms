@@ -8,13 +8,19 @@ async function getClient(code) {
         // let appid = ""
         if (!appid) {
             let conf = await ConfigModel.findOne({code: code})
-            // console.log(code,conf,'--------------------------conf')
-            appid = conf.appid
-            await mem.set("configure_" + code, appid, 60)
+            if (conf) {
+                appid = conf.appid
+                await mem.set("configure_" + code, appid, 60)
+            } else {
+                appid = ''
+            }
         }
-        let api = await Singleton.getInterface(appid)
-        // console.log(api.api, '----------------------api')
-        return api.api;
+        if(appid) {
+            let api = await Singleton.getInterface(appid)
+            return api.api;
+        }else{
+            return ''
+        }
     } catch (e) {
         console.log(e, '-----------------------api exception')
     }
@@ -33,7 +39,7 @@ class Singleton {
             //console.log(token, appid, '======================================')
             let access_token = ""
             let expires_in = ""
-            if(token){
+            if (token) {
                 access_token = token.split('!@#')[0]
                 expires_in = token.split('!@#')[1]
             }
