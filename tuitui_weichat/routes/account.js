@@ -33,7 +33,8 @@ router.get('/', async (req, res, next) => {
 
 router.put('/', async (req, res, next) => {
   let { id, username, password } = req.body;
-  let data = await AccountModel.findByIdAndUpdate(id, { username, password }, {new: true});
+  let updateAt = Date.now();
+  let data = await AccountModel.findByIdAndUpdate(id, { username, password, updateAt }, {new: true});
   if(data) {
     res.send({code: 1, msg: '密码修改成功', data})
   } else {
