@@ -195,6 +195,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             await mem.set("configure_appid_" + appid, code, 60)
         }
     }
+    //console.log(code+'--------'+appid)
     if (!code) {
         return res.send('')
     }
@@ -205,6 +206,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let message = await componentService.handleMessage(requestMessage, query);
     if (message.Event === 'unsubscribe') {
         return res.send('')
+    } else if (message.Content == 'openid') {
+        console.log('---回复openid-----')
+        return res.send(wxReplay.get_reply(req, message.FromUserName, message))
     }
     let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
     // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
@@ -247,8 +251,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     } else if (message.MsgType === 'text') {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
-        } else if (message.Content == 'openid') {
-            res.send(wxReplay.get_reply(req, message.FromUserName, message))
         } else {
             // console.log('--------component message------------')
             // console.log(message)
