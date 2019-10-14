@@ -32,8 +32,8 @@ router.get('/', async (req, res, next) => {
 });
 
 router.put('/', async (req, res, next) => {
-  let { id, password } = req.body;
-  let data = await AccountModel.findByIdAndUpdate(id, { password }, {new: true});
+  let { id, username, password } = req.body;
+  let data = await AccountModel.findByIdAndUpdate(id, { username, password }, {new: true});
   if(data) {
     res.send({code: 1, msg: '密码修改成功', data})
   } else {
@@ -60,7 +60,8 @@ router.post('/login', async (req, res, next) => {
     req.session.account = result[0];
     console.log(req.session.account, "---------------------------------req.session.account----------------------------------")
     let id = result[0]._id;
-    await AccountModel.findByIdAndUpdate(id, {loginAt: Date.now()})
+    let loginAt = Date.now();
+    await AccountModel.findByIdAndUpdate(id, {loginAt})
     res.send({code: 1, msg: '登录成功', data: result})
   } else {
     res.send({code: -1, msg: '用户名或密码输入有误，请重新输入'})
