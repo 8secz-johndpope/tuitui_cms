@@ -106,6 +106,7 @@ router.post('/create', async(req, res, next) => {
         templateName: req.body.templateName,
         url: req.body.url,
         content: req.body.content,
+        sex: req.body.sex,
         account_id
     }
     let doc = await templateMsgModel.create(data)
@@ -129,6 +130,7 @@ router.post('/update', async(req, res, next) => {
         templateName: req.body.templateName,
         url: req.body.url,
         content: req.body.content,
+        sex: req.body.sex
     }
     let doc = await templateMsgModel.findByIdAndUpdate(id, data, {new: true})
     if (doc) {
@@ -153,7 +155,8 @@ router.post('/send', async(req, res, next) => {
         code: req.body.code,
         templateId: req.body.templateId,
         url: req.body.url,
-        content: req.body.content
+        content: req.body.content,
+        sex: req.body.sex
     }
     sendMQ(JSON.stringify(data))
     res.send('已发送')
