@@ -6,6 +6,10 @@ var db = mongoose.createConnection(connect_url);
 var MessageSchema = new Schema({
     account_id: String,
     task: Boolean,
+    group: {
+        type: String,
+        default: "未分组"
+    },
     sex: String,//0未知 1男 2 女
     type: Number,//0链接 1文本 2 图片 3
     action_type: {type: Number, default: 0},

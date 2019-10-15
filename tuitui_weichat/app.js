@@ -26,6 +26,7 @@ var component = require('./routes/component');
 var account = require('./routes/account');
 var tuiguangTag = require('./routes/tuiguangTag')
 var template = require('./routes/template')
+var messageGroup = require('./routes/messageGroup')
 
 var app = express();
 
@@ -81,6 +82,7 @@ app.use('/component',component)
 app.use('/account',account)
 app.use('/tuiguangTag',tuiguangTag)
 app.use('/template',template)
+app.use('/messageGroup',messageGroup)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
