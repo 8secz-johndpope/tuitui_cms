@@ -243,7 +243,7 @@ router.post('/preview', async(req, res, next) => {
     res.send({code: 1, msg: "发送成功"})
 });
 
-router.get('/updateGroup', async(req, res, next) => {
+router.post('/updateGroup', async(req, res, next) => {
     let {selectedMessages, group} = req.body;
     selectedMessages.map(async item => {
         await MessageModel.findByIdAndUpdate(item, {group})
