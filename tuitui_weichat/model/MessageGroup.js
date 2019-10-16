@@ -5,6 +5,7 @@ var db = mongoose.createConnection(connect_url);
 
 var MessageGroupSchema = new Schema({
     group : String,
+    account_id: String
 });
 
 var MessageGroupModel = db.model('MessageGroup', MessageGroupSchema);
