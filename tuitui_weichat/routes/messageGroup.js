@@ -3,13 +3,15 @@ const router = express.Router();
 const MessageGroupModel = require('../model/MessageGroup');
 
 router.get('/', async(req, res, next) => {
-  let data = await MessageGroupModel.find();
+  let account_id = req.session.account._id;
+  let data = await MessageGroupModel.find({account_id});
   res.send({code: 1, msg: "查询成功", data})
 });
 
 router.post('/', async (req, res, next) => {
+  let account_id = req.session.account._id;
   let {group} = req.body;
-  let data = await MessageGroupModel.create({group});
+  let data = await MessageGroupModel.create({group, account_id});
   if(data) {
     res.send({code: 1, msg: "创建成功", data})
   } else {

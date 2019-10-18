@@ -243,6 +243,14 @@ router.post('/preview', async(req, res, next) => {
     res.send({code: 1, msg: "发送成功"})
 });
 
+router.put('/updateGroup', async(req, res, next) => {
+    let {selectedMessages, group} = req.body;
+    selectedMessages.map(async item => {
+        await MessageModel.findByIdAndUpdate(item, {group})
+    });
+    res.send({code: 1, msg: "修改成功"})
+});
+
 async function upload(type, img_path, codes) {
     if (type == 2) {
         for (let code of codes) {

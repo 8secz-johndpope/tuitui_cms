@@ -12,9 +12,9 @@ var TemplateMsgSchema = new Schema({
     templateName: String,
     url: String,
     content: Object,
-    sex: {type: String, default: 'all'},
+    sex: {type: String, default: 'all'},// 0未知 1男 2女 all全部
     is_timing: Boolean,
-    timing_time: Date,
+    timing_time: Date
 });
 
 var TemplateMsgModel = db.model('TemplateMsg', TemplateMsgSchema);
