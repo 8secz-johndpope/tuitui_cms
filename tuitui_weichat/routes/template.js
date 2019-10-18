@@ -36,6 +36,7 @@ router.get('/list', async(req, res, next) => {
         console.log(lists.template_list, '------------------------')
         for (let list of lists.template_list) {
             let obj = {template_id: list.template_id, title: list.title, data: {}}
+            console.log(list.content,'----------------------list')
             let body = ''
             let reg = /\n\W.*\}/g
             if (reg.test(list.content)) {
