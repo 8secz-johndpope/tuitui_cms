@@ -98,6 +98,8 @@ router.post('/create', async(req, res, next) => {
     let code = req.body.code
     let conf = await ConfigModel.findOne({code: code})
     let confName = conf.nick_name
+    console.log(req.body.is_timing, 111111111111)
+    console.log(req.body.timing_time, 22222222222222222222)
     let data = {
         code: code,
         confName: confName,
