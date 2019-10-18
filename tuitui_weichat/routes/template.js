@@ -107,6 +107,8 @@ router.post('/create', async(req, res, next) => {
         url: req.body.url,
         content: req.body.content,
         sex: req.body.sex,
+        is_timing: req.body.is_timing,
+        timing_time: req.body.timing_time,
         account_id
     }
     let doc = await templateMsgModel.create(data)
@@ -130,7 +132,9 @@ router.post('/update', async(req, res, next) => {
         templateName: req.body.templateName,
         url: req.body.url,
         content: req.body.content,
-        sex: req.body.sex
+        sex: req.body.sex,
+        is_timing: req.body.is_timing,
+        timing_time: req.body.timing_time
     }
     let doc = await templateMsgModel.findByIdAndUpdate(id, data, {new: true})
     if (doc) {
