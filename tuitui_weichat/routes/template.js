@@ -34,45 +34,47 @@ router.get('/list', async(req, res, next) => {
     let arr = []
     api.getAllPrivateTemplate(async function (err, lists) {
         for (let list of lists.template_list) {
-            let obj = {template_id: list.template_id, title: list.title, data: {}}
-            let body = ''
-            let reg = /\n\W.*\}/g
-            if (reg.test(list.content)) {
-                body = list.content.match(/\n\W.*\}/g).toString()
-                body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/：/g, '：_').replace(/.DATA/g, '')
-            }
-            for (let i of body.split(',')) {
-                if (i.split('_')[1]) {
-                    obj['data'][i.split('_')[1]] = {
-                        pre: i.split('_')[0],
-                        value: '',
-                        color: ''
-                    }
-                } else {
-                    if (list.content.indexOf('first') != -1) {
-                        obj['data']['first'] = {
-                            pre: '',
+            if(list.title != '阅模板消息') {
+                let obj = {template_id: list.template_id, title: list.title, data: {}}
+                let body = ''
+                let reg = /\n\W.*\}/g
+                if (reg.test(list.content)) {
+                    body = list.content.match(/\n\W.*\}/g).toString()
+                    body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/：/g, '：_').replace(/.DATA/g, '')
+                }
+                for (let i of body.split(',')) {
+                    if (i.split('_')[1]) {
+                        obj['data'][i.split('_')[1]] = {
+                            pre: i.split('_')[0],
                             value: '',
                             color: ''
                         }
-                    }
-                    if (list.content.indexOf('remark') != -1) {
-                        obj['data']['remark'] = {
-                            pre: '',
-                            value: '',
-                            color: ''
+                    } else {
+                        if (list.content.indexOf('first') != -1) {
+                            obj['data']['first'] = {
+                                pre: '',
+                                value: '',
+                                color: ''
+                            }
                         }
-                    }
-                    if (list.content.indexOf('content') != -1) {
-                        obj['data']['content'] = {
-                            pre: '',
-                            value: '',
-                            color: ''
+                        if (list.content.indexOf('remark') != -1) {
+                            obj['data']['remark'] = {
+                                pre: '',
+                                value: '',
+                                color: ''
+                            }
+                        }
+                        if (list.content.indexOf('content') != -1) {
+                            obj['data']['content'] = {
+                                pre: '',
+                                value: '',
+                                color: ''
+                            }
                         }
                     }
                 }
+                arr.push(obj)
             }
-            arr.push(obj)
         }
         res.send(arr)
     })
