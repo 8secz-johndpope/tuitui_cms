@@ -34,7 +34,7 @@ router.get('/list', async(req, res, next) => {
     let arr = []
     api.getAllPrivateTemplate(async function (err, lists) {
         for (let list of lists.template_list) {
-            if(list.title != '阅模板消息') {
+            if(list.title != '订阅模板消息') {
                 let obj = {template_id: list.template_id, title: list.title, data: {}}
                 let body = ''
                 let reg = /\n\W.*\}/g
