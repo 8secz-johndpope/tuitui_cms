@@ -33,18 +33,14 @@ router.get('/list', async(req, res, next) => {
     let api = await wechat_util.getClient(code);
     let arr = []
     api.getAllPrivateTemplate(async function (err, lists) {
-        console.log(lists.template_list, '------------------------')
         for (let list of lists.template_list) {
             let obj = {template_id: list.template_id, title: list.title, data: {}}
-            console.log(list.content,'----------------------list')
             let body = ''
             let reg = /\n\W.*\}/g
             if (reg.test(list.content)) {
                 body = list.content.match(/\n\W.*\}/g).toString()
                 body = body.replace(/\n/g, '').replace(/{/g, '').replace(/}/g, '').replace(/：/g, '：_').replace(/.DATA/g, '')
             }
-            // await mem.set(code + '_' + list.template_id, body, 24 * 60 * 60)
-            console.log(body,'---------------------body')
             for (let i of body.split(',')) {
                 if (i.split('_')[1]) {
                     obj['data'][i.split('_')[1]] = {
@@ -164,7 +160,6 @@ router.post('/send', async(req, res, next) => {
         content: req.body.content,
         sex: req.body.sex
     }
-    console.log(data,'------------------------data')
     sendMQ(JSON.stringify(data))
     res.send('已发送')
 })
