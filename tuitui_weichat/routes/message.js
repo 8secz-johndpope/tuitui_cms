@@ -14,18 +14,18 @@ const q = 'message_tasks';
 const amqplib = require('amqplib');
 let ch;
 getChannel();
-async function getChannel(){
+async function getChannel() {
     console.log('----- getChannel ----')
-    try{
+    try {
         let conn = await amqplib.connect('amqp://localhost')
         ch = await conn.createChannel();
         //sendMQ('openid,code')
-    }catch(e){
+    } catch (e) {
         console.log(e)
     }
 }
 
-async function sendMQ(msg){
+async function sendMQ(msg) {
     await ch.assertQueue(q);
     ch.sendToQueue(q, Buffer.from(msg));
 }
@@ -111,7 +111,8 @@ router.post('/create', async(req, res, next) => {
         remarks: req.body.remarks,
         gonghaoList: req.body.gonghaoList,
         group: req.body.group,
-        daily_time:req.body.daily_time
+        is_daily: req.body.is_daily,
+        daily_time: req.body.daily_time
     };
     var docs = await MessageModel.create(message);
     if (docs) {
@@ -147,7 +148,8 @@ router.post('/update', async(req, res, next) => {
         remarks: req.body.remarks,
         gonghaoList: req.body.gonghaoList,
         group: req.body.group,
-        daily_time:req.body.daily_time
+        is_daily: req.body.is_daily,
+        daily_time: req.body.daily_time
     }
     if (parseInt(req.body.type) == 2) {
         for (let code of req.body.codes) {
@@ -220,7 +222,7 @@ router.post('/preview', async(req, res, next) => {
     let {codes, openid, type, contents, img_path} = req.body;
     let users = await UserModel.find({openid: openid}, {nickname: 1, openid: 1}).sort({updateAt: -1}).limit(1)
     let user = users[0]
-    if(users.length > 0) {
+    if (users.length > 0) {
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
             type === 0 && client.sendNews(openid, contents, async function (error, result) {
