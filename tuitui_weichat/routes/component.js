@@ -273,9 +273,6 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         }
     }
     var reply = await mem.get("cms_reply_" + code + "_" + param);
-    if(code == 10000000049){
-        console.log(reply,type,'------------------reply')
-    }
     if (!reply) {
         if (type == 0) {
             reply = await ReplyModel.findOne({
@@ -284,10 +281,6 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                     {codes: {$elemMatch: {$eq: code}}, type: 4}
                 ]
             }).sort({type: 1})
-            if(code == 10000000049){
-                console.log(reply,'------------------reply1')
-                return res.send('')
-            }
         } else if (type == 1) {
             code === 10000000245 && console.log(code)
             reply = await MenuModel.find({codes: {$elemMatch: {$eq: code}}}).sort({updateAt: -1}).limit(1);
