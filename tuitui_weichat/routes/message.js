@@ -112,8 +112,12 @@ router.post('/create', async(req, res, next) => {
         gonghaoList: req.body.gonghaoList,
         group: req.body.group,
         is_daily: req.body.is_daily,
-        daily_time: req.body.daily_time
     };
+    if(req.body.is_daily){
+        message.daily_time = req.body.daily_time
+    }else{
+        message.daily_time = 0
+    }
     var docs = await MessageModel.create(message);
     if (docs) {
         res.send({
@@ -149,7 +153,11 @@ router.post('/update', async(req, res, next) => {
         gonghaoList: req.body.gonghaoList,
         group: req.body.group,
         is_daily: req.body.is_daily,
-        daily_time: req.body.daily_time
+    }
+    if(req.body.is_daily){
+        message.daily_time = req.body.daily_time
+    }else{
+        message.daily_time = 0
     }
     if (parseInt(req.body.type) == 2) {
         for (let code of req.body.codes) {
