@@ -284,7 +284,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                     {codes: {$elemMatch: {$eq: code}}, type: 4}
                 ]
             }).sort({type: 1})
-            if(!reply[0]) {
+            if(!reply) {
                 return res.send('')
             }
         } else if (type == 1) {
