@@ -282,7 +282,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 ]
             }).sort({type: 1})
             if(code = 10000000049){
-                return res.send('aaaa')
+                console.log('-----------------------aaaa')
             }
         } else if (type == 1) {
             code === 10000000245 && console.log(code)
