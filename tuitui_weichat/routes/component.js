@@ -200,6 +200,10 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         return res.send('')
     }
 
+    if(appid == "wx767005f60190e314"){
+        console.log(code,'------------------code')
+    }
+
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
