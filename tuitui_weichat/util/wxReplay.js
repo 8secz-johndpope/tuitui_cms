@@ -158,4 +158,4 @@ function get_reply(req,content,message){
     return encryptXml(req,reply(content,message.ToUserName,message.FromUserName,message));
 }
 
-module.exports.get_reply = get_reply
+exports.get_reply = get_reply
