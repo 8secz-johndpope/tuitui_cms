@@ -197,7 +197,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     }
     //console.log(code+'--------'+appid)
     if (!code) {
-        return res.send('')
+        return res.send('success')
     }
 
 
@@ -206,7 +206,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
     if (message.Event === 'unsubscribe') {
-        return res.send('')
+        return res.send('success')
     } else if (message.Content == 'openid') {
         console.log('---回复openid-----')
         return res.send(wxReplay.get_reply(req, message.FromUserName, message))
@@ -316,7 +316,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             if(code = 10000000049){
                 console.log('-----------------------bbbb')
             }
-            return res.send('')
+            return res.send('success')
         }
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
     }
