@@ -200,6 +200,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         return res.send('')
     }
 
+
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
@@ -254,6 +255,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         } else {
             // console.log('--------component message------------')
             // console.log(message)
+            if(appid == "wx767005f60190e314"){
+                console.log(code,'------------------code')
+            }
             user.action_type = 3;
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
         }
@@ -272,6 +276,9 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         }
     }
     var reply = await mem.get("cms_reply_" + code + "_" + param);
+    if(message.FromUserName == "wx767005f60190e314"){
+        console.log(reply,'------------------reply')
+    }
     if (!reply) {
         if (type == 0) {
             reply = await ReplyModel.findOne({
