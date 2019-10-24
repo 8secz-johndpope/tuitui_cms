@@ -24,6 +24,7 @@ var MessageSchema = new Schema({
     des: String,
     is_timing: Boolean,
     timing_time: Date,
+    daily_time: Number,
     time: String,
     tagId: Number,
     mediaId: {type: String, default: ''},

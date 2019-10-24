@@ -110,7 +110,8 @@ router.post('/create', async(req, res, next) => {
         account_id,
         remarks: req.body.remarks,
         gonghaoList: req.body.gonghaoList,
-        group: req.body.group
+        group: req.body.group,
+        daily_time:req.body.daily_time
     };
     var docs = await MessageModel.create(message);
     if (docs) {
@@ -145,7 +146,8 @@ router.post('/update', async(req, res, next) => {
         mediaId: mediaId,
         remarks: req.body.remarks,
         gonghaoList: req.body.gonghaoList,
-        group: req.body.group
+        group: req.body.group,
+        daily_time:req.body.daily_time
     }
     if (parseInt(req.body.type) == 2) {
         for (let code of req.body.codes) {
