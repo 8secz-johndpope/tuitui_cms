@@ -181,87 +181,86 @@ router.get('/unbind', async(req, res, next) => {
 })
 
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
-    res.send('')
     //用户回复
-    // let appid = req.params.appid;
-    // let code
-    // if (appid) {
-    //     code = await mem.get("configure_appid_" + appid)
-    //     if (!code) {
-    //         let conf = await ConfigModel.findOne({appid: appid})
-    //         if (!conf) {
-    //             return res.send('')
+    let appid = req.params.appid;
+    let code
+    if (appid) {
+        code = await mem.get("configure_appid_" + appid)
+        if (!code) {
+            let conf = await ConfigModel.findOne({appid: appid})
+            if (!conf) {
+                return res.send('')
+            }
+            code = conf.code
+            await mem.set("configure_appid_" + appid, code, 60)
+        }
+    }
+    //console.log(code+'--------'+appid)
+    if (!code) {
+        return res.send('success')
+    }
+
+
+    let requestString = req.body;
+    let requestMessage = xmlUtil.formatMessage(requestString.xml);
+    let query = req.query;
+    let message = await componentService.handleMessage(requestMessage, query);
+    if (message.Event === 'unsubscribe') {
+        return res.send('success')
+    } else if (message.Content == 'openid') {
+        console.log('---回复openid-----')
+        return res.send(wxReplay.get_reply(req, message.FromUserName, message))
+    }
+    let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
+    // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
+    // if(userSex && userSex.sex && userSex.sex != "0"){
+    //     user = {
+    //         action_time: Date.now()
+    //     }
+    // }else {
+    //     let info = await userInfo(code, message.FromUserName)
+    //     if (info && info.sex) {
+    //         user = {
+    //             nickname: info.nickname,
+    //             headimgurl: info.headimgurl,
+    //             sex: info.sex.toString(),
+    //             province: info.province,
+    //             city: info.city,
+    //             country: info.country,
+    //             action_time: Date.now()
     //         }
-    //         code = conf.code
-    //         await mem.set("configure_appid_" + appid, code, 60)
-    //     }
-    // }
-    // //console.log(code+'--------'+appid)
-    // if (!code) {
-    //     return res.send('success')
-    // }
-    //
-    //
-    // let requestString = req.body;
-    // let requestMessage = xmlUtil.formatMessage(requestString.xml);
-    // let query = req.query;
-    // let message = await componentService.handleMessage(requestMessage, query);
-    // if (message.Event === 'unsubscribe') {
-    //     return res.send('success')
-    // } else if (message.Content == 'openid') {
-    //     console.log('---回复openid-----')
-    //     return res.send(wxReplay.get_reply(req, message.FromUserName, message))
-    // }
-    // let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
-    // // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
-    // // if(userSex && userSex.sex && userSex.sex != "0"){
-    // //     user = {
-    // //         action_time: Date.now()
-    // //     }
-    // // }else {
-    // //     let info = await userInfo(code, message.FromUserName)
-    // //     if (info && info.sex) {
-    // //         user = {
-    // //             nickname: info.nickname,
-    // //             headimgurl: info.headimgurl,
-    // //             sex: info.sex.toString(),
-    // //             province: info.province,
-    // //             city: info.city,
-    // //             country: info.country,
-    // //             action_time: Date.now()
-    // //         }
-    // //     } else {
-    // //         user = {
-    // //             sex: "0",
-    // //             action_time: Date.now()
-    // //         }
-    // //     }
-    // // }
-    // if (message.MsgType === 'event') {
-    //     if (message.Event === 'subscribe') {
-    //         user.subscribe_time = Date.now();
-    //         user.subscribe_flag = true;
-    //         user.action_type = 1;
-    //         reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
-    //         // } else if (message.Event === 'unsubscribe') {
-    //         //     user.unsubscribe_time = Date.now();
-    //         //     user.subscribe_flag = false;
-    //     } else if (message.Event.toLowerCase() == 'click') {
-    //         user.action_type = 2;
-    //         reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
-    //     }
-    // } else if (message.MsgType === 'text') {
-    //     if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
-    //         res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
     //     } else {
-    //         // console.log('--------component message------------')
-    //         // console.log(message)
-    //         user.action_type = 3;
-    //         reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
+    //         user = {
+    //             sex: "0",
+    //             action_time: Date.now()
+    //         }
     //     }
     // }
-    //
-    // sendMQ(JSON.stringify(user))
+    if (message.MsgType === 'event') {
+        if (message.Event === 'subscribe') {
+            user.subscribe_time = Date.now();
+            user.subscribe_flag = true;
+            user.action_type = 1;
+            reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
+            // } else if (message.Event === 'unsubscribe') {
+            //     user.unsubscribe_time = Date.now();
+            //     user.subscribe_flag = false;
+        } else if (message.Event.toLowerCase() == 'click') {
+            user.action_type = 2;
+            reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
+        }
+    } else if (message.MsgType === 'text') {
+        if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
+            res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
+        } else {
+            // console.log('--------component message------------')
+            // console.log(message)
+            user.action_type = 3;
+            reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
+        }
+    }
+
+    sendMQ(JSON.stringify(user))
     // await UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
 })
 
