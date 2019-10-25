@@ -7,16 +7,16 @@ const crypto = require("crypto");
 
 async function a() {
 
-    let a = await AccountModel.update({_id:'5d842e38294bb857f2728122'},{username:'yuansikuan',password:'40bb7b3c8969de39b91a1fde16d2c42a'})
-    console.log(a,'--------------')
+    // let a = await AccountModel.update({_id:'5d842e38294bb857f2728122'},{username:'yuansikuan',password:'40bb7b3c8969de39b91a1fde16d2c42a'})
+    // console.log(a,'--------------')
     // sendMQ.send('aaa','message_tasks')
 
-    // let configs = await ConfigModel.find()
-    // for(let config of configs){
-    //     await mem.set("configure_appid_" + config.appid, 0, 1)
-    //     await mem.set("configure_" + config.code, 0, 1)
-    //     console.log(config,'---------------config')
-    // }
+    let configs = await ConfigModel.find()
+    for(let config of configs){
+        await mem.set("configure_appid_" + config.appid, 0, 1)
+        await mem.set("configure_" + config.code, 0, 1)
+        console.log(config,'---------------config')
+    }
 
     // var access_token = await mem.get("cms_component_access_token");
     // console.log(access_token,'------------------------------access_token')
