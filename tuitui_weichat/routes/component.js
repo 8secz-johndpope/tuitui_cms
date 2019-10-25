@@ -189,7 +189,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         if (!code) {
             let conf = await ConfigModel.findOne({appid: appid})
             if (!conf) {
-                return res.send('')
+                return res.send('success')
             }
             code = conf.code
             await mem.set("configure_appid_" + appid, code, 60)
@@ -199,8 +199,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     if (!code) {
         return res.send('success')
     }
-
-
+    if(code = 10000000348){
+        console.log('-----------------------aaaa')
+    }
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
@@ -281,9 +282,9 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                     {codes: {$elemMatch: {$eq: code}}, type: 4}
                 ]
             }).sort({type: 1})
-            if(code = 10000000049){
-                console.log('-----------------------aaaa')
-            }
+            // if(code = 10000000049){
+            //     console.log('-----------------------aaaa')
+            // }
         } else if (type == 1) {
             code === 10000000245 && console.log(code)
             reply = await MenuModel.find({codes: {$elemMatch: {$eq: code}}}).sort({updateAt: -1}).limit(1);
@@ -294,7 +295,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 console.log("----------------------------reply=============================")
                 reply = reply[0].contents[param]
             } else {
-                return res.send('')
+                return res.send('success')
             }
             // reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type, key: param})
         } else if (type == 2) {
@@ -313,9 +314,9 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             reply = JSON.stringify({type: 1, articles: reply.articles})
         } else {
             // console.log('----匹配不到规则----')
-            if(code = 10000000049){
-                console.log('-----------------------bbbb')
-            }
+            // if(code = 10000000049){
+            //     console.log('-----------------------bbbb')
+            // }
             return res.send('success')
         }
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
