@@ -19,25 +19,25 @@ const redis_client = asyncRedis.createClient();
 /**
  消息队列
  */
-const q = 'user_tasks';
-const amqplib = require('amqplib');
-let ch;
-getChannel();
-async function getChannel() {
-    console.log('----- getChannel ----')
-    try {
-        let conn = await amqplib.connect('amqp://localhost')
-        ch = await conn.createChannel();
-        //sendMQ('openid,code')
-    } catch (e) {
-        console.log(e)
-    }
-}
+// const q = 'user_tasks';
+// const amqplib = require('amqplib');
+// let ch;
+// getChannel();
+// async function getChannel() {
+//     console.log('----- getChannel ----')
+//     try {
+//         let conn = await amqplib.connect('amqp://localhost')
+//         ch = await conn.createChannel();
+//         //sendMQ('openid,code')
+//     } catch (e) {
+//         console.log(e)
+//     }
+// }
 
-async function sendMQ(msg) {
-    await ch.assertQueue(q);
-    ch.sendToQueue(q, Buffer.from(msg));
-}
+// async function sendMQ(msg) {
+//     await ch.assertQueue(q);
+//     ch.sendToQueue(q, Buffer.from(msg));
+// }
 
 var xml_msg = async function (req, res, next) {
     if (req.method == 'POST' && req.is('text/xml')) {
@@ -260,7 +260,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         }
     }
 
-    sendMQ(JSON.stringify(user))
+    // sendMQ(JSON.stringify(user))
     // await UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
 })
 
