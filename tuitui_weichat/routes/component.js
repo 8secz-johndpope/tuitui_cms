@@ -199,7 +199,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     if (!code) {
         return res.send('success')
     }
-    if(code = 10000000348){
+    if(code == 10000000348){
         console.log('-----------------------aaaa')
     }
     let requestString = req.body;
