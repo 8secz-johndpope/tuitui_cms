@@ -15,6 +15,22 @@ const wxReplay = require('../util/wxReplay')
 const asyncRedis = require("async-redis");
 const redis_client = asyncRedis.createClient();
 
+var session = require('express-session');
+let sessiond = session({
+    genid: function(req) {
+      return genuuid() // use UUIDs for session IDs
+    },
+    secret: 'mingxingshuo',
+    name: 'xiaoshuo',   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
+    cookie: {maxAge: 1000*60*60*24 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
+    resave: false,
+    rolling:true,
+    saveUninitialized: false,
+    store: new MemcachedStore({
+      hosts: ["127.0.0.1:11211"],
+      secret: "mingxingshuo" // Optionally use transparent encryption for memcache session data
+    })
+})
 
 /**
  消息队列
@@ -109,7 +125,7 @@ router.get('/componentAuthorize', async(req, res, next) => {
 })
 
 //授权后跳转到的页面
-router.get('/queryAuthorizeInfo', async(req, res, next) => {
+router.get('/queryAuthorizeInfo',[sessiond], async(req, res, next) => {
     let account_id = req.session.account._id
     let query = req.query;
     let auth_code = query.auth_code;
