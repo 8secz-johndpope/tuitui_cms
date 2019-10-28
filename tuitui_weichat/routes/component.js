@@ -182,7 +182,7 @@ router.get('/unbind', async(req, res, next) => {
 
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     //用户回复
-    return res.send('success')
+    return res.send('success');
 
     let appid = req.params.appid;
     let code
