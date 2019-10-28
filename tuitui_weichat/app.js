@@ -54,8 +54,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use(logger('dev'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({ extended: false,limit: '50mb' }));
-app.use(cookieParser());
-app.use(session({
+//app.use(cookieParser());
+/*app.use(session({
     genid: function(req) {
       return genuuid() // use UUIDs for session IDs
     },
@@ -69,24 +69,40 @@ app.use(session({
       hosts: ["127.0.0.1:11211"],
       secret: "mingxingshuo" // Optionally use transparent encryption for memcache session data
     })
-}));
+}));*/
 
-app.use('/', index);
-app.use('/qr_code', qr_code);
-app.use('/transfer', transfer);
-app.use('/tag',tag);
-app.use('/conf',conf);
-app.use('/menu',menu);
-app.use('/reply',reply)
-app.use('/message',message)
-app.use('/material',material)
-app.use('/gonghaoTag',gonghaoTag)
-app.use('/history',msgHistory)
+let sessiond = session({
+    genid: function(req) {
+      return genuuid() // use UUIDs for session IDs
+    },
+    secret: 'mingxingshuo',
+    name: 'xiaoshuo',   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
+    cookie: {maxAge: 1000*60*60*24 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
+    resave: false,
+    rolling:true,
+    saveUninitialized: false,
+    store: new MemcachedStore({
+      hosts: ["127.0.0.1:11211"],
+      secret: "mingxingshuo" // Optionally use transparent encryption for memcache session data
+    })
+})
+
+app.use('/',[cookieParser(),sessiond], index);
+app.use('/qr_code',[cookieParser(),sessiond], qr_code);
+app.use('/transfer',[cookieParser(),sessiond], transfer);
+app.use('/tag',[cookieParser(),sessiond],tag);
+app.use('/conf',[cookieParser(),sessiond],conf);
+app.use('/menu',[cookieParser(),sessiond],menu);
+app.use('/reply',[cookieParser(),sessiond],reply)
+app.use('/message',[cookieParser(),sessiond],message)
+app.use('/material',[cookieParser(),sessiond],material)
+app.use('/gonghaoTag',[cookieParser(),sessiond],gonghaoTag)
+app.use('/history',[cookieParser(),sessiond],msgHistory)
 app.use('/component',component)
-app.use('/account',account)
-app.use('/tuiguangTag',tuiguangTag)
-app.use('/template',template)
-app.use('/messageGroup',messageGroup)
+app.use('/account',[cookieParser(),sessiond],account)
+app.use('/tuiguangTag',[cookieParser(),sessiond],tuiguangTag)
+app.use('/template',[cookieParser(),sessiond],template)
+app.use('/messageGroup',[cookieParser(),sessiond],messageGroup)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
