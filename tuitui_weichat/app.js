@@ -87,7 +87,8 @@ let sessiond = session({
     })
 })
 
-app.use('/',[cookieParser(),sessiond], index);
+app.use('/component',component)
+app.use('/', index);
 app.use('/qr_code',[cookieParser(),sessiond], qr_code);
 app.use('/transfer',[cookieParser(),sessiond], transfer);
 app.use('/tag',[cookieParser(),sessiond],tag);
@@ -98,7 +99,6 @@ app.use('/message',[cookieParser(),sessiond],message)
 app.use('/material',[cookieParser(),sessiond],material)
 app.use('/gonghaoTag',[cookieParser(),sessiond],gonghaoTag)
 app.use('/history',[cookieParser(),sessiond],msgHistory)
-app.use('/component',component)
 app.use('/account',[cookieParser(),sessiond],account)
 app.use('/tuiguangTag',[cookieParser(),sessiond],tuiguangTag)
 app.use('/template',[cookieParser(),sessiond],template)
