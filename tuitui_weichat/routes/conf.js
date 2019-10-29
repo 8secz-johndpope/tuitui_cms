@@ -15,7 +15,7 @@ var async = require('async');
 router.get('/', async(req, res, next) => {
     let account_id;
     if(!req.session.account) {
-        account_id = "5d63ba0a1a9eed6decbfa37c"
+        account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
     }
@@ -24,14 +24,25 @@ router.get('/', async(req, res, next) => {
 });
 
 router.get('/group', async(req, res, next) => {
-    let account_id = req.session.account._id;
+    let account_id;
+    if(!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
     let {group = "未分组"} = req.query;
     let doc = await ConfigModel.find({account_id, group}).sort({_id: -1});
     res.send({code: 1, msg: "查询成功", data: doc})
 });
 
 router.get('/find_one', async(req, res, next) => {
-    let reg = new RegExp(req.query.nick_name), account_id = req.session.account._id;
+    let account_id;
+    if(!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
+    let reg = new RegExp(req.query.nick_name);
     let doc = await ConfigModel.find({nick_name: {$regex: reg}, account_id});
     res.send({code: 1, msg: "查询成功", data: doc})
 });
