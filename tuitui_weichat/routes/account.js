@@ -55,11 +55,11 @@ router.delete('/', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   let { username, password } = req.body;
   let result = await AccountModel.find({username, password});
-  console.log(username, password, "-----------------username, password----------------")
-  console.log(result, "-----------------result----------------")
+  // console.log(username, password, "-----------------username, password----------------")
+  // console.log(result, "-----------------result----------------")
   if(result.length > 0) {
     req.session.account = result[0];
-    console.log(req.session.account, "---------------------------------req.session.account----------------------------------")
+    // console.log(req.session.account, "---------------------------------req.session.account----------------------------------")
     result[0].loginAt = Date.now();
     await result[0].save();
     res.send({code: 1, msg: '登录成功', data: result})
@@ -67,5 +67,6 @@ router.post('/login', async (req, res, next) => {
     res.send({code: -1, msg: '用户名或密码输入有误，请重新输入'})
   }
 });
+
 
 module.exports = router;
