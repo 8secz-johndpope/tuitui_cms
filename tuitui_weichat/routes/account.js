@@ -59,7 +59,6 @@ router.post('/login', async (req, res, next) => {
   // console.log(result, "-----------------result----------------")
   if(result.length > 0) {
     req.session.account = result[0];
-    req.session.account = req.session.account;
     // console.log(req.session.account, "---------------------------------req.session.account----------------------------------")
     result[0].loginAt = Date.now();
     await result[0].save();
