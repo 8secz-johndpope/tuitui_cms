@@ -13,6 +13,9 @@ var WechatUtil = require('../util/get_weichat_client.js');
 var async = require('async');
 
 router.get('/', async(req, res, next) => {
+    if(req.session.account._id) {
+        req.session.account = req.session.account;
+    }
     let account_id = req.session.account._id;
     console.log(req.session)
     let doc = await ConfigModel.find({account_id}).sort({_id: -1});
