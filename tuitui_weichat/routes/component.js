@@ -248,26 +248,25 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     }
 
     let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
-    if (message.MsgType === 'event') {
-        if (message.Event === 'subscribe') {
-            user.subscribe_time = Date.now();
-            user.subscribe_flag = true;
-            user.action_type = 1;
-            reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
-        } else if (message.Event.toLowerCase() == 'click') {
-            let click_count = await mem.get('reply_click_count_' + code)
-            if (!click_count) {
-                click_count = await MenuModel.count({codes: {$elemMatch: {$eq: Number(code)}}})
-                await mem.set("reply_click_count_" + code, click_count.toString(), 60)
-            }
-            if (click_count == "0") {
-                return res.send('success')
-            } else {
-                user.action_type = 2;
-                reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
-            }
+
+    if (message.MsgType === 'event' && message.Event === 'subscribe') {
+        user.subscribe_time = Date.now();
+        user.subscribe_flag = true;
+        user.action_type = 1;
+        reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
+    } else if (essage.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
+        let click_count = await mem.get('reply_click_count_' + code)
+        if (!click_count) {
+            click_count = await MenuModel.count({codes: {$elemMatch: {$eq: Number(code)}}})
+            await mem.set("reply_click_count_" + code, click_count.toString(), 60)
         }
-    } else if (message.MsgType === 'text') {
+        if (click_count == "0") {
+            return res.send('success')
+        } else {
+            user.action_type = 2;
+            reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
+        }
+    }else if (message.MsgType === 'text') {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
