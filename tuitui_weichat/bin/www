@@ -32,7 +32,7 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 require('../script/subscribeAccess')
-require('../script/onMQ')
+// require('../script/onMQ')
 
 function normalizePort(val) {
   var port = parseInt(val, 10);
