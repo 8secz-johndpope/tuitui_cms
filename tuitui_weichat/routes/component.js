@@ -253,27 +253,25 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         user.subscribe_time = Date.now();
         user.subscribe_flag = true;
         user.action_type = 1;
-        sendMQ(JSON.stringify(user))
         let subscribe_count = await mem.get('reply_subscribe_count_' + code)
         if (!subscribe_count) {
             subscribe_count = await ReplyModel.count({codes: {$elemMatch: {$eq: Number(code)}}, type: 2})
             await mem.set("reply_subscribe_count_" + code, subscribe_count.toString(), 60)
         }
-        if (subscribe_count.toString() == "0") {
-            return res.send('success')
+        if (subscribe_count == "0") {
+            res.send('success')
         } else {
             reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
         }
     } else if (essage.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
         user.action_type = 2;
-        sendMQ(JSON.stringify(user))
         let click_count = await mem.get('reply_click_count_' + code)
         if (!click_count) {
             click_count = await MenuModel.count({codes: {$elemMatch: {$eq: Number(code)}}})
             await mem.set("reply_click_count_" + code, click_count.toString(), 60)
         }
-        if (click_count.toString() == "0") {
-            return res.send('success')
+        if (click_count == "0") {
+            res.send('success')
         } else {
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
@@ -282,7 +280,6 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
             user.action_type = 3;
-            sendMQ(JSON.stringify(user))
             let text_count = await mem.get('reply_text_count_' + code)
             if (!text_count) {
                 text_count = await ReplyModel.count({
@@ -291,13 +288,14 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
                 })
                 await mem.set("reply_text_count_" + code, text_count.toString(), 60)
             }
-            if (text_count.toString() == "0") {
-                return res.send('success')
+            if (text_count == "0") {
+                res.send('success')
             } else {
                 reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
             }
         }
     }
+    sendMQ(JSON.stringify(user))
 })
 
 
