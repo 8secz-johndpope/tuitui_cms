@@ -145,7 +145,12 @@ router.get('/componentAuthorize', async(req, res, next) => {
 
 //授权后跳转到的页面
 router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
-    let account_id = req.session.account._id
+    let account_id;
+    if(!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
     let query = req.query;
     let auth_code = query.auth_code;
     let expires_in = query.expires_in;
@@ -263,7 +268,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         } else {
             reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
         }
-    } else if (essage.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
+    } else if (message.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
         user.action_type = 2;
         let click_count = await mem.get('reply_click_count_' + code)
         if (!click_count) {
