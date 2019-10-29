@@ -5,7 +5,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var MemcachedStore = require('connect-memcached')(session);
+//var MemcachedStore = require('connect-memcached')(session);
+
+const asyncRedis = require("async-redis");
+const redis_client = asyncRedis.createClient();
+var RedisStrore = require('connect-redis')(session);
 
 //监控
 const easyMonitor = require('easy-monitor');
@@ -95,10 +99,11 @@ let sessiond = session({
     resave: false,
     rolling:false,
     saveUninitialized: false,
-    store: new MemcachedStore({
+    store : new RedisStrore({ host: 'localhost', port: 6379, client: redis_client,ttl :  260}),
+    /*store: new MemcachedStore({
       hosts: ["127.0.0.1:11211"],
       secret: "mingxingshuo" // Optionally use transparent encryption for memcache session data
-    })
+    })*/
 })
 
 app.use('/component',component)

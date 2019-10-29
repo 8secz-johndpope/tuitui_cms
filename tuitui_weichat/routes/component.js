@@ -16,7 +16,9 @@ const asyncRedis = require("async-redis");
 const redis_client = asyncRedis.createClient();
 
 var session = require('express-session');
-var MemcachedStore = require('connect-memcached')(session);
+var RedisStrore = require('connect-redis')(session);
+//var MemcachedStore = require('connect-memcached')(session);
+
 function genuuid(){
     var s = [];
     var hexDigits = "0123456789abcdef";
@@ -40,10 +42,11 @@ let sessiond = session({
     resave: false,
     rolling:false,
     saveUninitialized: false,
-    store: new MemcachedStore({
+    store : new RedisStrore({ host: 'localhost', port: 6379, client: redis_client,ttl :  260}),
+    /*store: new MemcachedStore({
       hosts: ["127.0.0.1:11211"],
       secret: "mingxingshuo" // Optionally use transparent encryption for memcache session data
-    })
+    })*/
 });
 
 /**
