@@ -24,7 +24,7 @@ router.get('/', async(req, res, next) => {
 router.post('/goTop', async(req, res, next) => {
     let account_id;
     if(!req.session.account) {
-        account_id = req.query.account_id
+        account_id = req.body.account_id
     } else {
         account_id = req.session.account._id;
     }
@@ -57,7 +57,7 @@ router.post('/create', async(req, res, next)=> {
     console.log(req.session.account, "req.session.account----------------------------------")
     let account_id;
     if(!req.session.account) {
-        account_id = req.query.account_id
+        account_id = req.body.account_id
     } else {
         account_id = req.session.account._id;
     }

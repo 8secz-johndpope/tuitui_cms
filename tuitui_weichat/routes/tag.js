@@ -38,7 +38,7 @@ router.get('/get_name',function(req,res,next){
 router.post('/',function(req,res,next){
 	  let account_id;
   if(!req.session.account) {
-    account_id = req.query.account_id
+    account_id = req.body.account_id
   } else {
     account_id = req.session.account._id;
   }

@@ -93,7 +93,13 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/search', async (req, res, next) => {
-  let reg = new RegExp(req.query.confName), account_id = req.session.account._id;
+  let account_id;
+  if (!req.session.account) {
+    account_id = req.body.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
+  let reg = new RegExp(req.query.confName);
   let doc = await templateMsgModel.find({confName: {$regex: reg}, account_id});
   res.send({msg: "查询成功", data: doc})
 })
@@ -102,7 +108,7 @@ router.get('/search', async (req, res, next) => {
 router.post('/create', async (req, res, next) => {
   let account_id;
   if (!req.session.account) {
-    account_id = req.query.account_id
+    account_id = req.body.account_id
   } else {
     account_id = req.session.account._id;
   }
