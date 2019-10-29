@@ -14,7 +14,7 @@ var async = require('async');
 
 router.get('/', async(req, res, next) => {
     let account_id;
-    if(Object.keys(req.session.account).length === 0) {
+    if(!req.session.account) {
         account_id = "5d63ba0a1a9eed6decbfa37c"
     } else {
         account_id = req.session.account._id;
