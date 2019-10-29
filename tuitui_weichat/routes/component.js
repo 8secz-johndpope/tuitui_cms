@@ -17,11 +17,11 @@ const redis_client = asyncRedis.createClient();
 
 var session = require('express-session');
 var RedisStrore = require('connect-redis')(session);
-var redis   = require("redis");
+var redis = require("redis");
 var redis_s_client = redis.createClient();
 //var MemcachedStore = require('connect-memcached')(session);
 
-function genuuid(){
+function genuuid() {
     var s = [];
     var hexDigits = "0123456789abcdef";
     for (var i = 0; i < 36; i++) {
@@ -35,20 +35,20 @@ function genuuid(){
     return uuid;
 }
 let sessiond = session({
-    genid: function(req) {
-      return genuuid() // use UUIDs for session IDs
+    genid: function (req) {
+        return genuuid() // use UUIDs for session IDs
     },
     secret: 'mingxingshuo',
     name: 'xiaoshuo',   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
-    cookie: {maxAge: 1000*60*60*24 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
+    cookie: {maxAge: 1000 * 60 * 60 * 24},  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
     resave: false,
-    rolling:false,
+    rolling: false,
     saveUninitialized: false,
-    store : new RedisStrore({ host: 'localhost', port: 6379, client: redis_s_client,ttl :  260}),
+    store: new RedisStrore({host: 'localhost', port: 6379, client: redis_s_client, ttl: 260}),
     /*store: new MemcachedStore({
-      hosts: ["127.0.0.1:11211"],
-      secret: "mingxingshuo" // Optionally use transparent encryption for memcache session data
-    })*/
+     hosts: ["127.0.0.1:11211"],
+     secret: "mingxingshuo" // Optionally use transparent encryption for memcache session data
+     })*/
 });
 
 /**
@@ -144,7 +144,7 @@ router.get('/componentAuthorize', async(req, res, next) => {
 })
 
 //授权后跳转到的页面
-router.get('/queryAuthorizeInfo',[sessiond], async(req, res, next) => {
+router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
     let account_id = req.session.account._id
     let query = req.query;
     let auth_code = query.auth_code;
@@ -218,7 +218,7 @@ router.get('/unbind', async(req, res, next) => {
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
 
     let appid = req.params.appid;
-    if(appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid !='wx4653895b5676edeb'){
+    if (appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid != 'wx4653895b5676edeb') {
         return res.send('');
     }
     let code
@@ -253,40 +253,51 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         user.subscribe_time = Date.now();
         user.subscribe_flag = true;
         user.action_type = 1;
-        reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
+        sendMQ(JSON.stringify(user))
+        let subscribe_count = await mem.get('reply_subscribe_count_' + code)
+        if (!subscribe_count) {
+            subscribe_count = await ReplyModel.count({codes: {$elemMatch: {$eq: Number(code)}}, type: 2})
+            await mem.set("reply_subscribe_count_" + code, subscribe_count.toString(), 60)
+        }
+        if (subscribe_count.toString() == "0") {
+            return res.send('success')
+        } else {
+            reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
+        }
     } else if (essage.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
+        user.action_type = 2;
+        sendMQ(JSON.stringify(user))
         let click_count = await mem.get('reply_click_count_' + code)
         if (!click_count) {
             click_count = await MenuModel.count({codes: {$elemMatch: {$eq: Number(code)}}})
             await mem.set("reply_click_count_" + code, click_count.toString(), 60)
         }
-        if (click_count == "0") {
+        if (click_count.toString() == "0") {
             return res.send('success')
         } else {
-            user.action_type = 2;
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
-    }else if (message.MsgType === 'text') {
+    } else if (message.MsgType === 'text') {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
+            user.action_type = 3;
+            sendMQ(JSON.stringify(user))
             let text_count = await mem.get('reply_text_count_' + code)
             if (!text_count) {
                 text_count = await ReplyModel.count({
                     codes: {$elemMatch: {$eq: Number(code)}},
-                    $or: [{type: 4}, {text: {$ne: ''}}],
+                    $or: [{type: 4}, {type: 0, text: {$ne: ''}}]
                 })
                 await mem.set("reply_text_count_" + code, text_count.toString(), 60)
             }
-            if (text_count == "0") {
+            if (text_count.toString() == "0") {
                 return res.send('success')
             } else {
-                user.action_type = 3;
                 reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
             }
         }
     }
-    sendMQ(JSON.stringify(user))
 })
 
 
@@ -313,7 +324,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             code === 10000000245 && console.log(code)
             reply = await MenuModel.find({codes: {$elemMatch: {$eq: code}}}).sort({updateAt: -1}).limit(1);
 
-            if(reply[0]) {
+            if (reply[0]) {
                 console.log("----------------------------reply=============================");
                 console.log(reply, param)
                 console.log("----------------------------reply=============================")
