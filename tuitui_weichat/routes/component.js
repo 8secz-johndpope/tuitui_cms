@@ -145,7 +145,12 @@ router.get('/componentAuthorize', async(req, res, next) => {
 
 //授权后跳转到的页面
 router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
-    let account_id = req.session.account._id
+    let account_id;
+    if(!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
     let query = req.query;
     let auth_code = query.auth_code;
     let expires_in = query.expires_in;
