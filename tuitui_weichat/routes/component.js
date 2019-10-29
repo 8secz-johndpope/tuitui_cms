@@ -38,7 +38,7 @@ let sessiond = session({
     name: 'xiaoshuo',   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
     cookie: {maxAge: 1000*60*60*24 },  //设置maxAge是80000ms，即80s后session和相应的cookie失效过期
     resave: false,
-    rolling:true,
+    rolling:false,
     saveUninitialized: false,
     store: new MemcachedStore({
       hosts: ["127.0.0.1:11211"],
