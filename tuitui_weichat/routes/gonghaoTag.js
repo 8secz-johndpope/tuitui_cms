@@ -3,7 +3,12 @@ var router = express.Router();
 var GonghaoTagModel = require('../model/GonghaoTag.js');
 var ConfigModel = require('../model/Config');
 router.get('/', async (req, res, next) => {
-  let account_id = req.session.account._id;
+  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
   let result = await GonghaoTagModel.find({account_id});
   if(result.length > 0) {
     res.send({ code: 1, msg: "查询成功", data: result })
@@ -13,7 +18,13 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/get_name', async (req, res, next) => {
-  let account_id = req.session.account._id, _id = req.query.tagId;
+  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
+  let _id = req.query.tagId;
   let result = GonghaoTagModel.findOne({_id, account_id});
   if(result) {
     res.send({ code: 1, msg: "查询成功", data: result })
@@ -23,7 +34,12 @@ router.get('/get_name', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-  let account_id = req.session.account._id;
+  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
   let { name } = req.body;
   let result = await GonghaoTagModel.findOne({ name, account_id });
   if(result) {
@@ -40,7 +56,12 @@ router.post('/', async (req, res, next) => {
 
 router.put("/", async (req, res, next) => {
   let { id, name } = req.body;
-  let account_id = req.session.account._id;
+  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
   let message = await GonghaoTagModel.findById(id);
   let result = await GonghaoTagModel.findByIdAndUpdate(id, {name}, {new: true});
   if(result) {
@@ -53,7 +74,12 @@ router.put("/", async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
   let message = await GonghaoTagModel.findById(req.params.id);
-  let account_id = req.session.account._id;
+  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
   let result = await GonghaoTagModel.findByIdAndRemove(req.params.id);
   if(result) {
     await ConfigModel.update({group: message.name, account_id}, {$set: {group: "未分组"}});

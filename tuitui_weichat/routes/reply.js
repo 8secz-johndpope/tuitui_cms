@@ -21,7 +21,12 @@ router.post('/upload', upload.single('imageFile'), function (req, res, next) {
 });
 
 router.get('/', async(req, res, next) => {
-    let account_id = req.session.account._id;
+    let account_id;
+    if(!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
     let doc = await ReplyModel.find({account_id});
     if(doc.length > 0) {
         res.send({code: 1, msg: "查询成功", data: doc})
@@ -31,7 +36,12 @@ router.get('/', async(req, res, next) => {
 });
 
 router.post('/create', async(req, res, next) => {
-    let account_id = req.session.account._id;
+    let account_id;
+    if(!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
     const {codes, type, text = "", key = "", sex, attribute, replyType, content = "", articles = [], name} = req.body;
     let data = {codes, type, text, key, sex, attribute, replyType, content, articles, account_id, name};
     let doc = await ReplyModel.create(data);
@@ -64,7 +74,12 @@ router.get('/del', async(req, res, next) => {
 });
 
 router.get('/remove', async(req, res, next) => {
-    let account_id = req.session.account._id;
+    let account_id;
+    if(!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
     var docs = await ReplyModel.remove({account_id});
     res.send({code: 1, msg: '删除成功', data: docs})
 });

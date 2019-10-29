@@ -3,7 +3,12 @@ var router = express.Router();
 var TagModel = require('../model/Tag.js')
 
 router.get('/',function(req,res,next){
-	let account_id = req.session.account._id;
+	  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
 	TagModel.find({account_id}, function(err,result){
 		if(err){
 			res.send({err: err})
@@ -14,7 +19,12 @@ router.get('/',function(req,res,next){
 });
 
 router.get('/get_name',function(req,res,next){
-	let account_id = req.session.account._id;
+	  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
 	TagModel.findOne({_id: req.query.tagId, account_id},function(err,result){
 		if(err){
 			console.log(err)
@@ -26,7 +36,12 @@ router.get('/get_name',function(req,res,next){
 })
 
 router.post('/',function(req,res,next){
-	let account_id = req.session.account._id;
+	  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
 	TagModel.findOne({name:req.body.name, account_id},function(err,result){
 		if(err){
 			res.send({err: err})

@@ -61,7 +61,12 @@ router.get('/del_msg', async (req, res, next) => {
 
 router.get('/delByDate', async (req, res, next) => {
   let date = req.query.date;
-  let account_id = req.session.account._id;
+  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
   let messages = await MsgHistoryModel.find({code: req.query.code, update_time: {$lte: date}, account_id});
   let code = messages[0].code;
   let api = await weichat_util.getClient(code);
@@ -73,7 +78,12 @@ router.get('/delByDate', async (req, res, next) => {
 });
 
 router.get('/clear', async (req, res, next) => {
-  let account_id = req.session.account._id;
+  let account_id;
+  if(!req.session.account) {
+    account_id = req.query.account_id
+  } else {
+    account_id = req.session.account._id;
+  }
   let docs = await MsgHistoryModel.remove({code: req.query.code, account_id})
   if(docs) {
     res.send({success: '已删除全部历史记录'})

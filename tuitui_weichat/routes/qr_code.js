@@ -6,7 +6,12 @@ var weichat_util = require('../util/get_weichat_client.js')
 var ConfigModel = require('../model/Config');
 
 router.get('/show', async(req, res, next) => {
-    let account_id = req.session.account._id;
+    let account_id;
+    if(!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
     var codes = await ConfigModel.find({account_id});
     let data = await QRcodeModel.find({account_id});
     res.send({data: data, codes: codes})
@@ -53,7 +58,12 @@ router.post('/create', (req, res, next) => {
 })
 
 router.get('/get_code', async(req, res, next) => {
-    let account_id = req.session.account._id;
+    let account_id;
+    if(!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
     var codes = await ConfigModel.find({account_id})
     // var codes = [];
     // for (var key in weichat_conf) {
