@@ -124,11 +124,6 @@ app.use('/tuiguangTag',[cookieParser(),sessiond],tuiguangTag)
 app.use('/template',[cookieParser(),sessiond],template)
 app.use('/messageGroup',[cookieParser(),sessiond],messageGroup)
 
-app.use(function(req, res, next) {
-  console.log(req.session, "===============app.js===========================");
-  next();
-});
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
