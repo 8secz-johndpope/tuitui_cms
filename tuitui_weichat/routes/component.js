@@ -216,8 +216,6 @@ router.get('/unbind', async(req, res, next) => {
 })
 
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
-    //用户回复
-    //return res.send('');
 
     let appid = req.params.appid;
     if(appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid !='wx4653895b5676edeb'){
@@ -235,12 +233,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             await mem.set("configure_appid_" + appid, code, 60)
         }
     }
-    //console.log(code+'--------'+appid)
     if (!code) {
         return res.send('success')
-    }
-    if(code == 10000000348){
-        console.log('-----------------------aaaa')
     }
     let requestString = req.body;
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
@@ -252,57 +246,48 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         console.log('---回复openid-----')
         return res.send(wxReplay.get_reply(req, message.FromUserName, message))
     }
+
     let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
-    // let userSex = await UserconfModel.findOne({openid: message.FromUserName, code: code})
-    // if(userSex && userSex.sex && userSex.sex != "0"){
-    //     user = {
-    //         action_time: Date.now()
-    //     }
-    // }else {
-    //     let info = await userInfo(code, message.FromUserName)
-    //     if (info && info.sex) {
-    //         user = {
-    //             nickname: info.nickname,
-    //             headimgurl: info.headimgurl,
-    //             sex: info.sex.toString(),
-    //             province: info.province,
-    //             city: info.city,
-    //             country: info.country,
-    //             action_time: Date.now()
-    //         }
-    //     } else {
-    //         user = {
-    //             sex: "0",
-    //             action_time: Date.now()
-    //         }
-    //     }
-    // }
     if (message.MsgType === 'event') {
         if (message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
             user.subscribe_flag = true;
             user.action_type = 1;
             reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
-            // } else if (message.Event === 'unsubscribe') {
-            //     user.unsubscribe_time = Date.now();
-            //     user.subscribe_flag = false;
         } else if (message.Event.toLowerCase() == 'click') {
-            user.action_type = 2;
-            reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
+            let click_count = await mem.get('reply_click_count_' + code)
+            if (!click_count) {
+                click_count = await MenuModel.count({codes: {$elemMatch: {$eq: Number(code)}}})
+                await mem.set("reply_click_count_" + code, click_count.toString(), 60)
+            }
+            if (click_count == "0") {
+                return res.send('success')
+            } else {
+                user.action_type = 2;
+                reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
+            }
         }
     } else if (message.MsgType === 'text') {
         if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
             res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
         } else {
-            // console.log('--------component message------------')
-            // console.log(message)
-            user.action_type = 3;
-            reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
+            let text_count = await mem.get('reply_text_count_' + code)
+            if (!text_count) {
+                text_count = await ReplyModel.count({
+                    codes: {$elemMatch: {$eq: Number(code)}},
+                    $or: [{type: 4}, {text: {$ne: ''}}],
+                })
+                await mem.set("reply_text_count_" + code, text_count.toString(), 60)
+            }
+            if (text_count == "0") {
+                return res.send('success')
+            } else {
+                user.action_type = 3;
+                reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
+            }
         }
     }
-
     sendMQ(JSON.stringify(user))
-    // await UserconfModel.findOneAndUpdate({openid: message.FromUserName, code: code}, user, {upsert: true})
 })
 
 
