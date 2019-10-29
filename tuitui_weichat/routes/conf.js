@@ -16,7 +16,7 @@ router.get('/', async(req, res, next) => {
     let account_id = req.session.account._id;
     console.log(req.session)
     let doc = await ConfigModel.find({account_id}).sort({_id: -1});
-    res.send({code: 1, msg: "查询成功", data: doc, account_id})
+    res.send({code: 1, msg: "查询成功", data: doc})
 });
 
 router.get('/group', async(req, res, next) => {
