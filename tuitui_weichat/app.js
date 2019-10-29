@@ -7,8 +7,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //var MemcachedStore = require('connect-memcached')(session);
 
-const asyncRedis = require("async-redis");
-const redis_client = asyncRedis.createClient();
+const redis   = require("redis");
+const redis_client = redis.createClient();
+
 var RedisStrore = require('connect-redis')(session);
 
 //监控
