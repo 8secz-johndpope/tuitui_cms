@@ -13,8 +13,12 @@ var WechatUtil = require('../util/get_weichat_client.js');
 var async = require('async');
 
 router.get('/', async(req, res, next) => {
-    let account_id = req.session.account._id;
-    console.log(req.session)
+    let account_id;
+    if(!req.session.account) {
+        account_id = "5d63ba0a1a9eed6decbfa37c"
+    } else {
+        account_id = req.session.account._id;
+    }
     let doc = await ConfigModel.find({account_id}).sort({_id: -1});
     res.send({code: 1, msg: "查询成功", data: doc})
 });
