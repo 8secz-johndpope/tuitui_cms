@@ -9,6 +9,7 @@ const authorizer_info = require("../util/authorizer_info")
 const ReplyModel = require('../model/Reply');
 const MenuModel = require('../model/Menu')
 // const MsgModel = require('../model/Msg');
+const ActionModel = require('../model/Action')
 const mem = require('../util/mem');
 const wechat_util = require('../util/get_weichat_client')
 const wxReplay = require('../util/wxReplay')
@@ -146,7 +147,7 @@ router.get('/componentAuthorize', async(req, res, next) => {
 //授权后跳转到的页面
 router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
@@ -251,6 +252,16 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
 
     if (appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid != 'wx4653895b5676edeb') {
         return res.send('');
+    }
+
+    let action = mem.get('action_' + code)
+    if (!action) {
+        action = await ActionModel.findOne({code: code})
+        action = action.actions.toString()
+        mem.set('action_' + code, action, 60)
+    }
+    if (action.indexOf(message.Event.toLowerCase()) === -1 && action.indexOf(message.MsgType) === -1) {
+        return res.send('')
     }
 
     let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
