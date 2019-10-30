@@ -264,8 +264,20 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             }
         }
         mem.set('action_' + code, JSON.stringify(action), 60)
+    }else{
+        action = JSON.parse(action)
     }
-    if (JSON.parse(action).actions.indexOf(message.Event.toLowerCase()) === -1 && JSON.parse(action).actions.indexOf(message.MsgType) === -1) {
+
+    let condition = '';
+    if(message.MsgType === 'event' && message.Event === 'subscribe'){
+        condition = 'subscribe'
+    }else if(message.MsgType === 'event' && message.Event.toLowerCase() == 'click'){
+        
+    }else if(message.MsgType === 'text'){
+
+    }
+
+    if (action.actions.indexOf(condition) === -1 && action.actions.indexOf(condition) === -1 && action.actions.indexOf('1')===-1 ){
         return res.send('')
     }
 
@@ -298,24 +310,21 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
-        if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
-            res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
-        } else {
-            user.action_type = 3;
-            let text_count = await mem.get('reply_text_count_' + code)
-            if (!text_count) {
-                text_count = await ReplyModel.count({
-                    codes: {$elemMatch: {$eq: Number(code)}},
-                    $or: [{type: 4}, {type: 0, text: {$ne: ''}}]
-                })
-                await mem.set("reply_text_count_" + code, text_count.toString(), 60)
-            }
-            if (text_count == "0") {
-                res.send('success')
-            } else {
-                reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
-            }
+        user.action_type = 3;
+        let text_count = await mem.get('reply_text_count_' + code)
+        if (!text_count) {
+            text_count = await ReplyModel.count({
+                codes: {$elemMatch: {$eq: Number(code)}},
+                $or: [{type: 4}, {type: 0, text: {$ne: ''}}]
+            })
+            await mem.set("reply_text_count_" + code, text_count.toString(), 60)
         }
+        if (text_count == "0") {
+            res.send('success')
+        } else {
+            reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
+        }
+        
     }
     sendMQ(JSON.stringify(user))
 })
