@@ -258,11 +258,12 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     if (!action) {
         action = await ActionModel.findOne({code: code})
         if(!action){
-            action = []
-        }else{
-            action = action.actions.toString()
+            action = {
+                code:code,
+                actions:[]
+            }
         }
-        mem.set('action_' + code, action, 60)
+        mem.set('action_' + code, JSON.stringify(action), 60)
     }
     if (action.indexOf(message.Event.toLowerCase()) === -1 && action.indexOf(message.MsgType) === -1) {
         return res.send('')
