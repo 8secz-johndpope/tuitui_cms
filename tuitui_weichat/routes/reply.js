@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var ReplyModel = require('../model/Reply');
+var ActionModel = require('../model/Action')
 var mem = require('../util/mem.js');
 var wechat_util = require('../util/get_weichat_client.js');
 var multer = require('multer');
@@ -46,6 +47,30 @@ router.post('/create', async(req, res, next) => {
     let data = {codes, type, text, key, sex, attribute, replyType, content, articles, account_id, name};
     let doc = await ReplyModel.create(data);
     if (doc) {
+        if ((doc.type == 2)) {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'subscribe'}}, {
+                    upsert: true,
+                    new: true
+                })
+            }
+        }
+        if (doc.type == 0 && doc.text) {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'text_' + doc.text}}, {
+                    upsert: true,
+                    new: true
+                })
+            }
+        }
+        if ((doc.type == 4)) {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: '1'}}, {
+                    upsert: true,
+                    new: true
+                })
+            }
+        }
         res.send({code: 1, msg: '创建成功', data: doc})
     } else {
         res.send({code: -1, msg: '创建失败'})
@@ -57,6 +82,30 @@ router.post('/update', async(req, res, next) => {
     let data = {codes, type, text, key, sex, attribute, replyType, content, articles, name};
     let doc = await ReplyModel.findByIdAndUpdate(_id, data, {new: true});
     if (doc) {
+        if ((doc.type == 2)) {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'subscribe'}}, {
+                    upsert: true,
+                    new: true
+                })
+            }
+        }
+        if (doc.type == 0 && doc.text) {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'text_' + doc.text}}, {
+                    upsert: true,
+                    new: true
+                })
+            }
+        }
+        if ((doc.type == 4)) {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: '1'}}, {
+                    upsert: true,
+                    new: true
+                })
+            }
+        }
         res.send({code: 1, msg: '修改成功', data: doc})
     } else {
         res.send({code: -1, msg: '修改失败'})

@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var MenuModel = require('../model/Menu');
+var ActionModel = require('../model/Action')
 var WechatUtil = require('../util/get_weichat_client.js');
 
 router.get('/', async(req, res, next) => {
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
@@ -16,7 +17,7 @@ router.get('/', async(req, res, next) => {
 
 router.post('/create', async(req, res, next) => {
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.body.account_id
     } else {
         account_id = req.session.account._id;
@@ -34,10 +35,20 @@ router.post('/create', async(req, res, next) => {
 
     if (doc) {
         for (let code of doc.codes) {
-            if(doc.individual) {
+            if (doc.individual) {
                 createIndividualMenu(code, doc.values, doc.sex, doc._id, null)
             } else {
                 createMenu(code, doc.values)
+            }
+        }
+        for (let value of doc.values) {
+            if (value.type == 'click') {
+                for (let code of menu.codes) {
+                    await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
+                        upsert: true,
+                        new: true
+                    })
+                }
             }
         }
         res.send({success: '创建成功', data: doc})
@@ -59,10 +70,20 @@ router.post('/update', async(req, res, next) => {
     let doc = await MenuModel.findByIdAndUpdate(id, data, {new: true});
     if (doc) {
         for (let code of doc.codes) {
-            if(data.individual) {
+            if (data.individual) {
                 createIndividualMenu(code, doc.values, doc.sex, doc._id, doc.menuid)
             } else {
                 createMenu(code, doc.values)
+            }
+        }
+        for (let value of doc.values) {
+            if (value.type == 'click') {
+                for (let code of menu.codes) {
+                    await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
+                        upsert: true,
+                        new: true
+                    })
+                }
             }
         }
         res.send({success: '修改成功', data: doc})
@@ -75,7 +96,7 @@ router.get('/del', async(req, res, next) => {
     let id = req.query.id;
     var doc = await MenuModel.findByIdAndRemove(id);
     for (let code of doc.codes) {
-        if(doc.individual) {
+        if (doc.individual) {
             console.log('--------------------删除个性化菜单1---------------------------')
             removeIndividualMenu(code, doc.menuid)
         } else {
@@ -134,7 +155,7 @@ async function createIndividualMenu(code, menu, sex, id, menuid) {
     console.log('individaulMenu', individaulMenu);
     console.log('code', code);
     var api = await WechatUtil.getClient(code);
-    if(menuid) {
+    if (menuid) {
         api.removeCustomMenu(menuid, function (err, res) {
             console.log(err)
             console.log(res)
@@ -147,7 +168,7 @@ async function createIndividualMenu(code, menu, sex, id, menuid) {
             console.log(res)
         }
         let result = await MenuModel.findByIdAndUpdate(id, {menuid: res.menuid}, {new: true});
-        if(result) {
+        if (result) {
             api.getMenu(function (error, res_m) {
                 console.log(error)
                 console.log(res_m);
@@ -161,7 +182,7 @@ async function removeIndividualMenu(code, menuid) {
     console.log('code', code)
     console.log('menuid', menuid)
     var api = await WechatUtil.getClient(code);
-    if(menuid) {
+    if (menuid) {
         api.removeCustomMenu(menuid, function (err, res) {
             console.log(err)
             console.log(res)
