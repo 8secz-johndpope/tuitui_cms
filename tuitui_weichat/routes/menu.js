@@ -43,7 +43,7 @@ router.post('/create', async(req, res, next) => {
         }
         for (let value of doc.values) {
             if (value.type == 'click') {
-                for (let code of menu.codes) {
+                for (let code of doc.codes) {
                     await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
                         upsert: true,
                         new: true
@@ -78,7 +78,7 @@ router.post('/update', async(req, res, next) => {
         }
         for (let value of doc.values) {
             if (value.type == 'click') {
-                for (let code of menu.codes) {
+                for (let code of doc.codes) {
                     await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
                         upsert: true,
                         new: true
