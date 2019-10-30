@@ -257,27 +257,27 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let action = mem.get('action_' + code)
     if (!action) {
         action = await ActionModel.findOne({code: code})
-        if(!action){
+        if (!action) {
             action = {
-                code:code,
-                actions:[]
+                code: code,
+                actions: []
             }
         }
         mem.set('action_' + code, JSON.stringify(action), 60)
-    }else{
+    } else {
         action = JSON.parse(action)
     }
 
     let condition = '';
-    if(message.MsgType === 'event' && message.Event === 'subscribe'){
+    if (message.MsgType === 'event' && message.Event === 'subscribe') {
         condition = 'subscribe'
-    }else if(message.MsgType === 'event' && message.Event.toLowerCase() == 'click'){
-        
-    }else if(message.MsgType === 'text'){
-
+    } else if (message.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
+        condition = 'click_' + message.EventKey
+    } else if (message.MsgType === 'text') {
+        condition = 'text_' + message.Content
     }
 
-    if (action.actions.indexOf(condition) === -1 && action.actions.indexOf(condition) === -1 && action.actions.indexOf('1')===-1 ){
+    if (action.actions.indexOf(condition) === -1 && action.actions.indexOf('1') === -1) {
         return res.send('')
     }
 
@@ -324,7 +324,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         } else {
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
         }
-        
+
     }
     sendMQ(JSON.stringify(user))
 })
