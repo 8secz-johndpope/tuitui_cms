@@ -254,7 +254,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         return res.send('');
     }*/
 
-    let action = mem.get('action_' + code)
+    let action = await mem.get('action_' + code)
     console.log('---------action------')
     console.log(action)
     if (!action) {
@@ -265,7 +265,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
                 actions: []
             }
         }
-        mem.set('action_' + code, JSON.stringify(action), 60)
+        await mem.set('action_' + code, JSON.stringify(action), 60)
     } else {
         action = JSON.parse(action)
     }
