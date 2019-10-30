@@ -265,7 +265,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         }
         mem.set('action_' + code, JSON.stringify(action), 60)
     }
-    if (action.indexOf(message.Event.toLowerCase()) === -1 && action.indexOf(message.MsgType) === -1) {
+    if (action.actions.indexOf(message.Event.toLowerCase()) === -1 && action.actions.indexOf(message.MsgType) === -1) {
         return res.send('')
     }
 
