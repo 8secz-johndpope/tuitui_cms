@@ -255,6 +255,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     }*/
 
     let action = mem.get('action_' + code)
+    console.log('---------action------')
+    console.log(action)
     if (!action) {
         action = await ActionModel.findOne({code: code})
         if (!action) {
