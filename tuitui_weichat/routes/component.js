@@ -250,9 +250,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         return res.send(wxReplay.get_reply(req, message.FromUserName, message))
     }
 
-    if (appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid != 'wx4653895b5676edeb') {
+    /*if (appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid != 'wx4653895b5676edeb') {
         return res.send('');
-    }
+    }*/
 
     let action = mem.get('action_' + code)
     if (!action) {
