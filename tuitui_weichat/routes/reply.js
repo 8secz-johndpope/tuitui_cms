@@ -106,16 +106,14 @@ router.post('/update', async(req, res, next) => {
             }
             if (type == 0 && text) {
                 await ActionModel.findOneAndUpdate({code: code}, {
-                    $addToSet: {actions: 'text_' + text},
-                    $pull: {actions: delparam}
+                    $addToSet: {actions: 'text_' + text}
                 }, {
                     upsert: true
                 })
             }
             if ((type == 4)) {
                 await ActionModel.findOneAndUpdate({code: code}, {
-                    $addToSet: {actions: '1'},
-                    $pull: {actions: delparam}
+                    $addToSet: {actions: '1'}
                 }, {
                     upsert: true
                 })
