@@ -80,34 +80,45 @@ router.post('/create', async(req, res, next) => {
 router.post('/update', async(req, res, next) => {
     const {codes, type, text = "", key = "", url = "", showUrl = "", sex, attribute, replyType, content = "", articles = [], _id, name} = req.body;
     let data = {codes, type, text, key, sex, attribute, replyType, content, articles, name};
-    let doc = await ReplyModel.findByIdAndUpdate(_id, data, {new: true});
+    let doc = await ReplyModel.findByIdAndUpdate(_id, data);
     if (doc) {
+        let delparam
         if ((doc.type == 2)) {
-            for (let code of doc.codes) {
-                await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'subscribe'}}, {
-                    upsert: true,
-                    new: true
-                })
-            }
+            delparam = 'subscribe'
         }
         if (doc.type == 0 && doc.text) {
-            console.log(doc.text,'------------------text')
-            for (let code of doc.codes) {
-                await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'text_' + doc.text}}, {
-                    upsert: true,
-                    new: true
-                })
-            }
+            delparam = 'text_' + doc.text
         }
         if ((doc.type == 4)) {
-            for (let code of doc.codes) {
-                await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: '1'}}, {
-                    upsert: true,
-                    new: true
+            delparam = '1'
+        }
+        for (let code of codes) {
+            if ((type == 2)) {
+                await ActionModel.findOneAndUpdate({code: code}, {
+                    $addToSet: {actions: 'subscribe'},
+                    $pull: {actions: delparam}
+                }, {
+                    upsert: true
+                })
+            }
+            if (type == 0 && text) {
+                await ActionModel.findOneAndUpdate({code: code}, {
+                    $addToSet: {actions: 'text_' + text},
+                    $pull: {actions: delparam}
+                }, {
+                    upsert: true
+                })
+            }
+            if ((type == 4)) {
+                await ActionModel.findOneAndUpdate({code: code}, {
+                    $addToSet: {actions: '1'},
+                    $pull: {actions: delparam}
+                }, {
+                    upsert: true
                 })
             }
         }
-        res.send({code: 1, msg: '修改成功', data: doc})
+        res.send({code: 1, msg: '修改成功'})
     } else {
         res.send({code: -1, msg: '修改失败'})
     }
@@ -117,18 +128,14 @@ router.get('/del', async(req, res, next) => {
     let id = req.query._id;
     var doc = await ReplyModel.findByIdAndRemove(id);
     if (doc) {
-        if ((doc.type == 2)) {
-            for (let code of doc.codes) {
+        for (let code of doc.codes) {
+            if ((doc.type == 2)) {
                 await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'subscribe'}})
             }
-        }
-        if (doc.type == 0 && doc.text) {
-            for (let code of doc.codes) {
+            if (doc.type == 0 && doc.text) {
                 await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'text_' + doc.text}})
             }
-        }
-        if ((doc.type == 4)) {
-            for (let code of doc.codes) {
+            if ((doc.type == 4)) {
                 await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: '1'}})
             }
         }
