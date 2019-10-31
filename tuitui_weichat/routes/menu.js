@@ -42,7 +42,7 @@ router.post('/create', async(req, res, next) => {
             }
         }
         for (let value of doc.values) {
-            if(value.sub_button.length == 0){
+            if (value.sub_button.length == 0) {
                 if (value.type == 'click') {
                     for (let code of doc.codes) {
                         await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
@@ -51,8 +51,8 @@ router.post('/create', async(req, res, next) => {
                         })
                     }
                 }
-            }else{
-                for(let button of value.sub_button){
+            } else {
+                for (let button of value.sub_button) {
                     if (button.type == 'click') {
                         for (let code of doc.codes) {
                             await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + button.key}}, {
@@ -80,29 +80,44 @@ router.post('/update', async(req, res, next) => {
         sex: req.body.sex,
         contents: req.body.contents,
     };
-    let doc = await MenuModel.findByIdAndUpdate(id, data, {new: true});
+    let doc = await MenuModel.findByIdAndUpdate(id, data);
     if (doc) {
         for (let code of doc.codes) {
-            if (data.individual) {
-                createIndividualMenu(code, doc.values, doc.sex, doc._id, doc.menuid)
-            } else {
-                createMenu(code, doc.values)
+            for (let value of doc.values) {
+                if (value.sub_button.length == 0) {
+                    if (value.type == 'click') {
+                        await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'click_' + value.key}})
+                    }
+                } else {
+                    for (let button of value.sub_button) {
+                        if (button.type == 'click') {
+                            await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'click_' + button.key}})
+                        }
+                    }
+                }
             }
         }
-        for (let value of doc.values) {
-            if(value.sub_button.length == 0){
+        for (let code of req.body.codes) {
+            if (data.individual) {
+                createIndividualMenu(code, req.body.values, req.body.sex, req.body.id, doc.menuid)
+            } else {
+                createMenu(code, req.body.values)
+            }
+        }
+        for (let value of req.body.values) {
+            if (value.sub_button.length == 0) {
                 if (value.type == 'click') {
-                    for (let code of doc.codes) {
+                    for (let code of req.body.codes) {
                         await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
                             upsert: true,
                             new: true
                         })
                     }
                 }
-            }else{
-                for(let button of value.sub_button){
+            } else {
+                for (let button of value.sub_button) {
                     if (button.type == 'click') {
-                        for (let code of doc.codes) {
+                        for (let code of req.body.codes) {
                             await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + button.key}}, {
                                 upsert: true,
                                 new: true
@@ -112,7 +127,7 @@ router.post('/update', async(req, res, next) => {
                 }
             }
         }
-        res.send({success: '修改成功', data: doc})
+        res.send({success: '修改成功'})
     } else {
         res.send({err: '修改失败'})
     }
@@ -130,23 +145,17 @@ router.get('/del', async(req, res, next) => {
         }
     }
     for (let value of doc.values) {
-        if(value.sub_button.length == 0){
+        if (value.sub_button.length == 0) {
             if (value.type == 'click') {
                 for (let code of doc.codes) {
-                    await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
-                        upsert: true,
-                        new: true
-                    })
+                    await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'click_' + value.key}})
                 }
             }
-        }else{
-            for(let button of value.sub_button){
+        } else {
+            for (let button of value.sub_button) {
                 if (button.type == 'click') {
                     for (let code of doc.codes) {
-                        await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + button.key}}, {
-                            upsert: true,
-                            new: true
-                        })
+                        await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'click_' + button.key}})
                     }
                 }
             }
