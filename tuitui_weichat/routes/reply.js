@@ -92,11 +92,14 @@ router.post('/update', async(req, res, next) => {
         if ((doc.type == 4)) {
             delparam = '1'
         }
+
         for (let code of codes) {
+            await ActionModel.findOneAndUpdate({code: code}, {
+                $pull: {actions: delparam}
+            })
             if ((type == 2)) {
                 await ActionModel.findOneAndUpdate({code: code}, {
-                    $addToSet: {actions: 'subscribe'},
-                    $pull: {actions: delparam}
+                    $addToSet: {actions: 'subscribe'}
                 }, {
                     upsert: true
                 })
