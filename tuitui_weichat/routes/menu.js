@@ -139,18 +139,14 @@ router.get('/del', async(req, res, next) => {
         } else {
             createMenu(code, {button: []})
         }
-    }
-    for (let value of doc.values) {
-        if (value.sub_button.length == 0) {
-            if (value.type == 'click') {
-                for (let code of doc.codes) {
+        for (let value of doc.values) {
+            if (value.sub_button.length == 0) {
+                if (value.type == 'click') {
                     await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'click_' + value.key}})
                 }
-            }
-        } else {
-            for (let button of value.sub_button) {
-                if (button.type == 'click') {
-                    for (let code of doc.codes) {
+            } else {
+                for (let button of value.sub_button) {
+                    if (button.type == 'click') {
                         await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'click_' + button.key}})
                     }
                 }
