@@ -16,6 +16,7 @@ router.get('/', async(req, res, next) => {
 });
 
 router.post('/create', async(req, res, next) => {
+    console.log('------------------------')
     let account_id;
     if (!req.session.account) {
         account_id = req.body.account_id
@@ -34,7 +35,6 @@ router.post('/create', async(req, res, next) => {
     let doc = await MenuModel.create(data);
 
     if (doc) {
-        console.log(req.body.codes,'------------------------codes')
         for (let code of doc.codes) {
             if (doc.individual) {
                 createIndividualMenu(code, doc.values, doc.sex, doc._id, null)
