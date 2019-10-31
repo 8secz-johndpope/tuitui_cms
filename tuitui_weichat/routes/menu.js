@@ -103,6 +103,13 @@ router.get('/del', async(req, res, next) => {
             createMenu(code, {button: []})
         }
     }
+    for (let value of doc.values) {
+        if (value.type == 'click') {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'click_' + value.key}})
+            }
+        }
+    }
     res.send({success: '删除成功', data: doc})
 });
 

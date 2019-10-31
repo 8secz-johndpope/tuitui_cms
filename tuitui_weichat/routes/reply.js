@@ -23,13 +23,13 @@ router.post('/upload', upload.single('imageFile'), function (req, res, next) {
 
 router.get('/', async(req, res, next) => {
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
     }
     let doc = await ReplyModel.find({account_id});
-    if(doc.length > 0) {
+    if (doc.length > 0) {
         res.send({code: 1, msg: "查询成功", data: doc})
     } else {
         res.send({code: -1, msg: "没有查询到相关数据"})
@@ -38,7 +38,7 @@ router.get('/', async(req, res, next) => {
 
 router.post('/create', async(req, res, next) => {
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.body.account_id
     } else {
         account_id = req.session.account._id;
@@ -91,6 +91,7 @@ router.post('/update', async(req, res, next) => {
             }
         }
         if (doc.type == 0 && doc.text) {
+            console.log(doc.text,'------------------text')
             for (let code of doc.codes) {
                 await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'text_' + doc.text}}, {
                     upsert: true,
@@ -116,6 +117,21 @@ router.get('/del', async(req, res, next) => {
     let id = req.query._id;
     var doc = await ReplyModel.findByIdAndRemove(id);
     if (doc) {
+        if ((doc.type == 2)) {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'subscribe'}})
+            }
+        }
+        if (doc.type == 0 && doc.text) {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: 'text_' + doc.text}})
+            }
+        }
+        if ((doc.type == 4)) {
+            for (let code of doc.codes) {
+                await ActionModel.findOneAndUpdate({code: code}, {$pull: {actions: '1'}})
+            }
+        }
         res.send({code: 1, msg: '删除成功', data: doc})
     } else {
         res.send({code: -1, msg: '删除失败'})
@@ -124,7 +140,7 @@ router.get('/del', async(req, res, next) => {
 
 router.get('/remove', async(req, res, next) => {
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
