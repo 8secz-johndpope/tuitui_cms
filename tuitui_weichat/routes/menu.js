@@ -42,12 +42,25 @@ router.post('/create', async(req, res, next) => {
             }
         }
         for (let value of doc.values) {
-            if (value.type == 'click') {
-                for (let code of doc.codes) {
-                    await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
-                        upsert: true,
-                        new: true
-                    })
+            if(value.sub_button.length == 0){
+                if (value.type == 'click') {
+                    for (let code of doc.codes) {
+                        await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
+                            upsert: true,
+                            new: true
+                        })
+                    }
+                }
+            }else{
+                for(let button of value.sub_button){
+                    if (button.type == 'click') {
+                        for (let code of doc.codes) {
+                            await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + button.key}}, {
+                                upsert: true,
+                                new: true
+                            })
+                        }
+                    }
                 }
             }
         }
@@ -77,12 +90,25 @@ router.post('/update', async(req, res, next) => {
             }
         }
         for (let value of doc.values) {
-            if (value.type == 'click') {
-                for (let code of doc.codes) {
-                    await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
-                        upsert: true,
-                        new: true
-                    })
+            if(value.sub_button.length == 0){
+                if (value.type == 'click') {
+                    for (let code of doc.codes) {
+                        await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
+                            upsert: true,
+                            new: true
+                        })
+                    }
+                }
+            }else{
+                for(let button of value.sub_button){
+                    if (button.type == 'click') {
+                        for (let code of doc.codes) {
+                            await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + button.key}}, {
+                                upsert: true,
+                                new: true
+                            })
+                        }
+                    }
                 }
             }
         }
