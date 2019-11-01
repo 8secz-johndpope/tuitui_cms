@@ -278,12 +278,22 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         condition = 'text_' + message.Content
     }
 
-    if (action.actions.indexOf(condition) === -1 && action.actions.indexOf('1') === -1) {
-        return res.send('')
-    }
-
     let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
 
+    if (action.actions.indexOf(condition) === -1 && action.actions.indexOf('1') === -1) {
+        if (message.MsgType === 'event' && message.Event === 'subscribe') {
+            user.subscribe_time = Date.now();
+            user.subscribe_flag = true;
+            user.action_type = 1;
+        }else if (message.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
+            user.action_type = 2;
+        }else if (message.MsgType === 'text') {
+            user.action_type = 3;
+        }
+        sendMQ(JSON.stringify(user))
+        return res.send('')
+    }
+    
     if (message.MsgType === 'event' && message.Event === 'subscribe') {
         user.subscribe_time = Date.now();
         user.subscribe_flag = true;
