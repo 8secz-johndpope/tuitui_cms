@@ -9,6 +9,7 @@ const authorizer_info = require("../util/authorizer_info")
 const ReplyModel = require('../model/Reply');
 const MenuModel = require('../model/Menu')
 // const MsgModel = require('../model/Msg');
+const ActionModel = require('../model/Action')
 const mem = require('../util/mem');
 const wechat_util = require('../util/get_weichat_client')
 const wxReplay = require('../util/wxReplay')
@@ -146,7 +147,7 @@ router.get('/componentAuthorize', async(req, res, next) => {
 //授权后跳转到的页面
 router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
@@ -223,9 +224,6 @@ router.get('/unbind', async(req, res, next) => {
 router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
 
     let appid = req.params.appid;
-    if (appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid != 'wx4653895b5676edeb') {
-        return res.send('');
-    }
     let code
     if (appid) {
         code = await mem.get("configure_appid_" + appid)
@@ -250,6 +248,38 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     } else if (message.Content == 'openid') {
         console.log('---回复openid-----')
         return res.send(wxReplay.get_reply(req, message.FromUserName, message))
+    }
+
+    /*if (appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid != 'wx4653895b5676edeb') {
+        return res.send('');
+    }*/
+
+    let action = await mem.get('action_' + code)
+    
+    if (!action) {
+        action = await ActionModel.findOne({code: code})
+        if (!action) {
+            action = {
+                code: code,
+                actions: []
+            }
+        }
+        await mem.set('action_' + code, JSON.stringify(action), 60)
+    } else {
+        action = JSON.parse(action)
+    }
+
+    let condition = '';
+    if (message.MsgType === 'event' && message.Event === 'subscribe') {
+        condition = 'subscribe'
+    } else if (message.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
+        condition = 'click_' + message.EventKey
+    } else if (message.MsgType === 'text') {
+        condition = 'text_' + message.Content
+    }
+
+    if (action.actions.indexOf(condition) === -1 && action.actions.indexOf('1') === -1) {
+        return res.send('')
     }
 
     let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
@@ -281,24 +311,21 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
-        if (message.Content == 'TESTCOMPONENT_MSG_TYPE_TEXT') {
-            res.send(wxReplay.get_reply(req, 'TESTCOMPONENT_MSG_TYPE_TEXT_callback', message))
-        } else {
-            user.action_type = 3;
-            let text_count = await mem.get('reply_text_count_' + code)
-            if (!text_count) {
-                text_count = await ReplyModel.count({
-                    codes: {$elemMatch: {$eq: Number(code)}},
-                    $or: [{type: 4}, {type: 0, text: {$ne: ''}}]
-                })
-                await mem.set("reply_text_count_" + code, text_count.toString(), 60)
-            }
-            if (text_count == "0") {
-                res.send('success')
-            } else {
-                reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
-            }
+        user.action_type = 3;
+        let text_count = await mem.get('reply_text_count_' + code)
+        if (!text_count) {
+            text_count = await ReplyModel.count({
+                codes: {$elemMatch: {$eq: Number(code)}},
+                $or: [{type: 4}, {type: 0, text: {$ne: ''}}]
+            })
+            await mem.set("reply_text_count_" + code, text_count.toString(), 60)
         }
+        if (text_count == "0") {
+            res.send('success')
+        } else {
+            reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
+        }
+
     }
     sendMQ(JSON.stringify(user))
 })
