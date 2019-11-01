@@ -134,7 +134,7 @@ router.get('/del', async(req, res, next) => {
             console.log('--------------------删除个性化菜单1---------------------------')
             removeIndividualMenu(code, doc.menuid)
         } else {
-            createMenu(code, {button: []})
+            createMenu(code, [])
         }
         for (let value of doc.values) {
             if (value.sub_button.length == 0) {
