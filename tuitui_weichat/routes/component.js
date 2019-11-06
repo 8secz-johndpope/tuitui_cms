@@ -288,7 +288,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         }else if (message.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
             user.action_type = 2;
         }else if (message.MsgType === 'text') {
-            user.action_type = 3;
+            user.action_type = 2;
         }
         sendMQ(JSON.stringify(user))
         return res.send('')
@@ -321,7 +321,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
     } else if (message.MsgType === 'text') {
-        user.action_type = 3;
+        user.action_type = 2;
         let text_count = await mem.get('reply_text_count_' + code)
         if (!text_count) {
             text_count = await ReplyModel.count({
