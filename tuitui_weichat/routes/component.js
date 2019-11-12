@@ -163,7 +163,7 @@ router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
         res.redirect('/admin')
         refreshAccessToken({appid: authorization_info.authorizer_appid})
     }else{
-        res.redirect('/admin/gonghao/tuoguan/error?errcode=' + authorization_info.errcode + '&errmsg=' + authorization_info.errmsg)
+        res.redirect('/error?errcode=' + authorization_info.errcode + '&errmsg=' + authorization_info.errmsg)
     }
 })
 

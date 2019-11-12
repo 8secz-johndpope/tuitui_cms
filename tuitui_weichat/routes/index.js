@@ -17,4 +17,9 @@ router.get('/admin', function(req, res, next) {
   res.sendFile(path.join(__dirname, '../build', 'home.html'));
 });
 
+router.get('/error', function(req, res, next) {
+  const {errcode, errmsg} = req.query;
+  res.render("/error/index", {errcode, errmsg})
+});
+
 module.exports = router;
