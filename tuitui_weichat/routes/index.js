@@ -19,7 +19,7 @@ router.get('/admin', function(req, res, next) {
 
 router.get('/error', function(req, res, next) {
   const {errcode, errmsg} = req.query;
-  res.render("/error/index", {errcode, errmsg})
+  res.render("error/index", {errcode, errmsg})
 });
 
 module.exports = router;
