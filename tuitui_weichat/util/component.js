@@ -126,7 +126,7 @@ module.exports.queryAuthorizeInfo = async(account_id, auth_code) => {
         }
         return authorization_info;
     }else{
-        return null
+        return queryAuthorize_json
     }
 }
 

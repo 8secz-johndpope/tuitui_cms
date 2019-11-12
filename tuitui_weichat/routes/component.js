@@ -157,10 +157,14 @@ router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
     let query = req.query;
     let auth_code = query.auth_code;
     let expires_in = query.expires_in;
-    await authorizer_info.get_authorizer_info({appid: authorization_info.authorizer_appid})
-    res.redirect('/admin')
     let authorization_info = await componentService.queryAuthorizeInfo(account_id, auth_code);
-    refreshAccessToken({appid: authorization_info.authorizer_appid})
+    if(!authorization_info.errcode){
+        await authorizer_info.get_authorizer_info({appid: authorization_info.authorizer_appid})
+        res.redirect('/admin')
+        refreshAccessToken({appid: authorization_info.authorizer_appid})
+    }else{
+        res.redirect('/admin/gonghao/tuoguan/error?errcode=' + authorization_info.errcode + '&errmsg=' + authorization_info.errmsg)
+    }
 })
 
 var refreshAccessToken = async function (con = {}) {
@@ -257,7 +261,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     }*/
 
     let action = await mem.get('action_' + code)
-    
+
     if (!action) {
         action = await ActionModel.findOne({code: code})
         if (!action) {
@@ -295,7 +299,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         sendMQ(JSON.stringify(user))
         return res.send('')
     }
-    
+
     if (message.MsgType === 'event' && message.Event === 'subscribe') {
         user.subscribe_time = Date.now();
         user.subscribe_flag = true;
