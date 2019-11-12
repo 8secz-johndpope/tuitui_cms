@@ -98,32 +98,36 @@ module.exports.queryAuthorizeInfo = async(account_id, auth_code) => {
     console.log(queryAuthorize_json);
     let authorization_info = queryAuthorize_json.authorization_info;
     console.log(authorization_info, '-------------------authorization_info')
-    let appid = authorization_info.authorizer_appid;
-    let authorizer_access_token = authorization_info.authorizer_access_token;
-    let expires_in = authorization_info.expires_in;
-    let refresh_token = authorization_info.authorizer_refresh_token;
-    let func_info = JSON.stringify(authorization_info.func_info);
-    let conf = await ConfigModel.findOne({"appid": appid})
-    if (conf) {
-        await ConfigModel.update({"appid": appid}, {
-            "authorizer_access_token": authorizer_access_token,
-            "expires_in": expires_in,
-            "refresh_time": Date.now(),
-            "refresh_token": refresh_token,
-            "func_info": func_info
-        })
-    } else {
-        await ConfigModel.create({
-            "appid": appid,
-            "authorizer_access_token": authorizer_access_token,
-            "expires_in": expires_in,
-            "refresh_time": Date.now(),
-            "refresh_token": refresh_token,
-            "func_info": func_info,
-            "account_id": account_id
-        })
+    if (authorization_info) {
+        let appid = authorization_info.authorizer_appid;
+        let authorizer_access_token = authorization_info.authorizer_access_token;
+        let expires_in = authorization_info.expires_in;
+        let refresh_token = authorization_info.authorizer_refresh_token;
+        let func_info = JSON.stringify(authorization_info.func_info);
+        let conf = await ConfigModel.findOne({"appid": appid})
+        if (conf) {
+            await ConfigModel.update({"appid": appid}, {
+                "authorizer_access_token": authorizer_access_token,
+                "expires_in": expires_in,
+                "refresh_time": Date.now(),
+                "refresh_token": refresh_token,
+                "func_info": func_info
+            })
+        } else {
+            await ConfigModel.create({
+                "appid": appid,
+                "authorizer_access_token": authorizer_access_token,
+                "expires_in": expires_in,
+                "refresh_time": Date.now(),
+                "refresh_token": refresh_token,
+                "func_info": func_info,
+                "account_id": account_id
+            })
+        }
+        return authorization_info;
+    }else{
+        return null
     }
-    return authorization_info;
 }
 
 async function test() {

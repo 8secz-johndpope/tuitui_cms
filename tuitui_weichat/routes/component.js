@@ -157,10 +157,10 @@ router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
     let query = req.query;
     let auth_code = query.auth_code;
     let expires_in = query.expires_in;
-    let authorization_info = await componentService.queryAuthorizeInfo(account_id, auth_code);
-    refreshAccessToken({appid: authorization_info.authorizer_appid})
     await authorizer_info.get_authorizer_info({appid: authorization_info.authorizer_appid})
     res.redirect('/admin')
+    let authorization_info = await componentService.queryAuthorizeInfo(account_id, auth_code);
+    refreshAccessToken({appid: authorization_info.authorizer_appid})
 })
 
 var refreshAccessToken = async function (con = {}) {
