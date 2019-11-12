@@ -152,6 +152,8 @@ router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
     } else {
         account_id = req.session.account._id;
     }
+    console.log('-------queryAuthorizeInfo  account_id---------')
+    console.log(account_id);
     let query = req.query;
     let auth_code = query.auth_code;
     let expires_in = query.expires_in;
