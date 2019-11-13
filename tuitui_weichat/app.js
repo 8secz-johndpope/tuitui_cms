@@ -32,6 +32,7 @@ var account = require('./routes/account');
 var tuiguangTag = require('./routes/tuiguangTag')
 var template = require('./routes/template')
 var messageGroup = require('./routes/messageGroup')
+var textMaterial = require('./routes/textMaterial')
 
 var app = express();
 
@@ -123,6 +124,7 @@ app.use('/account',[cookieParser(),sessiond],account)
 app.use('/tuiguangTag',[cookieParser(),sessiond],tuiguangTag)
 app.use('/template',[cookieParser(),sessiond],template)
 app.use('/messageGroup',[cookieParser(),sessiond],messageGroup)
+app.use('/textMaterial',[cookieParser(),sessiond],textMaterial)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
