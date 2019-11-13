@@ -4,7 +4,7 @@ const TextMaterialModel = require('../model/TextMaterial.js');
 var wechat_util = require('../util/get_weichat_client.js')
 
 router.get('/', async (req, res, next) => {
-  let account_id, {code} = rea.query;
+  let account_id, {code} = req.query;
   if(!req.session.account) {
     account_id = req.query.account_id
   } else {

@@ -13,8 +13,8 @@ var TextMaterialSchema = new Schema({
         default: false
     },
     timing_time: { // 定时时间
-        type: String,
-        default: ""
+        type: Number,
+        default: null
     },
     msg_id: {  // 素材msg_id
         type: String,
