@@ -1,8 +1,8 @@
-var mem = require('../util/mem.js');
+// var mem = require('../util/mem.js');
 const ConfigModel = require("../model/Config")
 const AccountModel = require('../model/Account.js')
 var MenuModel = require('../model/Menu');
-const crypto = require("crypto");
+// const crypto = require("crypto");
 // var sendMQ = require('./sendMQ')
 
 async function a() {
@@ -11,12 +11,15 @@ async function a() {
     // console.log(a,'--------------')
     // sendMQ.send('aaa','message_tasks')
 
-    let configs = await ConfigModel.find()
-    for(let config of configs){
-        await mem.set("configure_appid_" + config.appid, 0, 1)
-        await mem.set("configure_" + config.code, 0, 1)
-        console.log(config,'---------------config')
-    }
+    let a = await AccountModel.findById('5d842dc9294bb857f2728120')
+    console.log(a,'-----------------')
+
+    // let configs = await ConfigModel.find()
+    // for(let config of configs){
+    //     await mem.set("configure_appid_" + config.appid, 0, 1)
+    //     await mem.set("configure_" + config.code, 0, 1)
+    //     console.log(config,'---------------config')
+    // }
 
     // var access_token = await mem.get("cms_component_access_token");
     // console.log(access_token,'------------------------------access_token')
