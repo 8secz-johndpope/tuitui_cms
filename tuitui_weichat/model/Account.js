@@ -6,7 +6,11 @@ var db = mongoose.createConnection(connect_url);
 var AccountSchema = new Schema({
     username : String,
     password : String,
-    role : Number,//0 超级权限  1 1级代理  2  公众号矩阵  
+    remarks : {
+        type: String,
+        default: "默认为本公司使用"
+    },
+    role : Number,//0 超级权限  1 1级代理  2  公众号矩阵
     createAt: {
         type: Date,
         default: Date.now
