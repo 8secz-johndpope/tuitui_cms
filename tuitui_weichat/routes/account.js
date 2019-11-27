@@ -3,12 +3,12 @@ const router = express.Router();
 const AccountModel = require('../model/Account.js')
 
 router.post('/', async (req, res, next) => {
-  let { username, password, role } = req.body;
+  let { username, password, role, remarks } = req.body;
   let result = await AccountModel.find({username});
   if(result.length > 0) {
     res.send({code: 2, msg: "该账户名已存在，请检查输入是否有误"})
   } else {
-    let data = await AccountModel.create({ username, password, role, loginAt: Date.now() });
+    let data = await AccountModel.create({ username, password, role, remarks, loginAt: Date.now() });
     if(data) {
       res.send({code: 1, msg: '账户创建成功', data})
     } else {
@@ -28,6 +28,17 @@ router.get('/', async (req, res, next) => {
     res.send({code: 1, msg: '查询成功', data: result})
   } else {
     res.send({code: -1, msg: '没有查询到相关数据'})
+  }
+});
+
+router.put('/remarks', async (req, res, next) => {
+  let { id, remarks } = req.body;
+  let updateAt = Date.now();
+  let data = await AccountModel.findByIdAndUpdate(id, { remarks, updateAt }, {new: true});
+  if(data) {
+    res.send({code: 1, msg: '备注修改成功', data})
+  } else {
+    res.send({code: -1, msg: '备注修改失败，请重试'})
   }
 });
 
