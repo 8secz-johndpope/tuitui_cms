@@ -42,6 +42,8 @@ router.get('/find_one', async(req, res, next) => {
     } else {
         account_id = req.session.account._id;
     }
+    console.log(req.query.nick_name)
+    console.log(decodeURIComponent(req.query.nick_name))
     let reg = new RegExp(decodeURIComponent(req.query.nick_name));
     let doc = await ConfigModel.find({nick_name: {$regex: reg}, account_id});
     res.send({code: 1, msg: "查询成功", data: doc})
