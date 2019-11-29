@@ -99,7 +99,7 @@ router.get('/search', async (req, res, next) => {
   } else {
     account_id = req.session.account._id;
   }
-  let reg = new RegExp(decodeURIComponent(req.query.confName));
+  let reg = new RegExp(req.query.confName);
   let doc = await templateMsgModel.find({confName: {$regex: reg}, account_id});
   res.send({msg: "查询成功", data: doc})
 })
