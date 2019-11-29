@@ -99,9 +99,15 @@ router.get('/search', async (req, res, next) => {
   } else {
     account_id = req.session.account._id;
   }
-  let reg = new RegExp(req.query.confName);
-  let doc = await templateMsgModel.find({confName: {$regex: reg}, account_id});
-  res.send({msg: "查询成功", data: doc})
+  try {
+    let reg = new RegExp(req.query.confName);
+    let doc = await templateMsgModel.find({confName: {$regex: reg}, account_id});
+    res.send({msg: "查询成功", data: doc})
+  } catch (e) {
+    res.send({msg: "不能以特殊字符开头", data: []})
+  }
+
+
 })
 
 

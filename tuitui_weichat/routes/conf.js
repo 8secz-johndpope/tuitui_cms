@@ -42,9 +42,14 @@ router.get('/find_one', async(req, res, next) => {
     } else {
         account_id = req.session.account._id;
     }
-    let reg = new RegExp(req.query.nick_name);
-    let doc = await ConfigModel.find({nick_name: {$regex: reg}, account_id});
-    res.send({code: 1, msg: "查询成功", data: doc})
+    try {
+        let reg = new RegExp(req.query.nick_name);
+        let doc = await ConfigModel.find({nick_name: {$regex: reg}, account_id});
+        res.send({code: 1, msg: "查询成功", data: doc})
+    } catch (e) {
+        res.send({code: 1, msg: "不能以特殊字符开头", data: []})
+    }
+
 });
 
 router.get('/del', async(req, res, next) => {
