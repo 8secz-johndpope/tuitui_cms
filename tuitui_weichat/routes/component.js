@@ -258,6 +258,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         console.log('-------群发消息事件 收到回调------')
         console.log(message)
         return res.send('success')
+    } else if(message.Content == 'test_new'){
+        console.log('---回复测试-----')
+        return res.send(wxReplay.get_reply(req, '测试', message))
     }
 
     /*if (appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid != 'wx4653895b5676edeb') {
