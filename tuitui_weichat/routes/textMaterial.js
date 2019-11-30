@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const TextMaterialModel = require('../model/TextMaterial.js');
+var UserTagModel = require('../model/UserTag');
 var wechat_util = require('../util/get_weichat_client.js');
 
 router.get('/', async (req, res, next) => {
@@ -71,8 +72,9 @@ router.post('/preview', async (req, res, next) => {
 
 router.post('/send', async (req, res, next) => {
   let { code, content, tagId, _id } = req.body;
-  console.log('-------send---------')
-  console.log(req.body)
+  let tagIds = await UserTagModel.find({code:code})
+  tagId = tagIds[parseInt(tagId)];
+  console.log('tagId-----------',tagId)
   let client = await wechat_util.getClient(code);
   client.massSendText(content, tagId, async function (err, result) {
     if(err) {
