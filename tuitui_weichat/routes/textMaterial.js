@@ -76,6 +76,8 @@ router.post('/send', async (req, res, next) => {
     if(err) {
       console.log(err)
     }
+    console.log('------发送文本消息--------')
+    console.log(result)
     if(result.errcode === 0) {
       let data = await TextMaterialModel.findByIdAndUpdate(_id, {msg_id: result.msg_id, isSend: 1}, {new: true});
       res.send({code: 1, msg: "发送成功"})
