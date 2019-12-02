@@ -252,7 +252,7 @@ router.post('/preview', async(req, res, next) => {
     if (users.length > 0) {
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
-            message.contents[0].title = message.contents[0].title.replace('{{nick_name}}', user.nickname || "")
+            contents[0].title = contents[0].title.replace('{{nick_name}}', user.nickname || "")
             type === 0 && client.sendNews(openid, contents, async function (error, result) {
                 console.log("error", error, "----------图文-------------")
                 console.log("result", result, "----------图文-------------")
