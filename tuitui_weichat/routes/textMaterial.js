@@ -72,9 +72,6 @@ router.post('/preview', async (req, res, next) => {
 
 router.post('/send', async (req, res, next) => {
   let { code, content, tagId, _id } = req.body;
-  let tagIds = await UserTagModel.find({code:code})
-  tagId = tagIds[parseInt(tagId)].id;
-  console.log('tagId-----------',tagId)
   let client = await wechat_util.getClient(code);
   client.massSendText(content, tagId, async function (err, result) {
     if(err) {
