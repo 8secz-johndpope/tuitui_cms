@@ -257,7 +257,7 @@ router.post('/preview', async(req, res, next) => {
                 console.log("result", result, "----------图文-------------")
                 //res.send({code: 1, msg: "发送成功"})
             });
-            type === 1 && client.sendText(openid, contents[0].description.replace('{{nickname}}', user.nickname), async(error, result) => {
+            type === 1 && client.sendText(openid, contents[0].description.replace('{{nick_name}}', user.nickname), async(error, result) => {
                 console.log("error", error, "-----------文本------------")
                 console.log("result", result, "----------文本-------------")
                 //res.send({code: 1, msg: "发送成功"})
