@@ -65,8 +65,8 @@ router.get('/del', async(req, res, next) => {
 });
 
 router.put('/', async(req, res, next) => {
-    let {id, group, attribute} = req.body;
-    let result = await ConfigModel.findByIdAndUpdate(id, {group, attribute}, {new: true});
+    let {id, group, attribute, ab_test} = req.body;
+    let result = await ConfigModel.findByIdAndUpdate(id, {group, attribute, ab_test}, {new: true});
     if (result) {
         res.send({code: 1, msg: "修改成功", data: result})
     } else {

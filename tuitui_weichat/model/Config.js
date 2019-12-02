@@ -21,6 +21,7 @@ var ConfigSchema = new Schema({
     verify_type_info_id: Number,//授权方认证类型，-1代表未认证，0代表微信认证，1代表新浪微博认证，2代表腾讯微博认证，3代表已资质认证通过但还未通过名称认证，4代表已资质认证通过、还未通过名称认证，但通过了新浪微博认证，5代表已资质认证通过、还未通过名称认证，但通过了腾讯微博认证
     status: {type: Number, default: -2},  // -2未接管,-1接管中,0待接管,1已接管
     group: {type: String, default: "未分组"},
+    ab_test: {type: Number, default: 0},  // 0 默认 1 男 2 女
     attribute: {type: Number, default: 0}, //0 未知,1 男,2 女
     save_user: {type: Boolean, default: true},
     real_time: {type: Boolean, default: false},
