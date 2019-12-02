@@ -177,15 +177,9 @@ router.get('/del', async (req, res, next) => {
   }
 })
 
-router.post('/send', async (req, res, next) => {
-  let data = {
-    code: req.body.code,
-    templateId: req.body.templateId,
-    url: req.body.url,
-    content: req.body.content,
-    sex: req.body.sex
-  }
-  sendMQ(JSON.stringify(data))
+router.get('/send', async (req, res, next) => {
+  let id = req.query.id
+  sendMQ(id)
   res.send('已发送')
 })
 

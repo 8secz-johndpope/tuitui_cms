@@ -14,7 +14,12 @@ var TemplateMsgSchema = new Schema({
     content: Object,
     sex: {type: String, default: 'all'},// 0未知 1男 2女 all全部
     is_timing: Boolean,
-    timing_time: Date
+    timing_time: Date,
+    status: {type: Number, default: 0},//1正在发送，2超过次数限制，3发送完成
+    sendAt: Number,
+    errAt: Number,
+    openid: String,
+    count: {type: Number, default: 0}
 });
 
 var TemplateMsgModel = db.model('TemplateMsg', TemplateMsgSchema);
