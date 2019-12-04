@@ -6,9 +6,9 @@ async function getTags(tagId, code, openId) {
     let client = await wechat_util.getClient(code)
     client.getTagUsers(tagId, openId, function (err, res) {
         console.log(err)
-        console.log(res,'-------------------res')
+        console.log(res, '-------------------res')
         let openids = []
-        if(res.data && res.data.openid){
+        if (res.data && res.data.openid) {
             for (let openid of res.data.openid) {
                 openids.push({'openid': openid, 'code': code, tagid: tagId});
             }
@@ -16,10 +16,10 @@ async function getTags(tagId, code, openId) {
                 if (res.next_openid) {
                     setTimeout(function () {
                         getTags(tagId, code, res.next_openid)
-                    },500)
+                    }, 500)
                 }
             })
-        }else{
+        } else {
             return
         }
     })
@@ -28,11 +28,11 @@ async function getTags(tagId, code, openId) {
 async function updateTag() {
     let code = process.argv.slice(2)[0]
     UserTagModel.find({code: code}, function (err, data) {
-        console.log(data,'--------------------data')
+        console.log(data, '--------------------data')
         for (let i of data) {
-            if (i.name == "男" || i.name == "女" || i.name == "未知") {
-                console.log(i.id,'--------------------')
-                // getTags(i.id, code, null)
+            // if (i.name == "男" || i.name == "女" || i.name == "未知") {
+            if (i.name == "男") {
+                getTags(i.id, code, null)
             }
         }
     })
