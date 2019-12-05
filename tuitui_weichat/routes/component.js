@@ -249,9 +249,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let requestMessage = xmlUtil.formatMessage(requestString.xml);
     let query = req.query;
     let message = await componentService.handleMessage(requestMessage, query);
-    if (message.Event === 'unsubscribe') {
-        return res.send('success')
-    } else if (message.Content == 'openid') {
+    if (message.Content == 'openid') {
         console.log('---回复openid-----')
         return res.send(wxReplay.get_reply(req, message.FromUserName, message))
     } else if (message.MsgType === 'event' && message.Event.toUpperCase() == 'MASSSENDJOBFINISH') {
@@ -292,7 +290,11 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     }
 
     let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
-
+    if (message.Event === 'unsubscribe') {
+        user.subscribe_flag =false
+        sendMQ(JSON.stringify(user))
+        return res.send('success')
+    }
     if (action.actions.indexOf(condition) === -1 && action.actions.indexOf('1') === -1) {
         if (message.MsgType === 'event' && message.Event === 'subscribe') {
             user.subscribe_time = Date.now();
