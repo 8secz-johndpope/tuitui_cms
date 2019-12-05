@@ -5,7 +5,7 @@ var SubOpenidTagModel = require('../model/SubOpenidTag');
 var obj_users = {}
 
 function compare(id) {
-    let code = process.argv.slice(2)[0]
+    let code = parseInt(process.env.code)
     OpenidModel.fetch_openidSign(id, code, function (err, data) {
         var con_openids = []
         for (var index in data) {
