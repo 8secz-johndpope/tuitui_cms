@@ -157,7 +157,17 @@ router.get('/del', async(req, res, next) => {
 // 创建通用菜单
 async function createMenu(code, menu) {
     var menu = {"button": menu};
-    console.log('menu', menu);
+    for (var i =  0; i < menu.button.length; i++) {
+        var item = menu.button[i]
+        if(item.sub_button.length){
+            delete item['type']
+            delete item['key']
+            delete item['url']
+        }else{
+            delete item['sub_button']
+        }
+    }
+    console.log('menu', JSON.stringify(menu));
     var api = await WechatUtil.getClient(code);
     if (menu.button.length == 0) {
         api.removeMenu(function (err, res) {
