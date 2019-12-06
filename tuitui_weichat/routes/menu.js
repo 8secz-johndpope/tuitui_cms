@@ -159,7 +159,7 @@ async function createMenu(code, menu) {
     var menu = {"button": menu};
     for (var i =  0; i < menu.button.length; i++) {
         var item = menu.button[i]
-        if(item.sub_button.length){
+        if(item.sub_button && item.sub_button.length){
             delete item['type']
             delete item['key']
             delete item['url']
