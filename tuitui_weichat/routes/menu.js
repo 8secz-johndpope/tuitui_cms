@@ -163,6 +163,14 @@ async function createMenu(code, menu) {
             delete item['type']
             delete item['key']
             delete item['url']
+            for (var j = 0; j < item.sub_button.length; j++) {
+                var sub = item.sub_button[j]
+                if(sub.type=="view"){
+                    delete sub['key']
+                }else if(sub.type=="click"){
+                    delete sub['url']
+                }
+            }
         }else{
             delete item['sub_button']
         }
