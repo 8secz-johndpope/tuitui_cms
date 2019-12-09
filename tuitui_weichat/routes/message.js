@@ -41,15 +41,15 @@ router.get('/', async(req, res, next) => {
     let messages = [];
     if (type === "is_timing") {
         messages = await MessageModel.find({account_id, is_timing: true}).sort({
-            timing_time: -1
+            timing_time: -1,codes:1
         });
     } else if (type === "delay") {
         messages = await MessageModel.find({account_id, delay: {$lte: 0}}).sort({
-            _id: -1
+            _id: -1,codes:1
         });
     } else if (type === "manual") {
         messages = await MessageModel.find({account_id}).sort({
-            _id: -1
+            _id: -1,codes:1
         });
     }
     for (let i = 0; i < messages.length; i++) {
