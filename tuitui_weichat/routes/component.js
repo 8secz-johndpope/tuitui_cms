@@ -442,7 +442,6 @@ async function reply(req, res, message, code, type, param, openid, sex) {
 }
 
 async function replyMsg(req, res, message, content, code, openid) {
-    console.log(content, "lixin---------------")
     res.send(wxReplay.get_reply(req, content, message))
     return
 }
