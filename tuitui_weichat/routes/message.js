@@ -326,7 +326,7 @@ async function uploadImage(type, contents, codes) {
             })
         }
     } else {
-        return
+        return []
     }
 }
 
