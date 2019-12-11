@@ -412,8 +412,8 @@ async function reply(req, res, message, code, type, param, openid, sex) {
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
     }
 
-    console.log('----发送----')
-    console.log(reply)
+    // console.log('----发送----')
+    // console.log(reply)
     reply = JSON.parse(reply)
     if (reply.type == 1) {
         var articles = await mem.get("cms_articles_" + JSON.stringify({articles: reply.articles}));
