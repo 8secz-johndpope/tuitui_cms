@@ -1,6 +1,7 @@
 var MessageModel = require('../model/Message');
 var wechat_util = require('../util/get_weichat_client.js')
 var async = require('async');
+var fs= require("fs")
 var count = 0;
 
 async function get_message(){
@@ -31,10 +32,13 @@ async function uploadImage(type, contents, codes) {
             	continue
             }
             for (var i =  0; i < contents.length; i++) {
-                    let item = contents[i]
-                    item.local_picurl = item.picurl;
-                    let img_paths = item.local_picurl.split('/')
+                    let item = contents[i] 
+                    let img_paths = item.picurl.split('/')
                     let img_file = img_paths[img_paths.length-1]
+                    if(!fs.existsSync(ab_img + img_file)){
+                    	break
+                    }
+                    item.local_picurl = item.picurl;
                     item.picurl = await client_upload(client,ab_img + img_file)
             }
             console.log('----上传完成  break-----')
