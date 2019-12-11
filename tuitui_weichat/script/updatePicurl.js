@@ -7,10 +7,14 @@ var count = 0;
 async function get_message(){
 	let messages = await MessageModel.find({type:0})
 	async.eachSeries(messages,async function(message){
+		console.log('------修改前------')
+		console.log(message.contents)
 		if(!message.local_picurl){
 			message.contents = await uploadImage(0,message.contents,message
 			.codes)
 			//await message.save()
+			console.log('------修改后------')
+			console.log(message.contents)
 			count++
 			console.log('-------执行第'+count+'条------')
 		}
@@ -36,6 +40,7 @@ async function uploadImage(type, contents, codes) {
                     let img_paths = item.picurl.split('/')
                     let img_file = img_paths[img_paths.length-1]
                     if(!fs.existsSync(ab_img + img_file)){
+                    	console.log('-------文件不存在----------')
                     	break
                     }
                     item.local_picurl = item.picurl;
