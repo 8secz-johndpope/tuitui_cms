@@ -316,12 +316,17 @@ async function uploadImage(type, contents, codes) {
             return new Promise((resolve, reject) => {
                 let articles = contents.map(item => {
                     item.local_picurl = item.picurl.split("uploads/")[1];
-                    item.picurl = client.uploadImage(ab_img + item.local_picurl, async function (error, result) {
-                        console.log("error", error, "-----------------------")
-                        console.log("result", result, "-----------------------")
-                        return result.url
-                    });
-                    return item;
+                    new Promise((resolve, reject) => {
+                        client.uploadImage(ab_img + item.local_picurl, function (error, result) {
+                            console.log("error", error, "-----------------------")
+                            console.log("result", result, "-----------------------")
+                            resolve(result.url)
+                        });
+                    }).then(url => {
+                        item.picurl = url;
+                        console.log("------------------------item----------2019-12-11--------------------------", item, "------------------------item----------2019-12-11--------------------------");
+                        return item;
+                    })
                 });
                 console.log(articles, "------------------------articles----------2019-12-11--------------------------")
                 resolve(articles)
