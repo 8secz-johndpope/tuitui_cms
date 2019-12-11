@@ -6,6 +6,7 @@ var count = 0;
 async function get_message(){
 	let messages = await MessageModel.find({type:0})
 	async.eachSeries(messages,async function(message){
+		console.log(message)
 		if(!message.local_picurl){
 			message.contents = await uploadImage(0,message.contents,message
 			.codes)
@@ -25,6 +26,7 @@ async function uploadImage(type, contents, codes) {
     if (type === 0) {
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
+            console.log(client)
             for (var i =  0; i < contents.length; i++) {
                     let item = contents[i]
                     item.local_picurl = item.picurl;
