@@ -109,13 +109,15 @@ router.post('/create', async(req, res, next) => {
     var ab_img = __dirname + '/../' + req.body.img_path;
     var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
     var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
+
+    console.log(contents, "==================contents========2019-12-11================")
+
     let account_id;
     if(!req.session.account) {
         account_id = req.body.account_id
     } else {
         account_id = req.session.account._id;
     }
-
     var message = {
         codes: req.body.codes,
         sex: req.body.sex,
@@ -321,25 +323,28 @@ async function uploadImage(type, contents, codes) {
     if (type === 0) {
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
-            return new Promise((resolve, reject) => {
-                let articles = contents.map(item => {
+            for (var i =  0; i < contents.length; i++) {
+                    let item = contents[i]
                     item.local_picurl = item.picurl;
                     let img_paths = item.local_picurl.split('/')
                     let img_file = img_paths[img_paths.length-1]
-                    item.picurl = client.uploadImage(ab_img + img_file, async function (error, result) {
-                        console.log("error", error, "-----------------------")
-                        console.log("result", result, "-----------------------")
-                        return result.url
-                    });
-                    return item;
-                });
-                console.log(articles, "------------------------articles----------2019-12-11--------------------------")
-                resolve(articles)
-            })
+                    item.picurl = await client_upload(client,ab_img + img_file)
+            }
         }
+        return contents
     } else {
         return contents
     }
+}
+
+function client_upload(client,file_path){
+    return new Promise((resolve,reject) => {
+        client.uploadImage(file_path, function (error, result) {
+            console.log("error", error, "-----------------------")
+            console.log("result", result, "-----------------------")
+            resolve(result.url)
+        });
+    })
 }
 
 module.exports = router
