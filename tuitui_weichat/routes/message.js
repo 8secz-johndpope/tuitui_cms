@@ -77,6 +77,14 @@ router.get('/', async(req, res, next) => {
         }
         let times = year + '-' + month + '-' + date + ' ' + hour + ':' + minutes + ':' + seconds;
         messages[i].time = times
+
+        let contents = messages[i].contents
+        for (var j = 0; j < contents.length; j++) {
+            let content = contents[j]
+            if(content.local_picurl){
+                content.picurl = content.local_picurl
+            }
+        }
     }
     res.send({
         messages: messages
@@ -100,7 +108,7 @@ router.get('/get_code', async(req, res, next) => {
 router.post('/create', async(req, res, next) => {
     var ab_img = __dirname + '/../' + req.body.img_path;
     var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
-    // var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
+    var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
     let account_id;
     if(!req.session.account) {
         account_id = req.body.account_id
@@ -150,7 +158,7 @@ router.post('/update', async(req, res, next) => {
     var id = req.body.id;
     var ab_img = __dirname + '/../' + req.body.img_path;
     var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
-    // var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
+    var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
     var message = {
         codes: req.body.codes,
         sex: req.body.sex,
@@ -315,7 +323,10 @@ async function uploadImage(type, contents, codes) {
             let client = await wechat_util.getClient(code);
             return new Promise((resolve, reject) => {
                 let articles = contents.map(item => {
-                    item.picurl = client.uploadImage(ab_img + item.local_picurl, async function (error, result) {
+                    item.local_picurl = item.picurl;
+                    let img_paths = item.local_picurl.split('/')
+                    let img_file = img_paths[img_paths.length-1]
+                    item.picurl = client.uploadImage(ab_img + img_file, async function (error, result) {
                         console.log("error", error, "-----------------------")
                         console.log("result", result, "-----------------------")
                         return result.url
