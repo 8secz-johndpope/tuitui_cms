@@ -11,6 +11,8 @@ async function get_message(){
 			message.contents = await uploadImage(0,message.contents,message
 			.codes)
 			//await message.save()
+			console.log('------执行完之后的message------------')
+			console.log(message)
 			count++
 			console.log('-------执行第'+count+'条------')
 		}
