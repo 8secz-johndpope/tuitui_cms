@@ -26,6 +26,7 @@ async function uploadImage(type, contents, codes) {
     if (type === 0) {
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
+            console.log('-------client--------')
             console.log(client)
             for (var i =  0; i < contents.length; i++) {
                     let item = contents[i]
