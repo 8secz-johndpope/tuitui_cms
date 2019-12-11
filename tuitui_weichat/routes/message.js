@@ -308,7 +308,7 @@ async function upload(type, img_path, codes) {
 }
 
 async function uploadImage(type, contents, codes) {
-    let ab_img = __dirname + '/../';
+    let ab_img = __dirname + '/../public/uploads/';
     if (type === 0) {
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
