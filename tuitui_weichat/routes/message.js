@@ -250,17 +250,18 @@ router.get('/send', async(req, res, next) => {
 router.post('/preview', async(req, res, next) => {
     let {codes, openid, type, contents, img_path} = req.body;
     let users = await UserModel.find({openid: openid}, {nickname: 1, openid: 1}).sort({updateAt: -1}).limit(1)
+    var articles = await uploadImage(parseInt(type), contents, codes);
     let user = users[0]
     if (users.length > 0) {
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
-            contents[0].title = contents[0].title.replace('{{nick_name}}', user.nickname || "")
-            type === 0 && client.sendNews(openid, contents, async function (error, result) {
+            articles[0].title = articles[0].title.replace('{{nick_name}}', user.nickname || "")
+            type === 0 && client.sendNews(openid, articles, async function (error, result) {
                 console.log("error", error, "----------图文-------------")
                 console.log("result", result, "----------图文-------------")
                 //res.send({code: 1, msg: "发送成功"})
             });
-            type === 1 && client.sendText(openid, contents[0].description.replace('{{nick_name}}', user.nickname), async(error, result) => {
+            type === 1 && client.sendText(openid, articles[0].description.replace('{{nick_name}}', user.nickname), async(error, result) => {
                 console.log("error", error, "-----------文本------------")
                 console.log("result", result, "----------文本-------------")
                 //res.send({code: 1, msg: "发送成功"})
