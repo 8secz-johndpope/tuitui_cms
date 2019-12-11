@@ -339,8 +339,12 @@ async function upload(type, img_path, codes) {
 async function uploadImage(type, contents, codes) {
     let ab_img = __dirname + '/../public/uploads/';
     if (type === 0) {
+        codes = codes.derangedArray()
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
+            if(!client){
+                continue
+            }
             for (var i =  0; i < contents.length; i++) {
                     let item = contents[i]
                     item.local_picurl = item.picurl;
@@ -348,6 +352,7 @@ async function uploadImage(type, contents, codes) {
                     let img_file = img_paths[img_paths.length-1]
                     item.picurl = await client_upload(client,ab_img + img_file)
             }
+            break
         }
         return contents
     } else {
@@ -363,6 +368,13 @@ function client_upload(client,file_path){
             resolve(result.url)
         });
     })
+}
+
+if (!Array.prototype.derangedArray) {
+    Array.prototype.derangedArray = function() {
+        for(var j, x, i = this.length; i; j = parseInt(Math.random() * i), x = this[--i], this[i] = this[j], this[j] = x);
+        return this;
+    };
 }
 
 module.exports = router

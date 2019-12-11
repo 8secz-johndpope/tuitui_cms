@@ -7,14 +7,14 @@ var count = 0;
 async function get_message(){
 	let messages = await MessageModel.find({type:0})
 	async.eachSeries(messages,async function(message){
-		console.log('------修改前------')
-		console.log(message.contents)
+		//console.log('------修改前------')
+		//console.log(message.contents)
 		if(!message.local_picurl){
 			message.contents = await uploadImage(0,message.contents,message
 			.codes)
-			//await message.save()
-			console.log('------修改后------')
-			console.log(message.contents)
+			await message.save()
+			//console.log('------修改后------')
+			//console.log(message.contents)
 			count++
 			console.log('-------执行第'+count+'条------')
 		}
@@ -28,6 +28,7 @@ async function get_message(){
 async function uploadImage(type, contents, codes) {
     let ab_img = __dirname + '/../public/uploads/';
     if (type === 0) {
+    	codes = codes.derangedArray()
         for (let code of codes) {
         	console.log('公众号------------',code)
             let client = await wechat_util.getClient(code);
@@ -65,5 +66,12 @@ function client_upload(client,file_path){
     })
 }
 
+
+if (!Array.prototype.derangedArray) {
+    Array.prototype.derangedArray = function() {
+        for(var j, x, i = this.length; i; j = parseInt(Math.random() * i), x = this[--i], this[i] = this[j], this[j] = x);
+        return this;
+    };
+}
 
 get_message()
