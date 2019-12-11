@@ -145,6 +145,15 @@ router.post('/create', async(req, res, next) => {
     }
     var docs = await MessageModel.create(message);
     if (docs) {
+        if(docs.type==0){
+            let contents = docs.contents
+            for (var j = 0; j < contents.length; j++) {
+                let content = contents[j]
+                if(content.local_picurl){
+                    content.picurl = content.local_picurl
+                }
+            }
+        }
         res.send({
             success: '成功',
             data: docs
@@ -195,6 +204,15 @@ router.post('/update', async(req, res, next) => {
     // }
     var docs = await MessageModel.findByIdAndUpdate(id, message)
     if (docs) {
+        if(docs.type==0){
+            let contents = docs.contents
+            for (var j = 0; j < contents.length; j++) {
+                let content = contents[j]
+                if(content.local_picurl){
+                    content.picurl = content.local_picurl
+                }
+            }
+        }
         res.send({
             success: '修改成功',
             data: docs
