@@ -6,13 +6,10 @@ var count = 0;
 async function get_message(){
 	let messages = await MessageModel.find({type:0})
 	async.eachSeries(messages,async function(message){
-		console.log(message)
 		if(!message.local_picurl){
 			message.contents = await uploadImage(0,message.contents,message
 			.codes)
 			//await message.save()
-			console.log('------执行完之后的message------------')
-			console.log(message)
 			count++
 			console.log('-------执行第'+count+'条------')
 		}
@@ -27,9 +24,12 @@ async function uploadImage(type, contents, codes) {
     let ab_img = __dirname + '/../public/uploads/';
     if (type === 0) {
         for (let code of codes) {
+        	console.log('公众号------------',code)
             let client = await wechat_util.getClient(code);
-            console.log('-------client--------')
-            console.log(client)
+            if(!client){
+            	console.log('----client 为空  continue----')
+            	continue
+            }
             for (var i =  0; i < contents.length; i++) {
                     let item = contents[i]
                     item.local_picurl = item.picurl;
@@ -37,6 +37,8 @@ async function uploadImage(type, contents, codes) {
                     let img_file = img_paths[img_paths.length-1]
                     item.picurl = await client_upload(client,ab_img + img_file)
             }
+            console.log('----上传完成  break-----')
+            break;
         }
         return contents
     } else {
