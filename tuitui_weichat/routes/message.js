@@ -100,7 +100,7 @@ router.get('/get_code', async(req, res, next) => {
 router.post('/create', async(req, res, next) => {
     var ab_img = __dirname + '/../' + req.body.img_path;
     var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
-    var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
+    // var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
     let account_id;
     if(!req.session.account) {
         account_id = req.body.account_id
@@ -118,7 +118,7 @@ router.post('/create', async(req, res, next) => {
         isHour: req.body.isHour,
         timing_time: req.body.timing_time,
         type: parseInt(req.body.type),
-        contents,
+        contents: req.body.contents,
         img: req.body.img,
         tagId: req.body.tagId,
         mediaId: mediaId,
@@ -150,7 +150,7 @@ router.post('/update', async(req, res, next) => {
     var id = req.body.id;
     var ab_img = __dirname + '/../' + req.body.img_path;
     var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
-    var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
+    // var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
     var message = {
         codes: req.body.codes,
         sex: req.body.sex,
@@ -161,7 +161,7 @@ router.post('/update', async(req, res, next) => {
         isHour: req.body.isHour,
         timing_time: req.body.timing_time,
         type: parseInt(req.body.type),
-        contents,
+        contents: req.body.contents,
         img: req.body.img,
         tagId: req.body.tagId,
         mediaId: mediaId,
@@ -250,7 +250,7 @@ router.get('/send', async(req, res, next) => {
 router.post('/preview', async(req, res, next) => {
     let {codes, openid, type, contents, img_path} = req.body;
     let users = await UserModel.find({openid: openid}, {nickname: 1, openid: 1}).sort({updateAt: -1}).limit(1)
-    var articles = await uploadImage(parseInt(type), contents, codes);
+    var articles = acontents;
     let user = users[0]
     if (users.length > 0) {
         for (let code of codes) {
