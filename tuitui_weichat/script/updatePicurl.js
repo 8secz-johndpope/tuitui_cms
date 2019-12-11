@@ -6,11 +6,13 @@ var count = 0;
 async function get_message(){
 	let messages = await MessageModel.find({type:0})
 	async.eachSeries(messages,async function(message){
-		message.contents = await uploadImage(0,message.contents,message
+		if(!message.local_picurl){
+			message.contents = await uploadImage(0,message.contents,message
 			.codes)
-		await message.save()
-		count++
-		console.log('-------执行第'+count+'条------')
+			//await message.save()
+			count++
+			console.log('-------执行第'+count+'条------')
+		}
 		return message
 	},function(error){
 		console.log('-------执行完成------')
