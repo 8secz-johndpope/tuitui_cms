@@ -100,6 +100,7 @@ router.get('/get_code', async(req, res, next) => {
 router.post('/create', async(req, res, next) => {
     var ab_img = __dirname + '/../' + req.body.img_path;
     var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
+    var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
     let account_id;
     if(!req.session.account) {
         account_id = req.body.account_id
@@ -117,7 +118,7 @@ router.post('/create', async(req, res, next) => {
         isHour: req.body.isHour,
         timing_time: req.body.timing_time,
         type: parseInt(req.body.type),
-        contents: req.body.contents,
+        contents,
         img: req.body.img,
         tagId: req.body.tagId,
         mediaId: mediaId,
@@ -148,7 +149,8 @@ router.post('/create', async(req, res, next) => {
 router.post('/update', async(req, res, next) => {
     var id = req.body.id;
     var ab_img = __dirname + '/../' + req.body.img_path;
-    var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes)
+    var mediaId = await upload(parseInt(req.body.type), ab_img, req.body.codes);
+    var contents = await uploadImage(parseInt(req.body.type), req.body.contents, req.body.codes);
     var message = {
         codes: req.body.codes,
         sex: req.body.sex,
@@ -159,7 +161,7 @@ router.post('/update', async(req, res, next) => {
         isHour: req.body.isHour,
         timing_time: req.body.timing_time,
         type: parseInt(req.body.type),
-        contents: req.body.contents,
+        contents,
         img: req.body.img,
         tagId: req.body.tagId,
         mediaId: mediaId,
@@ -167,20 +169,20 @@ router.post('/update', async(req, res, next) => {
         gonghaoList: req.body.gonghaoList,
         group: req.body.group,
         is_daily: req.body.is_daily,
-    }
+    };
     if(req.body.is_daily){
         message.daily_time = req.body.daily_time
     }else{
         message.daily_time = 0
     }
-    if (parseInt(req.body.type) == 2) {
-        for (let code of req.body.codes) {
-            let client = await wechat_util.getClient(code);
-            client.uploadImageMaterial(req.body.img, async function (error, result) {
-                message.mediaId = result.media_id
-            })
-        }
-    }
+    // if (parseInt(req.body.type) === 2) {
+    //     for (let code of req.body.codes) {
+    //         let client = await wechat_util.getClient(code);
+    //         client.uploadImageMaterial(req.body.img, async function (error, result) {
+    //             message.mediaId = result.media_id
+    //         })
+    //     }
+    // }
     var docs = await MessageModel.findByIdAndUpdate(id, message)
     if (docs) {
         res.send({
@@ -298,6 +300,29 @@ async function upload(type, img_path, codes) {
                     console.log("result", result, "-----------------------")
                     resolve(result.media_id)
                 })
+            })
+        }
+    } else {
+        return
+    }
+}
+
+async function uploadImage(type, contents, codes) {
+    let ab_img = __dirname + '/../';
+    if (type === 0) {
+        for (let code of codes) {
+            let client = await wechat_util.getClient(code);
+            return new Promise((resolve, reject) => {
+                let articles = contents.map(item => {
+                    item.picurl = client.uploadImage(ab_img + item.local_picurl, async function (error, result) {
+                        console.log("error", error, "-----------------------")
+                        console.log("result", result, "-----------------------")
+                        return result.url
+                    });
+                    return item;
+                });
+                console.log(articles, "------------------------articles----------2019-12-11--------------------------")
+                resolve(articles)
             })
         }
     } else {

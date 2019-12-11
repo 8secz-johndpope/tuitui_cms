@@ -33,7 +33,11 @@ var MessageSchema = new Schema({
         title: String,
         description: String,
         url: String,
-        picurl: String
+        picurl: String,
+        local_picurl: {
+            type: String,
+            default: ""
+        },
     }],
     codes: [Number],
     gonghaoList: [{
