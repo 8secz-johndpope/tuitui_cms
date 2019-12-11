@@ -250,7 +250,7 @@ router.get('/send', async(req, res, next) => {
 router.post('/preview', async(req, res, next) => {
     let {codes, openid, type, contents, img_path} = req.body;
     let users = await UserModel.find({openid: openid}, {nickname: 1, openid: 1}).sort({updateAt: -1}).limit(1)
-    var articles = acontents;
+    var articles = contents;
     let user = users[0]
     if (users.length > 0) {
         for (let code of codes) {
