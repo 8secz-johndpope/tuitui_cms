@@ -347,10 +347,17 @@ async function uploadImage(type, contents, codes) {
             }
             for (var i =  0; i < contents.length; i++) {
                     let item = contents[i]
-                    item.local_picurl = item.picurl;
-                    let img_paths = item.local_picurl.split('/')
+                    let temp_pic = item.picurl
+                    let img_paths = item.picurl.split('/')
                     let img_file = img_paths[img_paths.length-1]
-                    item.picurl = await client_upload(client,ab_img + img_file)
+                    try{
+                        item.local_picurl = item.picurl;
+                        item.picurl = await client_upload(client,ab_img + img_file)
+                    }catch(e){
+                        item.picurl = temp_pic
+                        item.local_picurl = ''
+                    }
+                    continue
             }
             break
         }
@@ -365,7 +372,11 @@ function client_upload(client,file_path){
         client.uploadImage(file_path, function (error, result) {
             console.log("error", error, "-----------------------")
             console.log("result", result, "-----------------------")
-            resolve(result.url)
+            if(result && result.url){
+                resolve(result.url)
+            }else{
+                reject(error)
+            }
         });
     })
 }
