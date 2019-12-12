@@ -75,6 +75,11 @@ async function sendMQ(msg) {
     ch.sendToQueue(q, Buffer.from(msg));
 }
 
+async function sendSaveMQ(msg){
+    await ch.assertQueue('save_user_tasks');
+    ch.sendToQueue('save_user_tasks', Buffer.from(msg));
+}
+
 var xml_msg = async function (req, res, next) {
     if (req.method == 'POST' && req.is('text/xml')) {
         let promise = new Promise(function (resolve, reject) {
@@ -319,7 +324,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             await mem.set("reply_subscribe_count_" + code, subscribe_count.toString(), 60)
         }
         if (subscribe_count == "0") {
-            res.send('success')
+            sendMQ(JSON.stringify(user))
+            return res.send('success')
         } else {
             reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
         }
@@ -331,7 +337,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             await mem.set("reply_click_count_" + code, click_count.toString(), 60)
         }
         if (click_count == "0") {
-            res.send('success')
+            sendMQ(JSON.stringify(user))
+            return res.send('success')
         } else {
             reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
         }
@@ -346,13 +353,13 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             await mem.set("reply_text_count_" + code, text_count.toString(), 60)
         }
         if (text_count == "0") {
-            res.send('success')
+            sendMQ(JSON.stringify(user))
+            return res.send('success')
         } else {
             reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
         }
 
     }
-    sendMQ(JSON.stringify(user))
 })
 
 
@@ -407,6 +414,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             // if(code = 10000000049){
             //     console.log('-----------------------bbbb')
             // }
+            sendMQ(JSON.stringify(user))
             return res.send('success')
         }
         await mem.set("cms_reply_" + code + "_" + param, reply, 30)
@@ -417,18 +425,21 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     reply = JSON.parse(reply)
     if (reply.is_nickname) {
         let clinet = await wechat_util.getClient(code);
-        clinet.getUser(openid, async function (err, info) {
-            if (reply.type == 1) {
-                let articles = reply.articles;
-                if (articles.length > 0) {
-                    articles[0].title = articles[0].title.replace('{{nick_name}}', info.nickname || "")
-                    replyMsg(req, res, message, articles, code, openid)
-                }
-            } else {
-                let content = reply.content.replace('{{nick_name}}', info.nickname || "")
-                replyMsg(req, res, message, content, code, openid)
+        //clinet.getUser(openid, async function (err, info) {
+        let info = await async_getInfo(clinet,openid)
+        if (reply.type == 1) {
+            let articles = reply.articles;
+            if (articles.length > 0) {
+                articles[0].title = articles[0].title.replace('{{nick_name}}', info.nickname || "")
+                replyMsg(req, res, message, articles, code, openid)
             }
-        })
+            sendSaveMQ(user)
+        } else {
+            let content = reply.content.replace('{{nick_name}}', info.nickname || "")
+            replyMsg(req, res, message, content, code, openid)
+            sendSaveMQ(user)
+        }
+        //})
     } else {
         if (reply.type == 1) {
             var articles = await mem.get("cms_articles_" + JSON.stringify({articles: reply.articles}));
@@ -455,6 +466,15 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             }
         }
     }
+}
+
+
+function async_getInfo(clinet,openid){
+    return new Promise((resolve,reject)=>{
+        clinet.getUser(openid, function (err, info) {
+            resolve(user)
+        });
+    })
 }
 
 async function replyMsg(req, res, message, content, code, openid) {
