@@ -415,25 +415,33 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     // console.log('----发送----')
     // console.log(reply)
     reply = JSON.parse(reply)
-    if (reply.type == 1) {
-        var articles = await mem.get("cms_articles_" + JSON.stringify({articles: reply.articles}));
-        if (!articles) {
-            let articles = reply.articles;
-            if (articles.length > 0) {
-                await mem.set("cms_articles_" + JSON.stringify({articles}), JSON.stringify({articles}), 30);
-                replyMsg(req, res, message, articles, code, openid)
-            }
-        } else {
-            let articles1 = JSON.parse(articles);
-            replyMsg(req, res, message, articles1.articles, code, openid)
-        }
-    } else {
-        if (reply.is_nickname) {
-            let api = await wechat_util.getClient(code);
-            api.getUser(openid, function (err, info) {
-                let content = info.nickname + ' ' + reply.content
+    if (reply.is_nickname) {
+        let clinet = await wechat_util.getClient(code);
+        clinet.getUser(openid, async function (err, info) {
+            if (reply.type == 1) {
+                let articles = reply.articles;
+                if (articles.length > 0) {
+                    articles[0].title = articles[0].title.replace('{{nick_name}}', info.nickname || "")
+                    replyMsg(req, res, message, articles, code, openid)
+                }
+            } else {
+                let content = reply.content.replace('{{nick_name}}', info.nickname || "")
                 replyMsg(req, res, message, content, code, openid)
-            })
+            }
+        })
+    } else {
+        if (reply.type == 1) {
+            var articles = await mem.get("cms_articles_" + JSON.stringify({articles: reply.articles}));
+            if (!articles) {
+                let articles = reply.articles;
+                if (articles.length > 0) {
+                    await mem.set("cms_articles_" + JSON.stringify({articles}), JSON.stringify({articles}), 30);
+                    replyMsg(req, res, message, articles, code, openid)
+                }
+            } else {
+                let articles1 = JSON.parse(articles);
+                replyMsg(req, res, message, articles1.articles, code, openid)
+            }
         } else {
             var content = await mem.get("cms_content_" + reply.content);
             if (!content) {
