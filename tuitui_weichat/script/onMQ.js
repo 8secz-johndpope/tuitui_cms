@@ -4,7 +4,6 @@ const wechat_util = require('../util/get_weichat_client')
 /**
  消息队列
  */
-const q = 'user_tasks';
 const amqplib = require('amqplib');
 let ch;
 getChannel();
@@ -13,13 +12,14 @@ async function getChannel() {
     try {
         let conn = await amqplib.connect('amqp://localhost')
         ch = await conn.createChannel();
-        onMQ()
+        onMQ('user_tasks')
+        saveMQ('save_user_tasks')
     } catch (e) {
         console.log(e)
     }
 }
 
-async function onMQ() {
+async function onMQ(q) {
     await ch.assertQueue(q);
     ch.consume(q, async function (msg) {
         if (msg !== null) {
@@ -73,4 +73,21 @@ async function userInfo(code, openid) {
             })
         }
     })
+}
+
+async function saveMQ(q) {
+    await ch.assertQueue(q);
+    ch.consume(q, async function (msg) {
+        if (msg !== null) {
+            let handle_str = msg.content.toString()
+            let data = JSON.parse(handle_str)
+            await UserconfModel.findOneAndUpdate({openid: data.openid, code: data.code}, data, {upsert: true})
+            /**
+             待查询用户信息  写入数据库
+             */
+            ch.ack(msg);
+        }else{
+            ch.ack(msg);
+        }
+    });
 }
