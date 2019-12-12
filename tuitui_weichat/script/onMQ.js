@@ -4,7 +4,6 @@ const wechat_util = require('../util/get_weichat_client')
 /**
  消息队列
  */
-const q = 'user_tasks';
 const amqplib = require('amqplib');
 let ch;
 getChannel();
