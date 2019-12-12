@@ -38,14 +38,21 @@ async function uploadImage(type, contents, codes) {
             }
             for (var i =  0; i < contents.length; i++) {
                     let item = contents[i] 
+                    let temp_pic = item.picurl
                     let img_paths = item.picurl.split('/')
                     let img_file = img_paths[img_paths.length-1]
                     if(!fs.existsSync(ab_img + img_file)){
                     	console.log('-------文件不存在----------')
                     	break
                     }
-                    item.local_picurl = item.picurl;
-                    item.picurl = await client_upload(client,ab_img + img_file)
+                    try{
+                    	item.local_picurl = item.picurl;
+                    	item.picurl = await client_upload(client,ab_img + img_file)
+                    }catch(e){
+                    	item.picurl = temp_pic
+                    	item.local_picurl = ''
+                    }
+                    continue
             }
             console.log('----上传完成  break-----')
             break;
