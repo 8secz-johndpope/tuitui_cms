@@ -75,7 +75,7 @@ async function sendMQ(msg) {
     ch.sendToQueue(q, Buffer.from(msg));
 }
 
-async function sendSaveMQ(msg){
+async function sendSaveMQ(msg) {
     await ch.assertQueue('save_user_tasks');
     ch.sendToQueue('save_user_tasks', Buffer.from(msg));
 }
@@ -327,7 +327,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             sendMQ(JSON.stringify(user))
             return res.send('success')
         } else {
-            reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0)
+            reply(req, res, message, code, 2, 'subscribe', message.FromUserName, 0, user)
         }
     } else if (message.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
         user.action_type = 2;
@@ -340,7 +340,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             sendMQ(JSON.stringify(user))
             return res.send('success')
         } else {
-            reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0)
+            reply(req, res, message, code, 1, message.EventKey, message.FromUserName, 0, user)
         }
     } else if (message.MsgType === 'text') {
         user.action_type = 2;
@@ -356,14 +356,14 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             sendMQ(JSON.stringify(user))
             return res.send('success')
         } else {
-            reply(req, res, message, code, 0, message.Content, message.FromUserName, 0)
+            reply(req, res, message, code, 0, message.Content, message.FromUserName, 0, user)
         }
 
     }
 })
 
 
-async function reply(req, res, message, code, type, param, openid, sex) {
+async function reply(req, res, message, code, type, param, openid, sex, user) {
     if (sex == 0) {
         let info = await ReplyModel.findOne({code: code})
         if (info && info.attribute) {
@@ -392,6 +392,7 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 console.log("----------------------------reply=============================")
                 reply = reply[0].contents[param]
             } else {
+                sendMQ(JSON.stringify(user))
                 return res.send('success')
             }
             // reply = await ReplyModel.findOne({codes: {$elemMatch: {$eq: code}}, type: type, key: param})
@@ -425,21 +426,21 @@ async function reply(req, res, message, code, type, param, openid, sex) {
     reply = JSON.parse(reply)
     if (reply.is_nickname) {
         let clinet = await wechat_util.getClient(code);
-        //clinet.getUser(openid, async function (err, info) {
-        let info = await async_getInfo(clinet,openid)
+        let info = await async_getInfo(clinet, openid)
         if (reply.type == 1) {
             let articles = reply.articles;
             if (articles.length > 0) {
                 articles[0].title = articles[0].title.replace('{{nick_name}}', info.nickname || "")
                 replyMsg(req, res, message, articles, code, openid)
             }
-            sendSaveMQ(user)
         } else {
             let content = reply.content.replace('{{nick_name}}', info.nickname || "")
             replyMsg(req, res, message, content, code, openid)
-            sendSaveMQ(user)
         }
-        //})
+        user.nickname = info.nickname
+        user.headimgurl = info.headimgurl
+        user.sex = info.sex.toString() || "0"
+        sendSaveMQ(JSON.stringify(user))
     } else {
         if (reply.type == 1) {
             var articles = await mem.get("cms_articles_" + JSON.stringify({articles: reply.articles}));
@@ -465,12 +466,13 @@ async function reply(req, res, message, code, type, param, openid, sex) {
                 replyMsg(req, res, message, content, code, openid)
             }
         }
+        sendMQ(JSON.stringify(user))
     }
 }
 
 
-function async_getInfo(clinet,openid){
-    return new Promise((resolve,reject)=>{
+function async_getInfo(clinet, openid) {
+    return new Promise((resolve, reject) => {
         clinet.getUser(openid, function (err, info) {
             resolve(user)
         });
