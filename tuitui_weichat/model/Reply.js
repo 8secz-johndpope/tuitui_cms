@@ -6,6 +6,7 @@ var db = mongoose.createConnection(connect_url);
 var ReplySchema = new Schema({
     account_id : String,
     codes: Array,
+    is_nickname: {type: Boolean, default: false},
     name: String,
     type: Number, //事件类型:0文本 1点击 2关注 3location 4自动回复
     text: String, //请求发送的文字

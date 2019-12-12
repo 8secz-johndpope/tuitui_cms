@@ -158,11 +158,11 @@ router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
     let auth_code = query.auth_code;
     let expires_in = query.expires_in;
     let authorization_info = await componentService.queryAuthorizeInfo(account_id, auth_code);
-    if(!authorization_info.errcode){
+    if (!authorization_info.errcode) {
         await authorizer_info.get_authorizer_info({appid: authorization_info.authorizer_appid})
         res.redirect('/admin')
         refreshAccessToken({appid: authorization_info.authorizer_appid})
-    }else{
+    } else {
         res.redirect('/error?errcode=' + authorization_info.errcode + '&errmsg=' + authorization_info.errmsg)
     }
 })
@@ -256,14 +256,14 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
         console.log('-------群发消息事件 收到回调------')
         console.log(message)
         return res.send('success')
-    } else if(message.Content == 'test_new'){
+    } else if (message.Content == 'test_new') {
         console.log('---回复测试-----')
         return res.send(wxReplay.get_reply(req, '测试', message))
     }
 
     /*if (appid != 'wx3805806832e4f552' && appid != 'wx0b2522b49584c154' && appid != 'wx4653895b5676edeb') {
-        return res.send('');
-    }*/
+     return res.send('');
+     }*/
 
     let action = await mem.get('action_' + code)
 
@@ -291,7 +291,7 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
 
     let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
     if (message.Event === 'unsubscribe') {
-        user.subscribe_flag =false
+        user.subscribe_flag = false
         sendMQ(JSON.stringify(user))
         return res.send('success')
     }
@@ -300,9 +300,9 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
             user.subscribe_time = Date.now();
             user.subscribe_flag = true;
             user.action_type = 1;
-        }else if (message.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
+        } else if (message.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
             user.action_type = 2;
-        }else if (message.MsgType === 'text') {
+        } else if (message.MsgType === 'text') {
             user.action_type = 2;
         }
         sendMQ(JSON.stringify(user))
@@ -428,15 +428,23 @@ async function reply(req, res, message, code, type, param, openid, sex) {
             replyMsg(req, res, message, articles1.articles, code, openid)
         }
     } else {
-        var content = await mem.get("cms_content_" + reply.content);
-        if (!content) {
-            let content = reply.content;
-            if (content) {
-                await mem.set("cms_content_" + reply.content, content, 30);
+        if (reply.is_nickname) {
+            let api = await wechat_util.getClient(code);
+            api.getUser(openid, function (err, info) {
+                let content = info.nickname + ' ' + reply.content
+                replyMsg(req, res, message, content, code, openid)
+            })
+        } else {
+            var content = await mem.get("cms_content_" + reply.content);
+            if (!content) {
+                let content = reply.content;
+                if (content) {
+                    await mem.set("cms_content_" + reply.content, content, 30);
+                    replyMsg(req, res, message, content, code, openid)
+                }
+            } else {
                 replyMsg(req, res, message, content, code, openid)
             }
-        } else {
-            replyMsg(req, res, message, content, code, openid)
         }
     }
 }
