@@ -68,7 +68,12 @@ function client_upload(client,file_path){
         client.uploadImage(file_path, function (error, result) {
             console.log("error", error, "-----------------------")
             console.log("result", result, "-----------------------")
-            resolve(result.url)
+            if(result && result.url){
+            	resolve(result.url)
+            }else{
+            	reject(error)
+            }
+            
         });
     })
 }
