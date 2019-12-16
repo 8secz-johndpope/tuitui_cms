@@ -424,6 +424,7 @@ async function reply(req, res, message, code, type, param, openid, sex, user) {
     // console.log('----发送----')
     // console.log(reply)
     reply = JSON.parse(reply)
+    console.log(reply,'--------------------------reply')
     if (reply.is_nickname) {
         let clinet = await wechat_util.getClient(code);
         let info = await async_getInfo(clinet, openid)
@@ -435,6 +436,7 @@ async function reply(req, res, message, code, type, param, openid, sex, user) {
             }
         } else {
             let content = reply.content.replace('{{nick_name}}', info.nickname || "")
+            console.log(content,'--------------------------content')
             replyMsg(req, res, message, content, code, openid)
         }
         user.nickname = info.nickname
