@@ -38,7 +38,9 @@ async function send_users(id, message, tagId, mediaId) {
 function async_send(opts,tagId,client,id){
     return new Promise((resolve, reject)=>{
         tagId = parseInt(tagId)
-        client.massSend(opts, tagId, function (err, res) {
+        let receivers = tagId === "all" ? true : tagId;
+        console.log(receivers, "receivers----------------------------2019-12-16----------------------群发")
+        client.massSend(opts, receivers, function (err, res) {
             console.log('------------err--------');
             console.log(err);
             console.log('------------res--------');

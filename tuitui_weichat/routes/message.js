@@ -306,7 +306,7 @@ router.post('/preview', async(req, res, next) => {
         }
         res.send({code: 1, msg: "发送成功"})
     } else {
-        res.send({code: -1, msg: "请重新关注公号，发送预览消息"})
+        res.send({code: -1, msg: "互动时间超过48小时，再次互动或重新关注公众号后，再次尝试"})
     }
 
 });
