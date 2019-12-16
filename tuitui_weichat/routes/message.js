@@ -137,6 +137,7 @@ router.post('/create', async(req, res, next) => {
         gonghaoList: req.body.gonghaoList,
         group: req.body.group,
         is_daily: req.body.is_daily,
+        is_nickname: req.body.is_nickname,
     };
     if(req.body.is_daily){
         message.daily_time = req.body.daily_time
@@ -188,6 +189,7 @@ router.post('/update', async(req, res, next) => {
         gonghaoList: req.body.gonghaoList,
         group: req.body.group,
         is_daily: req.body.is_daily,
+        is_nickname: req.body.is_nickname,
     };
     if(req.body.is_daily){
         message.daily_time = req.body.daily_time
