@@ -32,7 +32,7 @@ async function getMaterial(code, client, type, offset) {
             if(data[j].content.news_item.length && data[j].content.news_item[0] && data[j].content.news_item[0]!='null'){
                 console.log('----------',j,'-------------')
                 console.log(data[j].content.news_item.length)
-                console.log(data[j].content.news_item[0])
+                // console.log(data[j].content.news_item[0])
                 async.map(data[j].content.news_item,async function(item) {
                     if(item.thumb_url){
                         let path = await handleImage(item.thumb_url);
