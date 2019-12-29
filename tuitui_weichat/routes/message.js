@@ -321,6 +321,14 @@ router.put('/updateGroup', async(req, res, next) => {
     res.send({code: 1, msg: "修改成功"})
 });
 
+router.delete('/delSelect', async(req, res, next) => {
+    let {selectedMessages} = req.query;
+    selectedMessages.map(async item => {
+        await MessageModel.findByIdAndRemove(item)
+    });
+    res.send({code: 1, msg: "批量删除成功"})
+});
+
 async function upload(type, img_path, codes) {
     if (type == 2) {
         for (let code of codes) {
