@@ -44,7 +44,7 @@ async function getMaterial(code, client, type, offset) {
                                 item.thumb_media_id = doc.media_id;
                             })
                         }
-                        console.log(item, "=================2020-01-02  item==================================")
+                        console.log(item.thumb_media_id, "=================2020-01-02  item==================================")
                         return item
                     }
                 },async (error,results) => {
