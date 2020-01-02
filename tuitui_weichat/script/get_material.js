@@ -45,6 +45,7 @@ async function getMaterial(code, client, type, offset) {
                             })
                         }
                     }
+                    console.log(item, "=================2020-01-02  item==================================")
                     return item
                 },async (error,results) => {
                         if(error){
