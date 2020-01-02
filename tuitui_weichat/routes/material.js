@@ -214,7 +214,7 @@ async function uploadMaterial(code, news) {
 
 async function updateContentSourceUrl(updateInfo, code) {
   var api = await weichat_util.getClient(code);
-  console.log(result, "-------------------------------修改原文链接1---------------------")
+  console.log("-------------------------------修改原文链接1---------------------")
   console.log(updateInfo)
   return new Promise((resolve, reject) => {
     api.updateNewsMaterial({...updateInfo}, (err, result) => {
