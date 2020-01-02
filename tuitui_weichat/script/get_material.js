@@ -37,13 +37,13 @@ async function getMaterial(code, client, type, offset) {
                     if(item.thumb_url){
                         let path = await handleImage(item.thumb_url);
                         item.local_img_path = path.split('/public')[1]; 
-                    }
-                    if(!item.thumb_media_id) {
-                        await client.uploadMaterial(item.local_img_path, "image", (error, doc) => {
-                            console.log(error, "------------------2020-01-02--error--------------------------")
-                            console.log(doc, "------------------2020-01-02----------------------------")
-                            item.thumb_media_id = doc.media_id;
-                        })
+                        if(!item.thumb_media_id) {
+                            await client.uploadMaterial(path, "image", (error, doc) => {
+                                console.log(error, "------------------2020-01-02--error--------------------------")
+                                console.log(doc, "------------------2020-01-02----------------------------")
+                                item.thumb_media_id = doc.media_id;
+                            })
+                        }
                     }
                     return item
                 },async (error,results) => {
