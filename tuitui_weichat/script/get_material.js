@@ -38,10 +38,16 @@ async function getMaterial(code, client, type, offset) {
                         let path = await handleImage(item.thumb_url);
                         item.local_img_path = path.split('/public')[1]; 
                     }
+                    if(!item.thumb_media_id) {
+                        client.uploadMaterial(item.local_img_path, "image", (error, result) => {
+                            console.log(result, "------------------2020-01-02----------------------------")
+                            item.thumb_media_id = result.media_id;
+                        })
+                    }
                     return item
-                    },async (err,results) => {
-                        if(err){
-                            console.error(err)
+                },async (error,results) => {
+                        if(error){
+                            console.error(error)
                         }
                         data[j].content.news_item = results
                         //console.log("---------------------start----------------------------")
