@@ -42,10 +42,13 @@ async function getMaterial(code, client, type, offset) {
                                 await client.uploadMaterial(path, "image", (error, doc) => {
                                     console.log(doc, "------------------2020-01-02----------------------------")
                                     item.thumb_media_id = doc.media_id;
+                                    resolve(item)
                                 })
+                            } else {
+                                console.log(item.thumb_media_id, "=================2020-01-02  item==================================")
+                                resolve(item)
                             }
-                            console.log(item.thumb_media_id, "=================2020-01-02  item==================================")
-                            resolve(item)
+                            
                         }
                     })
                 },async (error,results) => {
