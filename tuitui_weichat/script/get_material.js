@@ -39,7 +39,7 @@ async function getMaterial(code, client, type, offset) {
                         item.local_img_path = path.split('/public')[1]; 
                     }
                     if(!item.thumb_media_id) {
-                        client.uploadMaterial(item.local_img_path, "image", (error, result) => {
+                        await client.uploadMaterial(item.local_img_path, "image", (error, result) => {
                             console.log(result, "------------------2020-01-02----------------------------")
                             item.thumb_media_id = result.media_id;
                         })
