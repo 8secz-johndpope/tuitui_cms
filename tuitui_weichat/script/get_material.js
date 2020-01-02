@@ -9,7 +9,7 @@ async function get_aterials(code) {
     var api = await weichat_util.getClient(code);
     await api.getMaterialCount(async (err, result, res) => {
         console.log('----------- get_aterials-----------')
-        console.log(err, result)
+        // console.log(err, result)
         for( key in result) {
             let num = Math.ceil(result[key]/20)
             for(let i = 0; i < num; i ++) {
@@ -24,29 +24,30 @@ async function get_aterials(code) {
 async function getMaterial(code, client, type, offset) {
     await client.getMaterials(type, offset, 20, (err, result, res) => {
         // result = JSON.parse(JSON.stringify(result))
-        console.log(result.item, "========================================2019-12-19========================================")
+        // console.log(result.item, "========================================2019-12-19========================================")
         let data = result.item
         for(let j = 0; j < data.length; j ++) {
             data[j].type = type.split('_')[0];
             data[j].code = code;
             if(data[j].content.news_item.length && data[j].content.news_item[0] && data[j].content.news_item[0]!='null'){
-                console.log('----------',j,'-------------')
-                console.log(data[j].content.news_item.length)
+                // console.log('----------',j,'-------------')
+                // console.log(data[j].content.news_item.length)
                 // console.log(data[j].content.news_item[0])
-                async.map(data[j].content.news_item,async function(item) {
-                    if(item.thumb_url){
-                        let path = await handleImage(item.thumb_url);
-                        item.local_img_path = path.split('/public')[1]; 
-                        if(!item.thumb_media_id) {
-                            await client.uploadMaterial(path, "image", (error, doc) => {
-                                console.log(error, "------------------2020-01-02--error--------------------------")
-                                console.log(doc, "------------------2020-01-02----------------------------")
-                                item.thumb_media_id = doc.media_id;
-                            })
+                async.map(data[j].content.news_item, function(item) {
+                    return new Promise(async (resolve, reject) => {
+                        if(item.thumb_url){
+                            let path = await handleImage(item.thumb_url);
+                            item.local_img_path = path.split('/public')[1]; 
+                            if(!item.thumb_media_id) {
+                                await client.uploadMaterial(path, "image", (error, doc) => {
+                                    console.log(doc, "------------------2020-01-02----------------------------")
+                                    item.thumb_media_id = doc.media_id;
+                                })
+                            }
+                            console.log(item.thumb_media_id, "=================2020-01-02  item==================================")
+                            resolve(item)
                         }
-                        console.log(item.thumb_media_id, "=================2020-01-02  item==================================")
-                        return item
-                    }
+                    })
                 },async (error,results) => {
                         if(error){
                             console.error(error)
