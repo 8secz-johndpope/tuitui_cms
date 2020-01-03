@@ -41,16 +41,20 @@ router.post('/', async (req, res, next) => {
     account_id = req.session.account._id;
   }
   let { name } = req.body;
-  let result = await GonghaoTagModel.findOne({ name, account_id });
-  if(result) {
-    res.send({ code: 1, msg: "查询成功", exist: 1, data: result })
-  } else {
-    let data = await GonghaoTagModel.create({ name, account_id });
-    if(data) {
-      res.send({ code: 1, msg: "创建标签成功", exist: 0, data })
+  if(account_id) {
+    let result = await GonghaoTagModel.findOne({ name, account_id });
+    if(result) {
+      res.send({ code: 1, msg: "查询成功", exist: 1, data: result })
     } else {
-      res.send({ code: -1, msg: "创建失败" })
+      let data = await GonghaoTagModel.create({ name, account_id });
+      if(data) {
+        res.send({ code: 1, msg: "创建标签成功", exist: 0, data })
+      } else {
+        res.send({ code: -1, msg: "创建失败" })
+      }
     }
+  } else {
+    res.send({ code: -1, msg: "创建失败,用户信息失效" })
   }
 });
 
