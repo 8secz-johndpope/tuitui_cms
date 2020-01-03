@@ -144,26 +144,33 @@ router.post('/create', async(req, res, next) => {
     }else{
         message.daily_time = 0
     }
-    var docs = await MessageModel.create(message);
-    if (docs) {
-        if(docs.type==0){
-            let contents = docs.contents
-            for (var j = 0; j < contents.length; j++) {
-                let content = contents[j]
-                if(content.local_picurl){
-                    content.picurl = content.local_picurl
+    if(account_id) {
+        var docs = await MessageModel.create(message);
+        if (docs) {
+            if(docs.type==0){
+                let contents = docs.contents
+                for (var j = 0; j < contents.length; j++) {
+                    let content = contents[j]
+                    if(content.local_picurl){
+                        content.picurl = content.local_picurl
+                    }
                 }
             }
+            res.send({
+                success: '成功',
+                data: docs
+            })
+        } else {
+            res.send({
+                err: '创建失败，请检查输入是否有误'
+            })
         }
-        res.send({
-            success: '成功',
-            data: docs
-        })
     } else {
         res.send({
-            err: '创建失败，请检查输入是否有误'
+            err: '创建失败，账户信息失效'
         })
     }
+   
 })
 
 router.post('/update', async(req, res, next) => {
