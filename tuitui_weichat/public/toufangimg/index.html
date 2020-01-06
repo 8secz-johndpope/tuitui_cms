@@ -45,9 +45,11 @@
 					<div class="row" style="margin-top: 10px">
 						<button id="sub" type="button" class="btn btn-success">确认，生成图片</button>
 					</div>
+					<!-- 
 					<div class="row" style="margin-top: 20px">
 						<button id="download" type="button" class="btn btn-info">合成图片下载</button>
 					</div>
+					 -->
 				</div>
 			</div>
 
@@ -85,7 +87,7 @@
 				var canvas = document.createElement('canvas');
 				canvas.width = ImgObj.width;
 				canvas.height = ImgObj.height;
-				document.getElementById('shows').append(canvas);
+				// document.getElementById('shows').append(canvas);
 				ctx = canvas.getContext('2d');
 				ctx.drawImage(ImgObj,0,0);
 				var bft_x=0 , bft_y=0
@@ -98,10 +100,21 @@
 					bft_x = ImgObj.width - ft_img_obj.width
 				}
 				ctx.drawImage(ft_img_obj,bft_x,bft_y)
+
+
+				//下载
+				var link = document.createElement("a");
+				var imgData =canvas.toDataURL({format: 'png', quality:1, width:canvas.width, height:canvas.height});
+			    var strDataURI = imgData.substr(22, imgData.length);
+			    var blob = dataURLtoBlob(imgData);
+			    var objurl = URL.createObjectURL(blob);
+			    link.download = new Date().toGMTString()+parseInt(Math.random()*1000)+".png";
+			    link.href = objurl;
+			    link.click();
 			}
 		})
 
-		$('#download').click(function(){
+		/*$('#download').click(function(){
 			var $cs = $('#shows canvas')
 			for(var i =0; i<$cs.length; i++){
 				var cs = $cs[i];
@@ -113,9 +126,8 @@
 			    link.download = new Date().toGMTString()+parseInt(Math.random()*1000)+".png";
 			    link.href = objurl;
 			    link.click();
-			}
-			
-		})
+			}	
+		})*/
 
 	function  dataURLtoBlob(dataurl) {
     	var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
