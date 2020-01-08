@@ -7,10 +7,11 @@ var request = require('request');
 
 function short_url_req(long_url){
     return new Promise((resolve,reject)=>{
-        let api = 'http://api.weibo.com/2/short_url/shorten.json?source=2849184197&url_long='+encodeURIComponent(long_url);
+        let api = 'http://api.weibo.com/2/short_url/shorten.json?source=211160679&url_long='+encodeURIComponent(long_url);
         request(api,function(error, response, body){
           try{
             let data = JSON.parse(body)
+            console.log(data)
             resolve(data.urls[0].url_short)
           }catch(e){
             reject(e)
@@ -18,5 +19,7 @@ function short_url_req(long_url){
         })
     });
   }
+
+short_url_req('http://tiexie0.wang/transfer/101091303')
 
 exports.short_url_req = short_url_req;
