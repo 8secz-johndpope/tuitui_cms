@@ -24,7 +24,7 @@ async function get_aterials(code) {
 async function getMaterial(code, client, type, offset) {
     await client.getMaterials(type, offset, 20, (err, result, res) => {
         // result = JSON.parse(JSON.stringify(result))
-        console.log(result.item, "========================================2019-12-19========================================")
+        // console.log(result.item, "========================================2019-12-19========================================")
         let data = result.item
         for(let j = 0; j < data.length; j ++) {
             data[j].type = type.split('_')[0];
@@ -37,11 +37,16 @@ async function getMaterial(code, client, type, offset) {
                     if(item.thumb_url){
                         let path = await handleImage(item.thumb_url);
                         item.local_img_path = path.split('/public')[1]; 
+                        if(!item.thumb_media_id) {
+                            let doc = await uploadImage(client, path);
+                            item.thumb_media_id = doc.media_id;
+                        }
                     }
+                    console.log(item.thumb_media_id, "=================2020-01-02  item==================================")
                     return item
-                    },async (err,results) => {
-                        if(err){
-                            console.error(err)
+                },async (error,results) => {
+                        if(error){
+                            console.error(error)
                         }
                         data[j].content.news_item = results
                         //console.log("---------------------start----------------------------")
@@ -75,6 +80,14 @@ function handleImage(thumb_url){
         writeStream.on("finish", function() {
             // console.log("ok");
         });
+    })
+}
+
+function uploadImage(client, path) {
+    return new Promise((resolve, reject) => {
+        client.uploadMaterial(path, "image", (error, doc) => {
+            resolve(doc)
+        })
     })
 }
 

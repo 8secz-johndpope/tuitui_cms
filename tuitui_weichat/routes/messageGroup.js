@@ -21,12 +21,17 @@ router.post('/', async (req, res, next) => {
     account_id = req.session.account._id;
   }
   let {group} = req.body;
-  let data = await MessageGroupModel.create({group, account_id});
-  if(data) {
-    res.send({code: 1, msg: "创建成功", data})
+  if(account_id) {
+    let data = await MessageGroupModel.create({group, account_id});
+    if(data) {
+      res.send({code: 1, msg: "创建成功", data})
+    } else {
+      res.send({code: -1, msg: "创建失败"})
+    }
   } else {
-    res.send({code: -1, msg: "创建失败"})
+    res.send({code: -1, msg: "创建失败,用户信息失效"})
   }
+  
 });
 
 router.delete("/", async (req, res, next) => {

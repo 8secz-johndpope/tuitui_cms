@@ -159,16 +159,20 @@ router.get('/queryAuthorizeInfo', [sessiond], async(req, res, next) => {
     }
     console.log('-------queryAuthorizeInfo  account_id---------')
     console.log(account_id);
-    let query = req.query;
-    let auth_code = query.auth_code;
-    let expires_in = query.expires_in;
-    let authorization_info = await componentService.queryAuthorizeInfo(account_id, auth_code);
-    if (!authorization_info.errcode) {
-        await authorizer_info.get_authorizer_info({appid: authorization_info.authorizer_appid})
-        res.redirect('/admin')
-        refreshAccessToken({appid: authorization_info.authorizer_appid})
+    if(account_id) {
+        let query = req.query;
+        let auth_code = query.auth_code;
+        let expires_in = query.expires_in;
+        let authorization_info = await componentService.queryAuthorizeInfo(account_id, auth_code);
+        if (!authorization_info.errcode) {
+            await authorizer_info.get_authorizer_info({appid: authorization_info.authorizer_appid})
+            res.redirect('/admin')
+            refreshAccessToken({appid: authorization_info.authorizer_appid})
+        } else {
+            res.redirect('/error?errcode=' + authorization_info.errcode + '&errmsg=' + authorization_info.errmsg)
+        }
     } else {
-        res.redirect('/error?errcode=' + authorization_info.errcode + '&errmsg=' + authorization_info.errmsg)
+        res.redirect('/error?errcode=404&errmsg=' + "用户信息失效，请重试")
     }
 })
 

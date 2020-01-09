@@ -22,18 +22,23 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     let account_id;
     if (!req.session.account) {
-        account_id = req.query.account_id
+        account_id = req.body.account_id
     } else {
         account_id = req.session.account._id;
     }
     let {content, is_timing, timing_time, tagId, code} = req.body;
-    let result = await TextMaterialModel.create({content, is_timing, timing_time, tagId, code, account_id});
-    if (result) {
-        res.send({code: 1, msg: "创建成功", data: result})
+    if(account_id) {
+        let result = await TextMaterialModel.create({content, is_timing, timing_time, tagId, code, account_id});
+        if (result) {
+            res.send({code: 1, msg: "创建成功", data: result})
+        } else {
+            res.send({code: 0, msg: "创建失败，请检查输入是否有误"})
+        }
     } else {
-        res.send({code: 0, msg: "创建失败，请检查输入是否有误"})
+        res.send({code: 0, msg: "创建失败，账户信息失效"})
     }
 });
+    
 
 router.put('/', async (req, res, next) => {
     let {_id, content, is_timing, timing_time, tagId} = req.body;
