@@ -48,6 +48,8 @@ var MessageSchema = new Schema({
         type: String,
         default: ""
     },
+    sendAt: Number,
+    count: {type: Number, default: 0},
     createAt: {
         type: Date,
         default: Date.now
