@@ -25,8 +25,8 @@ var ConfigSchema = new Schema({
     attribute: {type: Number, default: 0}, //0 未知,1 男,2 女
     save_user: {type: Boolean, default: true},
     real_time: {type: Boolean, default: false},
-    todayCount: Number,
-    yesterdayCount: Number,
+    todayCount: {type: Number, default: 0},
+    yesterdayCount: {type: Number, default: 0},
     createAt: {
         type: Date,
         default: Date.now
