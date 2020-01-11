@@ -23,7 +23,12 @@ async function get_aterials(code) {
 
 async function getMaterial(code, client, type, offset) {
     await client.getMaterials(type, offset, 20, (err, result, res) => {
+       console.log('--------result-------')
+        console.log(typeof result)
         // result = JSON.parse(JSON.stringify(result))
+        if(!result){
+            return
+        }
         console.log(result.item, "========================================2020-01-12========================================")
         let data = result.item
         if(!data){
