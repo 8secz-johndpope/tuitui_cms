@@ -23,8 +23,8 @@ async function get_aterials(code) {
 
 async function getMaterial(code, client, type, offset) {
     await client.getMaterials(type, offset, 20, (err, result, res) => {
-        // result = JSON.parse(JSON.stringify(result))
-        // console.log(result.item, "========================================2019-12-19========================================")
+        result = JSON.parse(JSON.stringify(result))
+        console.log(result.item, "========================================2020-01-12========================================")
         let data = result.item
         for(let j = 0; j < data.length; j ++) {
             data[j].type = type.split('_')[0];
