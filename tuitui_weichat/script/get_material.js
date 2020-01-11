@@ -22,6 +22,7 @@ async function get_aterials(code) {
 }
 
 async function getMaterial(code, client, type, offset) {
+    console.log('----offset-----',offset);
     await client.getMaterials(type, offset, 20, (err, result, res) => {
        console.log('--------result-------')
         console.log(typeof result)
