@@ -14,7 +14,7 @@ async function get_aterials(code) {
             let num = Math.ceil(result[key]/20)
             for(let i = 0; i < num; i ++) {
               if(key.split('_')[0] == 'news') {
-                await getMaterial(code, api, key.split('_')[0], i)
+                await getMaterial(code, api, key.split('_')[0], i*20)
               }
             }
         }
