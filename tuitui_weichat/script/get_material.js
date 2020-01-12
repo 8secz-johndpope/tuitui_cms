@@ -7,7 +7,8 @@ var fs = require('fs');
 async function get_aterials(code) {
     console.log('-------执行 get_aterials 方法-------')
     var api = await weichat_util.getClient(code);
-    await api.getMaterialCount(async (err, result, res) => {
+    await getMaterial(code, api, 'news', 0)
+    /*await api.getMaterialCount(async (err, result, res) => {
         console.log('----------- get_aterials-----------')
         console.log(err, result)
         for( key in result) {
@@ -18,14 +19,14 @@ async function get_aterials(code) {
               }
             }
         }
-    })
+    })*/
 }
 
 async function getMaterial(code, client, type, offset) {
     console.log('----offset-----',offset);
     await client.getMaterials(type, offset, 20, (err, result, res) => {
-       console.log('--------result-------')
-       console.log(result)
+       //console.log('--------result-------')
+       //console.log(result)
         // result = JSON.parse(JSON.stringify(result))
         if(!result){
             return

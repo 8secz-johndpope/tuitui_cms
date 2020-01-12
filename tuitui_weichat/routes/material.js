@@ -26,7 +26,7 @@ router.get('/show', async (req, res, next) => {
     type: 'news',
   }).sort({
     'update_time': -1
-  })
+  }).limit(20)
   res.send({
     success: '成功',
     data: docs
