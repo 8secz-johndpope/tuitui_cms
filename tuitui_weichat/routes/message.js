@@ -140,10 +140,8 @@ router.post('/create', async(req, res, next) => {
         is_nickname: req.body.is_nickname,
     };
     if (req.body.is_daily) {
-        let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
-        console.log(req.body.daily_time,'-------------------daily_time')
-        console.log(LocalDate,'-------------------LocalDate')
-        message.daily_time = req.body.daily_time - LocalDate
+        message.daily_time = req.body.daily_time % (24 * 60 * 60 * 1000) + 8 * 60 * 60 * 1000
+        message.daily_time_show = req.body.daily_time_show
     } else {
         message.daily_time = 0
     }
@@ -202,8 +200,8 @@ router.post('/update', async(req, res, next) => {
         is_nickname: req.body.is_nickname,
     };
     if (req.body.is_daily) {
-        let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
-        message.daily_time = req.body.daily_time - LocalDate
+        message.daily_time = req.body.daily_time % (24 * 60 * 60 * 1000) + 8 * 60 * 60 * 1000
+        message.daily_time_show = req.body.daily_time_show
     } else {
         message.daily_time = 0
     }
