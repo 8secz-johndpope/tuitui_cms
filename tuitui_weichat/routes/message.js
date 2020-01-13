@@ -67,7 +67,7 @@ router.get('/', async(req, res, next) => {
             }
         }
 
-        if(messages[i].is_daily && !messages[i].daily_time_show){
+        if(messages[i].is_daily){
             messages[i].daily_time_show = LocalDate + messages[i].daily_time
         }
 
