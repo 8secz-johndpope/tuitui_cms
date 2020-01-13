@@ -141,6 +141,8 @@ router.post('/create', async(req, res, next) => {
     };
     if (req.body.is_daily) {
         let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
+        console.log(req.body.daily_time,'-------------------daily_time')
+        console.log(LocalDate,'-------------------LocalDate')
         message.daily_time = req.body.daily_time - LocalDate
     } else {
         message.daily_time = 0
