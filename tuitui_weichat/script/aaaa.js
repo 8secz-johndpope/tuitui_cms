@@ -1,10 +1,12 @@
-var ConfigModel = require('../model/Config');
+var ConfigModel = require('../model/Message');
 // var UserTagModel = require('../model/UserTag')
 // var wechat_util = require('../util/get_weichat_client.js')
-// var UserconfModel = require('../model/Userconf');
+var UserconfModel = require('../model/Userconf');
 // var OpenidModel = require('../model/Openid');
 // var OpenidTagModel = require('../model/OpenidTag');
 // var SubOpenidTagModel = require('../model/SubOpenidTag');
+const MessageModel = require("../model/Message")
+var account = require('../model/Account')
 
 async function a() {
     let code = process.argv.slice(2)[0]
@@ -16,7 +18,19 @@ async function a() {
     // console.log(SubOpenidTag, '-----------------SubOpenidTag')
     // let client = await wechat_util.getClient(code)
 
-    await ConfigModel.update({code: code}, {status: -2})
+    // let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
+    // let yDate = new Date(new Date().toLocaleDateString()).getTime() - 24*3600*1000
+    // let yyDate = new Date(new Date().toLocaleDateString()).getTime() - 48*3600*1000
+    // let a = await UserconfModel.count({code:code,subscribe_flag: {$ne: false},action_time:{$gte:yyDate,$lt:yDate}})
+    // console.log(a,'----------------------')
+    // let b = await UserconfModel.count({code:code,subscribe_flag: {$ne: false},action_time:{$gte:yDate,$lt:LocalDate}})
+    // console.log(b,'----------------------')
+    let c = await MessageModel.find({codes:[code],is_daily:true})
+    console.log(c,'---------------')
+    // let d = await account.findById('5dedbac43c67d104222f4c82')
+    // console.log(d.password,'------------------d')
+
+    // await ConfigModel.update({code: code}, {status: -2})
     //
     // let result = await UserconfModel.remove({code:code})
     // console.log(result,'---result')

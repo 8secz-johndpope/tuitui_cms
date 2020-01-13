@@ -32,7 +32,7 @@ async function sendMQ(msg) {
 
 router.get('/', async(req, res, next) => {
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
@@ -41,15 +41,15 @@ router.get('/', async(req, res, next) => {
     let messages = [];
     if (type === "is_timing") {
         messages = await MessageModel.find({account_id, is_timing: true}).sort({
-            timing_time: -1,codes:1
+            timing_time: -1, codes: 1
         });
     } else if (type === "delay") {
         messages = await MessageModel.find({account_id, delay: {$lte: 0}}).sort({
-            _id: -1,codes:1
+            _id: -1, codes: 1
         });
     } else if (type === "manual") {
         messages = await MessageModel.find({account_id}).sort({
-            _id: -1,codes:1
+            _id: -1, codes: 1
         });
     }
     for (let i = 0; i < messages.length; i++) {
@@ -81,7 +81,7 @@ router.get('/', async(req, res, next) => {
         let contents = messages[i].contents
         for (var j = 0; j < contents.length; j++) {
             let content = contents[j]
-            if(content.local_picurl){
+            if (content.local_picurl) {
                 content.picurl = content.local_picurl
             }
         }
@@ -93,7 +93,7 @@ router.get('/', async(req, res, next) => {
 
 router.get('/get_code', async(req, res, next) => {
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
@@ -113,7 +113,7 @@ router.post('/create', async(req, res, next) => {
     console.log(contents, "==================contents========2019-12-11================")
 
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.body.account_id
     } else {
         account_id = req.session.account._id;
@@ -139,19 +139,20 @@ router.post('/create', async(req, res, next) => {
         is_daily: req.body.is_daily,
         is_nickname: req.body.is_nickname,
     };
-    if(req.body.is_daily){
-        message.daily_time = req.body.daily_time
-    }else{
+    if (req.body.is_daily) {
+        let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
+        message.daily_time = req.body.daily_time - LocalDate
+    } else {
         message.daily_time = 0
     }
-    if(account_id) {
+    if (account_id) {
         var docs = await MessageModel.create(message);
         if (docs) {
-            if(docs.type==0){
+            if (docs.type == 0) {
                 let contents = docs.contents
                 for (var j = 0; j < contents.length; j++) {
                     let content = contents[j]
-                    if(content.local_picurl){
+                    if (content.local_picurl) {
                         content.picurl = content.local_picurl
                     }
                 }
@@ -170,7 +171,7 @@ router.post('/create', async(req, res, next) => {
             err: '创建失败，账户信息失效'
         })
     }
-   
+
 })
 
 router.post('/update', async(req, res, next) => {
@@ -198,9 +199,10 @@ router.post('/update', async(req, res, next) => {
         is_daily: req.body.is_daily,
         is_nickname: req.body.is_nickname,
     };
-    if(req.body.is_daily){
-        message.daily_time = req.body.daily_time
-    }else{
+    if (req.body.is_daily) {
+        let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
+        message.daily_time = req.body.daily_time - LocalDate
+    } else {
         message.daily_time = 0
     }
     // if (parseInt(req.body.type) === 2) {
@@ -213,11 +215,11 @@ router.post('/update', async(req, res, next) => {
     // }
     var docs = await MessageModel.findByIdAndUpdate(id, message)
     if (docs) {
-        if(docs.type==0){
+        if (docs.type == 0) {
             let contents = docs.contents
             for (var j = 0; j < contents.length; j++) {
                 let content = contents[j]
-                if(content.local_picurl){
+                if (content.local_picurl) {
                     content.picurl = content.local_picurl
                 }
             }
@@ -252,7 +254,7 @@ router.get('/remove', async(req, res, next) => {
     var startTime = new Date(Number(req.query.startTime)),
         endTime = new Date(Number(req.query.endTime));
     let account_id;
-    if(!req.session.account) {
+    if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
@@ -359,22 +361,22 @@ async function uploadImage(type, contents, codes) {
         codes = codes.derangedArray()
         for (let code of codes) {
             let client = await wechat_util.getClient(code);
-            if(!client){
+            if (!client) {
                 continue
             }
-            for (var i =  0; i < contents.length; i++) {
-                    let item = contents[i]
-                    let temp_pic = item.picurl
-                    let img_paths = item.picurl.split('/')
-                    let img_file = img_paths[img_paths.length-1]
-                    try{
-                        item.local_picurl = item.picurl;
-                        item.picurl = await client_upload(client,ab_img + img_file)
-                    }catch(e){
-                        item.picurl = temp_pic
-                        item.local_picurl = ''
-                    }
-                    continue
+            for (var i = 0; i < contents.length; i++) {
+                let item = contents[i]
+                let temp_pic = item.picurl
+                let img_paths = item.picurl.split('/')
+                let img_file = img_paths[img_paths.length - 1]
+                try {
+                    item.local_picurl = item.picurl;
+                    item.picurl = await client_upload(client, ab_img + img_file)
+                } catch (e) {
+                    item.picurl = temp_pic
+                    item.local_picurl = ''
+                }
+                continue
             }
             break
         }
@@ -384,14 +386,14 @@ async function uploadImage(type, contents, codes) {
     }
 }
 
-function client_upload(client,file_path){
-    return new Promise((resolve,reject) => {
+function client_upload(client, file_path) {
+    return new Promise((resolve, reject) => {
         client.uploadImage(file_path, function (error, result) {
             console.log("error", error, "-----------------------")
             console.log("result", result, "-----------------------")
-            if(result && result.url){
+            if (result && result.url) {
                 resolve(result.url)
-            }else{
+            } else {
                 reject(error)
             }
         });
@@ -399,8 +401,8 @@ function client_upload(client,file_path){
 }
 
 if (!Array.prototype.derangedArray) {
-    Array.prototype.derangedArray = function() {
-        for(var j, x, i = this.length; i; j = parseInt(Math.random() * i), x = this[--i], this[i] = this[j], this[j] = x);
+    Array.prototype.derangedArray = function () {
+        for (var j, x, i = this.length; i; j = parseInt(Math.random() * i), x = this[--i], this[i] = this[j], this[j] = x);
         return this;
     };
 }
