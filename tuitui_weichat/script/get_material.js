@@ -7,25 +7,35 @@ var fs = require('fs');
 async function get_aterials(code) {
     console.log('-------执行 get_aterials 方法-------')
     var api = await weichat_util.getClient(code);
-    await api.getMaterialCount(async (err, result, res) => {
+    await getMaterial(code, api, 'news', 0)
+    /*await api.getMaterialCount(async (err, result, res) => {
         console.log('----------- get_aterials-----------')
         console.log(err, result)
         for( key in result) {
             let num = Math.ceil(result[key]/20)
             for(let i = 0; i < num; i ++) {
               if(key.split('_')[0] == 'news') {
-                await getMaterial(code, api, key.split('_')[0], i)
+                await getMaterial(code, api, key.split('_')[0], i*20)
               }
             }
         }
-    })
+    })*/
 }
 
 async function getMaterial(code, client, type, offset) {
+    console.log('----offset-----',offset);
     await client.getMaterials(type, offset, 20, (err, result, res) => {
+       //console.log('--------result-------')
+       //console.log(result)
         // result = JSON.parse(JSON.stringify(result))
-        // console.log(result.item, "========================================2019-12-19========================================")
+        if(!result){
+            return
+        }
+        console.log(result.item, "========================================2020-01-12========================================")
         let data = result.item
+        if(!data){
+            return
+        }
         for(let j = 0; j < data.length; j ++) {
             data[j].type = type.split('_')[0];
             data[j].code = code;
