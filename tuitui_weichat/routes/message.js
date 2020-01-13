@@ -53,7 +53,7 @@ router.get('/', async(req, res, next) => {
         });
     }
 
-    messages = messages.toObject();
+    messages = JSON.parse(JSON.stringify(messages))
 
     let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
 
