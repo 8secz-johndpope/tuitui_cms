@@ -67,7 +67,7 @@ router.get('/', async(req, res, next) => {
             }
         }
 
-        if(!messages[i].daily_time_show){
+        if(messages[i].is_daily && !messages[i].daily_time_show){
             messages[i].daily_time_show = LocalDate + messages[i].daily_time
         }
 
@@ -200,6 +200,7 @@ router.post('/update', async(req, res, next) => {
     if (req.body.is_daily) {
         //适配没更新
         if(!req.body.daily_time_show){
+            console.log('----- not daily_time_show------')
             message.daily_time = req.body.daily_time
             if(message.daily_time<0){
                 let date_tmp = new Date(new Date().toLocaleDateString()).getTime()+message.daily_time
