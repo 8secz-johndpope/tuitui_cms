@@ -52,32 +52,11 @@ router.get('/', async(req, res, next) => {
             _id: -1, codes: 1
         });
     }
-    for (let i = 0; i < messages.length; i++) {
-        let d = new Date(messages[i].timing_time);
-        let year = d.getFullYear()
-        let month = d.getMonth() + 1
-        let date = d.getDate()
-        let hour = d.getHours()
-        let minutes = d.getMinutes()
-        let seconds = d.getSeconds()
-        if (month < 10) {
-            month = '0' + month
-        }
-        if (date < 10) {
-            date = '0' + date
-        }
-        if (hour < 10) {
-            hour = '0' + hour
-        }
-        if (minutes < 10) {
-            minutes = '0' + minutes
-        }
-        if (seconds < 10) {
-            seconds = '0' + seconds
-        }
-        let times = year + '-' + month + '-' + date + ' ' + hour + ':' + minutes + ':' + seconds;
-        messages[i].time = times
 
+    let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
+
+    for (let i = 0; i < messages.length; i++) {
+        
         let contents = messages[i].contents
         for (var j = 0; j < contents.length; j++) {
             let content = contents[j]
@@ -85,6 +64,11 @@ router.get('/', async(req, res, next) => {
                 content.picurl = content.local_picurl
             }
         }
+
+        if(!messages[i].daily_time_show){
+            messages[i].daily_time_show = LocalDate + messages[i].daily_time
+        }
+
     }
     res.send({
         messages: messages
@@ -140,8 +124,20 @@ router.post('/create', async(req, res, next) => {
         is_nickname: req.body.is_nickname,
     };
     if (req.body.is_daily) {
-        message.daily_time = req.body.daily_time % (24 * 60 * 60 * 1000) + 8 * 60 * 60 * 1000
-        message.daily_time_show = req.body.daily_time_show
+        //适配没更新
+        if(!req.body.daily_time_show){
+            message.daily_time = req.body.daily_time
+            if(message.daily_time<0){
+                let date_tmp = new Date(new Date().toLocaleDateString()).getTime()+message.daily_time
+                let date_com = new Date(date_tmp)
+                let tmp_time = date_com.setHours(0,0,0,0)
+                let d_time = date_tmp-tmp_time
+                message.daily_time = d_time
+            }
+        }else{
+            message.daily_time = req.body.daily_time_show % (24 * 60 * 60 * 1000) + 8 * 60 * 60 * 1000
+        }
+        //message.daily_time_show = req.body.daily_time_show
     } else {
         message.daily_time = 0
     }
@@ -200,8 +196,19 @@ router.post('/update', async(req, res, next) => {
         is_nickname: req.body.is_nickname,
     };
     if (req.body.is_daily) {
-        message.daily_time = req.body.daily_time % (24 * 60 * 60 * 1000) + 8 * 60 * 60 * 1000
-        message.daily_time_show = req.body.daily_time_show
+        //适配没更新
+        if(!req.body.daily_time_show){
+            message.daily_time = req.body.daily_time
+            if(message.daily_time<0){
+                let date_tmp = new Date(new Date().toLocaleDateString()).getTime()+message.daily_time
+                let date_com = new Date(date_tmp)
+                let tmp_time = date_com.setHours(0,0,0,0)
+                let d_time = date_tmp-tmp_time
+                message.daily_time = d_time
+            }
+        }else{
+            message.daily_time = req.body.daily_time_show % (24 * 60 * 60 * 1000) + 8 * 60 * 60 * 1000
+        }
     } else {
         message.daily_time = 0
     }
