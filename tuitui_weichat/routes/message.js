@@ -137,7 +137,7 @@ router.post('/create', async(req, res, next) => {
                 message.daily_time = d_time
             }
         }else{
-            message.daily_time = req.body.daily_time_show % (24 * 60 * 60 * 1000) + 8 * 60 * 60 * 1000
+            message.daily_time = (req.body.daily_time_show + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000)
         }
         //message.daily_time_show = req.body.daily_time_show
     } else {
@@ -210,7 +210,7 @@ router.post('/update', async(req, res, next) => {
                 message.daily_time = d_time
             }
         }else{
-            message.daily_time = req.body.daily_time_show % (24 * 60 * 60 * 1000) + 8 * 60 * 60 * 1000
+            message.daily_time = (req.body.daily_time_show + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000)
         }
     } else {
         message.daily_time = 0
