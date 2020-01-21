@@ -25,10 +25,10 @@ async function get_aterials(code) {
 async function getMaterial(code, client, type, offset) {
     console.log('----offset-----',offset);
     await client.getMaterials(type, offset, 20, (err, result, res) => {
+        result = JSON.parse(JSON.stringify(result))
        console.log('--------result-------')
        console.log(result)
        console.log('--------result-------')
-        // result = JSON.parse(JSON.stringify(result))
         if(!result){
             return
         }
