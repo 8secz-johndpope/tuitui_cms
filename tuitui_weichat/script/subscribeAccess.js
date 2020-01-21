@@ -18,8 +18,8 @@ redis_client.on("message", async function (channel, message) {
         let saveToken = await Singleton.getInterface(appid)
         saveToken.setToken(appid,access_token,expires_in)
     }else{
-        console.log('------access_token err---------')
-        console.log(token)
+        /*console.log('------access_token err---------')
+        console.log(token)*/
         return
     }
 });
