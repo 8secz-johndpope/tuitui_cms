@@ -31,10 +31,10 @@ async function getMaterial(code, client, type, offset) {
             return
         }
        if(!result.item) {
-        result = JSON.parse(JSON.stringify(result)).toString()
+        result = JSON.parse(JSON.stringify(result))
        }
        console.log('--------result-------')
-       console.log(result)
+       console.log(typeof result)
        console.log('--------result-------')
         console.log(result.item, "========================================2020-01-12========================================")
         let data = result.item
