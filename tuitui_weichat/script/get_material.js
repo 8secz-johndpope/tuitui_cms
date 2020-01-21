@@ -31,7 +31,7 @@ async function getMaterial(code, client, type, offset) {
             return
         }
        if(!result.item) {
-        result = JSON.parse(result.toString())
+        result = JSON.parse(JSON.stringify(result)).toString()
        }
        console.log('--------result-------')
        console.log(result)
