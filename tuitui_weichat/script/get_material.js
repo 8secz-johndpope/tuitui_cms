@@ -25,9 +25,7 @@ async function get_aterials(code) {
 
 async function getMaterial(code, client, type, offset) {
     console.log('----offset-----',offset);
-    console.log(client.token, "token------client")
     await client.getMaterials(type, offset, 20, (err, result, res) => {
-        
         if(!result){
             return
         }
@@ -37,10 +35,10 @@ async function getMaterial(code, client, type, offset) {
             console.log("result11222222222---------------------------")
            resultObj = JSON.parse(JSON.stringify(result))
            let buf = new Buffer(resultObj)
-           result = buf.toString();
-        //    result = JSON.parse(buf)
+           result = JSON.parse(buf.toString())
        }
        console.log('--------result-------')
+       console.log(typeof result)
        console.log(result)
        console.log('--------result-------')
         console.log(result.item, "========================================2020-01-12========================================")
