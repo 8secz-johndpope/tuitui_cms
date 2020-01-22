@@ -33,9 +33,10 @@ async function getMaterial(code, client, type, offset) {
         console.log("result11222222222---------------------------")
             console.log(result)
             console.log("result11222222222---------------------------")
-           resultObj = JSON.parse(JSON.stringify(result))
-           let buf = new Buffer(resultObj)
-           result = JSON.parse(buf.toString())
+        //    resultObj = JSON.parse(JSON.stringify(result))
+        //    let buf = new Buffer(resultObj)
+        //    result = JSON.parse(buf.toString())
+        result = result.toString()
        }
        console.log('--------result-------')
        console.log(typeof result)
