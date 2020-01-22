@@ -30,19 +30,15 @@ async function getMaterial(code, client, type, offset) {
             return
         }
        if(!result.item) {
-        console.log("result11222222222---------------------------")
+            console.log("result11222222222---------------------------")
             console.log(result)
             console.log("result11222222222---------------------------")
-        //    resultObj = JSON.parse(JSON.stringify(result))
-        //    let buf = new Buffer(resultObj)
-        //    result = JSON.parse(buf.toString())
-        result = result.toJSON()
+            result = result.toString()
+            console.log(typeof result)
+            console.log(result)
+            console.log('--------result-------')
        }
-       console.log('--------result-------')
-       console.log(typeof result)
-       console.log(result)
-       console.log('--------result-------')
-        console.log(result.item, "========================================2020-01-12========================================")
+        // console.log(result.item, "========================================2020-01-12========================================")
         let data = result.item
         if(!data){
             return
