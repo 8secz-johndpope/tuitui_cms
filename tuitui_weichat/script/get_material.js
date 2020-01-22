@@ -8,7 +8,7 @@ async function get_aterials(code) {
     console.log('-------执行 get_aterials 方法-------')
     var api = await weichat_util.getClient(code);
     console.log(code)
-    await getMaterial(code, api, 'news', 0)
+    // await getMaterial(code, api, 'news', 0)
     // await api.getMaterialCount(async (err, result, res) => {
     //     console.log('----------- get_aterials-----------')
     //     console.log(err, result)
