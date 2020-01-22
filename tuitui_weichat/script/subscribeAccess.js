@@ -2,6 +2,7 @@ const asyncRedis = require("async-redis");
 const redis_client = asyncRedis.createClient();
 const mem = require('../util/mem.js');
 const Singleton = require('../util/get_weichat_client');
+const ConfigModel = require('../model/Config');
 
 redis_client.on("subscribe", function (channel, count) {
     console.log('监听到订阅事件',channel, count)
@@ -18,14 +19,18 @@ redis_client.on("message", async function (channel, message) {
         let saveToken = await Singleton.getInterface(appid)
         saveToken.setToken(appid,access_token,expires_in)
     }else{
-        /*console.log('------access_token err---------')
-        console.log(token)*/
-        return
+        // console.log('------access_token err---------')
+        // console.log(token)
+        let conf = await ConfigModel.findOne({appid:appid})
+        let access_token = conf.authorizer_access_token
+        let expires_in = conf.expires_in
+        let saveToken = await Singleton.getInterface(appid)
+        saveToken.setToken(appid,access_token,expires_in)
     }
 });
 
 async function subscribeAccessToken(){
-	await redis_client.subscribe('access_token');
+    await redis_client.subscribe('access_token');
 }
 
 subscribeAccessToken()
