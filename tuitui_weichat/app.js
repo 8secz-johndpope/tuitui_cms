@@ -33,6 +33,8 @@ var tuiguangTag = require('./routes/tuiguangTag')
 var template = require('./routes/template')
 var messageGroup = require('./routes/messageGroup')
 var textMaterial = require('./routes/textMaterial')
+var watermark = require('./routes/watermark')
+
 
 var app = express();
 
@@ -125,6 +127,7 @@ app.use('/tuiguangTag',[cookieParser(),sessiond],tuiguangTag)
 app.use('/template',[cookieParser(),sessiond],template)
 app.use('/messageGroup',[cookieParser(),sessiond],messageGroup)
 app.use('/textMaterial',[cookieParser(),sessiond],textMaterial)
+app.use('/watermark',[cookieParser(),sessiond],watermark)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -2,7 +2,7 @@ const request = require('request');
 const fs = require("fs");
 const path = require("path");
 
-const dirPath = path.join(__dirname, "file");
+const dirPath = path.join(__dirname, "../public/douyin");
 if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath);
     //console.log("文件夹创建成功");
