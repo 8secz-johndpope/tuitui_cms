@@ -25,25 +25,20 @@ async function get_aterials(code) {
 
 async function getMaterial(code, client, type, offset) {
     console.log('----offset-----',offset);
-    console.log(client.token, "token------client")
-    await client.getMaterials(type, offset, 20, (err, result, res) => {
-        
+    await client.getMaterials(type, offset, 6, (err, result, res) => {
         if(!result){
             return
         }
        if(!result.item) {
-        console.log("result11222222222---------------------------")
+            console.log("result11222222222---------------------------")
             console.log(result)
             console.log("result11222222222---------------------------")
-           resultObj = JSON.parse(JSON.stringify(result))
-           let buf = new Buffer(resultObj)
-           result = buf.toString();
-        //    result = JSON.parse(buf)
+            result = JSON.parse(result.toString())
+            console.log(typeof result)
+            console.log(result)
+            console.log('--------result-------')
        }
-       console.log('--------result-------')
-       console.log(result)
-       console.log('--------result-------')
-        console.log(result.item, "========================================2020-01-12========================================")
+        // console.log(result.item, "========================================2020-01-12========================================")
         let data = result.item
         if(!data){
             return
