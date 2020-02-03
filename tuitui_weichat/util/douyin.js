@@ -33,7 +33,7 @@ function get_url(url,cb){
 }
 
 function get_file(d_url,cb) {
-	let fileName = Date.now()+parseInt(Math.random()*1000)+'.mp4'
+	let fileName = Date.now()+''+parseInt(Math.random()*1000)+'.mp4'
 	let stream = fs.createWriteStream(path.join(dirPath, fileName));
     request({
     	url : d_url,
@@ -73,3 +73,4 @@ function async_get_douyin(url){
 module.exports.async_get_douyin = async_get_douyin
 module.exports.get_douyin_md5_vedio = get_douyin_md5_vedio
 
+// async_get_douyin('https://v.douyin.com/gtjqLt/')
