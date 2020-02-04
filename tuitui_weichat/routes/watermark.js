@@ -7,3 +7,5 @@ router.get('/douyin', async function(req, res, next) {
     let d_url = await douyin.async_get_douyin(url)
     res.send(d_url)
 })
+
+module.exports = router;
