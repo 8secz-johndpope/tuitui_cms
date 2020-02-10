@@ -139,20 +139,12 @@ async function remove_menu(code) {
 
 async function get_data(code) {
 	var client = await wechat_util.getClient(code)
-	client.getUserSummary('2020-02-09','2020-02-09',function(err,res){
-		console.log('------2020-02-09-------getUserSummary  ----------')
+	client.getUserSummary('2020-02-07','2020-02-09',function(err,res){
+		console.log('------2020-02-07-09-------getUserSummary  ----------')
 		console.log(res)
 	})
 	client.getUserCumulate('2020-02-09','2020-02-09',function(err,res){
 		console.log('------2020-02-09-------getUserCumulate  ----------')
-		console.log(res)
-	})
-	client.getUserSummary('2020-02-10','2020-02-10',function(err,res){
-		console.log('------2020-02-10-------getUserSummary  ----------')
-		console.log(res)
-	})
-	client.getUserCumulate('2020-02-10','2020-02-10',function(err,res){
-		console.log('------2020-02-10-------getUserCumulate  ----------')
 		console.log(res)
 	})
 }
