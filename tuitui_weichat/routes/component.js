@@ -292,6 +292,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
     let condition = '';
     if (message.MsgType === 'event' && message.Event === 'subscribe') {
         condition = 'subscribe'
+        await redis_client.incr('sub_'+code+new Date().Format('yyyy-MM-dd'))
+        await redis_client.expire('sub_'+code+new Date().Format('yyyy-MM-dd'),60*60*48)
     } else if (message.MsgType === 'event' && message.Event.toLowerCase() == 'click') {
         condition = 'click_' + message.EventKey
     } else if (message.MsgType === 'text') {
@@ -300,6 +302,8 @@ router.post('/message/:appid/callback', xml_msg, async(req, res, next) => {
 
     let user = {openid: message.FromUserName, code: code, action_time: Date.now()}
     if (message.Event === 'unsubscribe') {
+        await redis_client.incr('unsub_'+code+new Date().Format('yyyy-MM-dd'))
+        await redis_client.expire('unsub_'+code+new Date().Format('yyyy-MM-dd'),60*60*48)
         user.subscribe_flag = false
         sendMQ(JSON.stringify(user))
         return res.send('success')
