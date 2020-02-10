@@ -211,3 +211,5 @@ async function get_qr(code){
     })
 }
 
+
+get_data(10000002209)
