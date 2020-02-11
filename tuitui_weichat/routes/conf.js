@@ -107,7 +107,8 @@ router.get('/data/:code',async(req, res, next) =>{
     let code = parseInt(req.params.code);
     console.log('------获取data  code---------',code)
     let client = await WechatUtil.getClient(code);
-    let y_cumulate_user = await get_wechat_cumulate(client)
+    let y_cumulate_user = await get_wechat_cumulate(client,code)
+    let y_data = await get_wechat_summary(client,code)
     let sub_user = parseInt(await redis_client.get('sub_'+code+new Date().Format('yyyy-MM-dd')))
     sub_user = sub_user?sub_user:0;
     let unsub_user = parseInt(await redis_client.get('unsub_'+code+new Date().Format('yyyy-MM-dd')))
@@ -116,12 +117,14 @@ router.get('/data/:code',async(req, res, next) =>{
         cumulate_user : y_cumulate_user+sub_user-unsub_user,
         new_user : sub_user,
         cancel_user : unsub_user,
-        y_cumulate_user : y_cumulate_user
+        y_cumulate_user : y_cumulate_user,
+        y_new_user : y_data.new_user,
+        y_cancel_user : y_data.cancel_user
     }
     res.send(data)
 })
 
-function get_wechat_cumulate(client){
+function get_wechat_cumulate(client,code){
     return new Promise((resolve, reject) =>{
         let d = new Date(Date.now() - 24*60*60*1000)
         let s_d = d.Format('yyyy-MM-dd')
@@ -134,5 +137,26 @@ function get_wechat_cumulate(client){
     })
 }
 
+function get_wechat_summary(client,code){
+    return new Promise((resolve, reject) =>{
+        let d = new Date(Date.now() - 24*60*60*1000)
+        let s_d = d.Format('yyyy-MM-dd')
+        client.getUserSummary(s_d, s_d, (err,res_data) => {
+            if(err || !res_data.list || !res_data.list.length ){
+                return reject('未获取到数据')
+            }
+            let data ={
+                new_user : 0,
+                cancel_user : 0
+            }
+            for (var i = res_data.list.length - 1; i >= 0; i--) {
+                let item = res_data.list[i];
+                data.new_user += item.new_user;
+                data.cancel_user += item.cancel_user;
+            }
+            return resolve(data)
+        })
+    })
+}
 
 module.exports = router;
