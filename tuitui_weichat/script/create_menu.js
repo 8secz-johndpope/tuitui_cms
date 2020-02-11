@@ -193,6 +193,16 @@ async function get_status(code,msg_id){
 	})
 }
 
+async function removeMass(code,msg_id){
+	var client = await wechat_util.getClient(code)
+	client.deleteMass(msg_id,0,(error,res) => {
+		console.log('------------err--------');
+        console.log(err);
+        console.log('------------res--------');
+        console.log(res);
+	})
+}
+
 async function get_qr(code){
 	var client = await wechat_util.getClient(code)
 	client.createLimitQRCode('test', (err, result) => {
@@ -204,4 +214,4 @@ async function get_qr(code){
 }
 
 
-get_data(10000002209)
+removeMass(10000000459,1000000033)
