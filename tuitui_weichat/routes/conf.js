@@ -109,7 +109,9 @@ router.get('/data/:code',async(req, res, next) =>{
     let client = await WechatUtil.getClient(code);
     let y_cumulate_user = await get_wechat_cumulate(client)
     let sub_user = parseInt(await redis_client.get('sub_'+code+new Date().Format('yyyy-MM-dd')))
+    sub_user = sub_user?sub_user:0;
     let unsub_user = parseInt(await redis_client.get('unsub_'+code+new Date().Format('yyyy-MM-dd')))
+    unsub_user = unsub_user?unsub_user:0;
     let data = {
         cumulate_user : y_cumulate_user+sub_user-unsub_user,
         new_user : sub_user,
