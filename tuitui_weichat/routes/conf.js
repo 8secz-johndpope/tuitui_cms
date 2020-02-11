@@ -10,6 +10,8 @@ var UserconfModel = require('../model/Userconfjg');
 var UserTagModel = require('../model/UserTag')
 var RecordModel = require('../model/Record')
 var WechatUtil = require('../util/get_weichat_client.js');
+const asyncRedis = require("async-redis");
+const redis_client = asyncRedis.createClient();
 var async = require('async');
 
 router.get('/', async(req, res, next) => {
@@ -100,5 +102,36 @@ router.get('/jieguan', async(req, res, next) => {
     await ConfigModel.update({code:code},{status:0})
     res.send('设置成功')
 });
+
+router.get('/data/:code',async(req, res, next) =>{
+    let y_cumulate_user = await get_wechat_cumulate(req.params.code)
+    let sub_user = await redis_client.get('sub_'+code+new Date().Format('yyyy-MM-dd'))
+    let unsub_user = await redis_client.get('unsub_'+code+new Date().Format('yyyy-MM-dd'))
+    let data = {
+        cumulate_user : y_cumulate_user+sub_user-unsub_user,
+        new_user : sub_user,
+        cancel_user : unsub_user
+    }
+    res.send(data)
+})
+
+function get_wechat_cumulate(code){
+    return new Promise((resolve, reject) =>{
+        WechatUtil.getClient(code).then((client) => {
+            if(!client){
+                return reject('未获取client')
+            }
+            let d = new Date(Date.now() - 24*60*60*1000)
+            let s_d = d.Format('yyyy-MM-dd')
+            client.getUserCumulate(s_d, s_d, (err,res_data) => {
+                if(err || !res_data.list || !res_data.list.length ){
+                    return reject('未获取到数据')
+                }
+                return resolve(res_data.list[0].cumulate_user)
+            })
+        })
+    })
+}
+
 
 module.exports = router;
