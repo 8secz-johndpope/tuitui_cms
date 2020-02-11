@@ -104,7 +104,8 @@ router.get('/jieguan', async(req, res, next) => {
 });
 
 router.get('/data/:code',async(req, res, next) =>{
-    let y_cumulate_user = await get_wechat_cumulate(req.params.code)
+    let code = req.params.code;
+    let y_cumulate_user = await get_wechat_cumulate()
     let sub_user = await redis_client.get('sub_'+code+new Date().Format('yyyy-MM-dd'))
     let unsub_user = await redis_client.get('unsub_'+code+new Date().Format('yyyy-MM-dd'))
     let data = {
