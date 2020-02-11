@@ -195,7 +195,7 @@ async function get_status(code,msg_id){
 
 async function removeMass(code,msg_id){
 	var client = await wechat_util.getClient(code)
-	client.deleteMass(msg_id,0,(error,res) => {
+	client.deleteMass(msg_id,0,(err,res) => {
 		console.log('------------err--------');
         console.log(err);
         console.log('------------res--------');
