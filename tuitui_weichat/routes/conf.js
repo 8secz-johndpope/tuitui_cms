@@ -106,7 +106,8 @@ router.get('/jieguan', async(req, res, next) => {
 router.get('/data/:code',async(req, res, next) =>{
     let code = parseInt(req.params.code);
     console.log('------获取data  code---------',code)
-    let y_cumulate_user = await get_wechat_cumulate()
+    let client = await WechatUtil.getClient(code);
+    let y_cumulate_user = await get_wechat_cumulate(client)
     let sub_user = await redis_client.get('sub_'+code+new Date().Format('yyyy-MM-dd'))
     let unsub_user = await redis_client.get('unsub_'+code+new Date().Format('yyyy-MM-dd'))
     let data = {
@@ -117,20 +118,15 @@ router.get('/data/:code',async(req, res, next) =>{
     res.send(data)
 })
 
-function get_wechat_cumulate(code){
+function get_wechat_cumulate(client){
     return new Promise((resolve, reject) =>{
-        WechatUtil.getClient(code).then((client) => {
-            if(!client){
-                return reject('未获取client')
+        let d = new Date(Date.now() - 24*60*60*1000)
+        let s_d = d.Format('yyyy-MM-dd')
+        client.getUserCumulate(s_d, s_d, (err,res_data) => {
+            if(err || !res_data.list || !res_data.list.length ){
+                return reject('未获取到数据')
             }
-            let d = new Date(Date.now() - 24*60*60*1000)
-            let s_d = d.Format('yyyy-MM-dd')
-            client.getUserCumulate(s_d, s_d, (err,res_data) => {
-                if(err || !res_data.list || !res_data.list.length ){
-                    return reject('未获取到数据')
-                }
-                return resolve(res_data.list[0].cumulate_user)
-            })
+            return resolve(res_data.list[0].cumulate_user)
         })
     })
 }
