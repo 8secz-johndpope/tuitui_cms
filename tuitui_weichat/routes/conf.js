@@ -130,6 +130,7 @@ function get_wechat_cumulate(client,code){
         let s_d = d.Format('yyyy-MM-dd')
         client.getUserCumulate(s_d, s_d, (err,res_data) => {
             if(err || !res_data.list || !res_data.list.length ){
+                console.log(err)
                 return reject('未获取到数据')
             }
             return resolve(res_data.list[0].cumulate_user)
