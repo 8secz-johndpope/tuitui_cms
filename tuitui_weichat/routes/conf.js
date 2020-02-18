@@ -107,8 +107,21 @@ router.get('/data/:code',async(req, res, next) =>{
     let code = parseInt(req.params.code);
     console.log('------获取data  code---------',code)
     let client = await WechatUtil.getClient(code);
-    let y_cumulate_user = await get_wechat_cumulate(client,code)
-    let y_data = await get_wechat_summary(client,code)
+    let y_cumulate_user = 0
+    try{
+        y_cumulate_user = await get_wechat_cumulate(client,code)
+    }catch(e){
+        console.log(e)
+    }
+    let y_data = {
+                new_user : 0,
+                cancel_user : 0
+    }
+    try{
+        y_data = await get_wechat_summary(client,code)
+    }catch(e){
+        console.log(e)
+    }
     let sub_user = parseInt(await redis_client.get('sub_'+code+new Date().Format('yyyy-MM-dd')))
     sub_user = sub_user?sub_user:0;
     let unsub_user = parseInt(await redis_client.get('unsub_'+code+new Date().Format('yyyy-MM-dd')))
