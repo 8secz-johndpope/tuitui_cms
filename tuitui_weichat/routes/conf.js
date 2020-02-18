@@ -144,7 +144,7 @@ function get_wechat_summary(client,code){
         let s_d = d.Format('yyyy-MM-dd')
         client.getUserSummary(s_d, s_d, (err,res_data) => {
             if(err || !res_data.list || !res_data.list.length ){
-                console.log(err, "get_wechat_summary")
+                console.log(err, res.data.list, "get_wechat_summary")
                 return reject('未获取到数据')
             }
             let data ={
