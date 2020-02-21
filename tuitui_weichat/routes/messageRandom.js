@@ -40,7 +40,7 @@ router.post('/create', async (req, res, next) => {
 });
 
 router.post('/update', async (req, res, next) => {
-    const {message_id, message_array} = req.body;
+    const {_id, message_id, message_array} = req.body;
     let data = {message_id, message_array};
     let doc = await MessageRandomModel.findByIdAndUpdate(_id, data);
     if (doc) {

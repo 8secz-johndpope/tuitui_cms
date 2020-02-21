@@ -40,7 +40,7 @@ router.post('/create', async (req, res, next) => {
 });
 
 router.post('/update', async (req, res, next) => {
-    const {reply_id, is_nickname, content, timing_time} = req.body;
+    const {_id, reply_id, is_nickname, content, timing_time} = req.body;
     let data = {reply_id, content, is_nickname, timing_time};
     let doc = await ReplyTimeModel.findByIdAndUpdate(_id, data);
     if (doc) {
