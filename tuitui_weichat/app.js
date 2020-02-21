@@ -25,6 +25,7 @@ var menu = require('./routes/menu');
 var reply = require('./routes/reply');
 var replyTime = require('./routes/replyTime');
 var message = require('./routes/message');
+var messageRandom = require('./routes/messageRandom');
 var material = require('./routes/material');
 var gonghaoTag = require('./routes/gonghaoTag')
 var msgHistory = require('./routes/msgHistory')
@@ -121,6 +122,7 @@ app.use('/menu',[cookieParser(),sessiond],menu);
 app.use('/reply',[cookieParser(),sessiond],reply)
 app.use('/replyTime',[cookieParser(),sessiond],replyTime)
 app.use('/message',[cookieParser(),sessiond],message)
+app.use('/messageRandom',[cookieParser(),sessiond],messageRandom)
 app.use('/material',[cookieParser(),sessiond],material)
 app.use('/gonghaoTag',[cookieParser(),sessiond],gonghaoTag)
 app.use('/history',[cookieParser(),sessiond],msgHistory)
