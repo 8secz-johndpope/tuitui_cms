@@ -31,23 +31,6 @@ var MessageRandomSchema = new Schema({
     timestamps: {createdAt: 'createAt', updatedAt: 'updateAt'}
 });
 
-MessageRandomSchema.statics = {
-    fetch(id, codes, cb) {
-        if (id) {
-            return this.find({_id: {$lt: id}, code: {$in: codes}})
-                .limit(50)
-                .sort({'_id': -1})
-                .exec(cb);
-        } else {
-            return this.find({code: {$in: codes}})
-                .limit(50)
-                .sort({'_id': -1})
-                .exec(cb);
-        }
-
-    }
-}
-
 var MessageRandomModel = db.model('MessageRandom', MessageRandomSchema);
 
 module.exports = MessageRandomModel;
