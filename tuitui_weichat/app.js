@@ -23,6 +23,7 @@ var tag = require('./routes/tag');
 var conf = require('./routes/conf');
 var menu = require('./routes/menu');
 var reply = require('./routes/reply');
+var replyTime = require('./routes/replyTime');
 var message = require('./routes/message');
 var material = require('./routes/material');
 var gonghaoTag = require('./routes/gonghaoTag')
@@ -118,6 +119,7 @@ app.use('/tag',[cookieParser(),sessiond],tag);
 app.use('/conf',[cookieParser(),sessiond],conf);
 app.use('/menu',[cookieParser(),sessiond],menu);
 app.use('/reply',[cookieParser(),sessiond],reply)
+app.use('/replyTime',[cookieParser(),sessiond],replyTime)
 app.use('/message',[cookieParser(),sessiond],message)
 app.use('/material',[cookieParser(),sessiond],material)
 app.use('/gonghaoTag',[cookieParser(),sessiond],gonghaoTag)
