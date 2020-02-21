@@ -31,7 +31,7 @@ var MessageRandomSchema = new Schema({
     timestamps: {createdAt: 'createAt', updatedAt: 'updateAt'}
 });
 
-MessageSchema.statics = {
+MessageRandomSchema.statics = {
     fetch(id, codes, cb) {
         if (id) {
             return this.find({_id: {$lt: id}, code: {$in: codes}})
