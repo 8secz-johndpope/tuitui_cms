@@ -8,7 +8,6 @@ var MessageRandomSchema = new Schema({
     message_id: String,
     message_array:[{
         type: Number,//0链接 1文本 2 图片 3
-        mediaId: {type: String, default: ''},
         contents: [{
             title: String,
             description: String,
