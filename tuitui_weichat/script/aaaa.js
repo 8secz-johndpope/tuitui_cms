@@ -1,4 +1,5 @@
-var ConfigModel = require('../model/Message');
+var ReplyModel = require('../model/Reply');
+var ReplyTimeModel = require('../model/ReplyTime');
 // var UserTagModel = require('../model/UserTag')
 // var wechat_util = require('../util/get_weichat_client.js')
 var UserconfModel = require('../model/Userconf');
@@ -25,8 +26,10 @@ async function a() {
     // console.log(a,'----------------------')
     // let b = await UserconfModel.count({code:code,subscribe_flag: {$ne: false},action_time:{$gte:yDate,$lt:LocalDate}})
     // console.log(b,'----------------------')
-    let c = await MessageModel.find({codes:[code],is_daily:true})
+    let c = await ReplyModel.findById('5e4fb5f208d37f5a1e475a75')
     console.log(c,'---------------')
+    let d = await ReplyTimeModel.find({reply_id:'5e4fb5f208d37f5a1e475a75'})
+    console.log(d,'---------------')
     // let d = await account.findById('5dedbac43c67d104222f4c82')
     // console.log(d.password,'------------------d')
 
