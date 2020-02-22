@@ -26,6 +26,7 @@ router.post('/create', async (req, res, next) => {
     }
     const {message_id, message_array} = req.body;
     let data = {message_id, message_array, account_id};
+    console.log(data, typeof data, '------------------')
     if (account_id) {
         let doc = await MessageRandomModel.create(data);
         if (doc) {
