@@ -11,6 +11,10 @@ var AccountSchema = new Schema({
         default: "默认为本公司使用"
     },
     role : Number,//0 超级权限  1 1级代理  2  公众号矩阵
+    power : {
+        type: Number,//0 无测试权限  1 有
+        default: 0
+    },
     createAt: {
         type: Date,
         default: Date.now

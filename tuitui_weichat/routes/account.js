@@ -31,6 +31,17 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.put('/power', async (req, res, next) => {
+  let { id, power } = req.body;
+  let updateAt = Date.now();
+  let data = await AccountModel.findByIdAndUpdate(id, { power, updateAt }, {new: true});
+  if(data) {
+    res.send({code: 1, msg: '权限修改成功', data})
+  } else {
+    res.send({code: -1, msg: '权限修改失败，请重试'})
+  }
+});
+
 router.put('/remarks', async (req, res, next) => {
   let { id, remarks } = req.body;
   let updateAt = Date.now();
