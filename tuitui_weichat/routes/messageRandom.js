@@ -24,8 +24,8 @@ router.post('/create', async (req, res, next) => {
     } else {
         account_id = req.session.account._id;
     }
-    const {message_id, message_array} = req.body;
-    let data = {message_id, message_array, account_id};
+    const {message_id, message_array, remarks} = req.body;
+    let data = {message_id, message_array, remarks, account_id};
     console.log(data, typeof data, '------------------')
     console.log(message_array, typeof message_array, '------------------')
     if (account_id) {
@@ -42,8 +42,8 @@ router.post('/create', async (req, res, next) => {
 });
 
 router.post('/update', async (req, res, next) => {
-    const {_id, message_id, message_array} = req.body;
-    let data = {message_id, message_array};
+    const {_id, message_id, message_array, remarks} = req.body;
+    let data = {message_id, message_array, remarks};
     let doc = await MessageRandomModel.findByIdAndUpdate(_id, data);
     if (doc) {
         res.send({code: 1, msg: '修改成功'})

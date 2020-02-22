@@ -19,6 +19,10 @@ var MessageRandomSchema = new Schema({
             }
         }]
     }],
+    remarks: {
+        type: String,
+        default: ""
+    },
     createAt: {
         type: Date,
         default: Date.now

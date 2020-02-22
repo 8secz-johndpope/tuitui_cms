@@ -24,8 +24,8 @@ router.post('/create', async (req, res, next) => {
     } else {
         account_id = req.session.account._id;
     }
-    const {reply_id, is_nickname, content, timing_time} = req.body;
-    let data = {reply_id, is_nickname, content, timing_time, account_id};
+    const {reply_id, is_nickname, content, timing_time, remarks} = req.body;
+    let data = {reply_id, is_nickname, content, timing_time, remarks, account_id};
     if (account_id) {
         let doc = await ReplyTimeModel.create(data);
         if (doc) {
@@ -40,8 +40,8 @@ router.post('/create', async (req, res, next) => {
 });
 
 router.post('/update', async (req, res, next) => {
-    const {_id, reply_id, is_nickname, content, timing_time} = req.body;
-    let data = {reply_id, content, is_nickname, timing_time};
+    const {_id, reply_id, is_nickname, content, timing_time, remarks} = req.body;
+    let data = {reply_id, content, is_nickname, timing_time, remarks};
     let doc = await ReplyTimeModel.findByIdAndUpdate(_id, data);
     if (doc) {
         res.send({code: 1, msg: '修改成功'})

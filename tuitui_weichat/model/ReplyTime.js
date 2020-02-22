@@ -9,6 +9,10 @@ var ReplyTimeSchema = new Schema({
     is_nickname: Boolean,
     content: String, // 文本消息
     timing_time: Date,
+    remarks: {
+        type: String,
+        default: ""
+    },
 });
 
 var ReplyTimeModel = db.model('ReplyTime', ReplyTimeSchema);
