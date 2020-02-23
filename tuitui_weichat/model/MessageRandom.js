@@ -7,7 +7,9 @@ var MessageRandomSchema = new Schema({
     account_id: String,
     message_id: String,
     message_array:[{
-        type: Number,//0链接 1文本 2 图片 3
+        type: {
+            type: Number
+        },//0链接 1文本 2 图片 3
         contents: [{
             title: String,
             description: String,
