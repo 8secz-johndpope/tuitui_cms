@@ -6,7 +6,8 @@ var db = mongoose.createConnection(connect_url);
 var MessageRandomSchema = new Schema({
     account_id: String,
     message_id: String,
-    message_array:[{
+    local_urls: {type: Array, default: []},
+    message_array: [{
         type: {
             type: Number
         },//0链接 1文本 2 图片 3

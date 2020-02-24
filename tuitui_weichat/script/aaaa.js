@@ -7,6 +7,7 @@ var UserconfModel = require('../model/Userconf');
 // var OpenidTagModel = require('../model/OpenidTag');
 // var SubOpenidTagModel = require('../model/SubOpenidTag');
 const MessageModel = require("../model/Message")
+const MessageRandomModel = require("../model/MessageRandom")
 var account = require('../model/Account')
 
 async function a() {
@@ -26,10 +27,8 @@ async function a() {
     // console.log(a,'----------------------')
     // let b = await UserconfModel.count({code:code,subscribe_flag: {$ne: false},action_time:{$gte:yDate,$lt:LocalDate}})
     // console.log(b,'----------------------')
-    let c = await ReplyModel.findById('5e4fb5f208d37f5a1e475a75')
-    console.log(c,'---------------')
-    let d = await ReplyTimeModel.find({reply_id:'5e4fb5f208d37f5a1e475a75'})
-    console.log(d,'---------------')
+    let c = await MessageRandomModel.find({})
+    console.log(JSON.stringify(c),'---------------')
     // let d = await account.findById('5dedbac43c67d104222f4c82')
     // console.log(d.password,'------------------d')
 
