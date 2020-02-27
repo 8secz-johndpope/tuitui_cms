@@ -32,9 +32,15 @@ router.post('/upload', upload.single('imageFile'), function (req, res, next) {
 })
 
 router.get('/show', async (req, res, next) => {
+	let account_id;
+    if (!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
 	let { page = 1 } = req.query;
-	let count = await TuiGuangModel.count({});
-	let messages = await TuiGuangModel.find({}, { capter: 0 }).skip((page - 1) * 20).limit(20).sort({ zIndex: -1, _id: -1 });
+	let count = await TuiGuangModel.count({account_id});
+	let messages = await TuiGuangModel.find({account_id}, { capter: 0 }).skip((page - 1) * 20).limit(20).sort({ zIndex: -1, _id: -1 });
 	// let domain_name = "https://td.tyuss.com";
 	let domain_name = "http://t.dmmup.com";
 	if (messages.length) {
@@ -51,7 +57,13 @@ router.get('/get_content', async (req, res, next) => {
 })
 
 router.post('/add', (req, res, next) => {
-	TuiGuangModel.find({ id: req.body.id }, function (err, data) {
+	let account_id;
+    if (!req.session.account) {
+        account_id = req.body.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
+	TuiGuangModel.find({ id: req.body.id, account_id }, function (err, data) {
 		if (err) {
 			console.log("Error:" + err);
 		} else {
@@ -59,6 +71,7 @@ router.post('/add', (req, res, next) => {
 				res.send({ err: '此id已存在' })
 			} else {
 				var novelInfo = {
+					account_id,
 					type: req.body.type,
 					id: req.body.id,
 					gonghao_id: req.body.gonghao_id,
@@ -124,8 +137,15 @@ router.post('/update', async (req, res, next) => {
 })
 
 router.post('/delete_one', (req, res, next) => {
+	let account_id;
+    if (!req.session.account) {
+        account_id = req.body.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
 	var selector = {
-		id: req.body.id
+		id: req.body.id,
+		account_id
 	}
 	TuiGuangModel.find(selector, function (err, data) {
 		if (err) {
@@ -143,7 +163,13 @@ router.post('/delete_one', (req, res, next) => {
 })
 
 router.post('/goTop', async (req, res, next) => {
-	let message = await TuiGuangModel.findOne().sort({ zIndex: -1 });
+	let account_id;
+    if (!req.session.account) {
+        account_id = req.body.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
+	let message = await TuiGuangModel.findOne({account_id}).sort({ zIndex: -1 });
 	let zIndex = message.zIndex + 1;
 	let result = await TuiGuangModel.findByIdAndUpdate(req.body.id, { zIndex }, { new: true });
 	if (result) {

@@ -4,7 +4,13 @@ const router = express.Router();
 const ZhuiShuYunModel = require('../model/ZhuiShuYun.js');
 
 router.get('/', async (req, res, next) => {
-    let result = await ZhuiShuYunModel.find();
+    let account_id;
+    if (!req.session.account) {
+      account_id = req.query.account_id;
+    } else {
+      account_id = req.session.account._id;
+    }
+    let result = await ZhuiShuYunModel.find({account_id});
     let domain_name = "https://td.tyuss.com"
     if(result.length) {
         res.send({code: 1, msg: "查询成功", data: result, domain_name})
@@ -14,11 +20,17 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post("/", async (req, res, next) => {
+    let account_id;
+    if (!req.session.account) {
+      account_id = req.body.account_id;
+    } else {
+      account_id = req.session.account._id;
+    }
     let {gonghao_name, channel_id, tuiguang_link} = req.body;
     if(!gonghao_name || !channel_id || !tuiguang_link) {
         res.send({code: 0, msg: "字段不能为空"})
     } else {
-        let result = await ZhuiShuYunModel.create({gonghao_name, channel_id, tuiguang_link});
+        let result = await ZhuiShuYunModel.create({gonghao_name, channel_id, tuiguang_link, account_id});
         if(result) {
             res.send({code: 1, msg: "创建成功", data: result})
         } else {
