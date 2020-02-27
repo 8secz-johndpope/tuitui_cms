@@ -36,11 +36,10 @@ router.get('/novel/show', async (req, res, next) => {
 	let { page = 1 } = req.query;
 	let count = await TuiGuangModel.count({});
 	let messages = await TuiGuangModel.find({}, { capter: 0 }).skip((page - 1) * 20).limit(20).sort({ zIndex: -1, _id: -1 });
-	let domain_names = await DomainModel.find();
 	if (messages.length) {
 		res.send({ code: 1, data: messages, domain_names, count, msg: "查询成功" })
 	} else {
-		res.send({ code: -1, data: messages, domain_names, count, msg: "暂时没有相关数据" })
+		res.send({ code: -1, data: messages, domain_name: "https://td.tyuss.com", count, msg: "暂时没有相关数据" })
 	}
 });
 
