@@ -1,15 +1,16 @@
 var express = require('express');
 var router = express.Router();
 var TuiGuangModel = require('../model/TuiGuang.js');
-var StaticsTuiGuangModel = require('../model/StaticsTuiGuang.js');
-var TransferModel = require('../model/Transfer.js');
 var DomainModel = require('../model/Domain.js');
-var PlatformDataModel = require('../model/PlatformData.js');
+
+// var StaticsTuiGuangModel = require('../model/StaticsTuiGuang.js');
+// var TransferModel = require('../model/Transfer.js');
+// var PlatformDataModel = require('../model/PlatformData.js');
 var multer = require('multer');
 var fs = require('fs')
 var mem = require('../util/mem.js')
-const asyncRedis = require("async-redis");
-const redis_client = asyncRedis.createClient();
+// const asyncRedis = require("async-redis");
+// const redis_client = asyncRedis.createClient();
 
 //线上
 var juedui_lujing = '/home/work/tuitui_program/project/public/images/website'
@@ -160,110 +161,110 @@ router.post('/cancelGoTop', async (req, res, next) => {
 	}
 });
 
-router.get('/data', async (req, res, next) => {
-	let tid = req.query.tid
-	if (!tid) {
-		return res.send('请输入transfer id')
-	}
-	let transfer = await TransferModel.findOne({ id: tid })
-	if (!transfer) {
-		return res.send('没有找到相关的transfer')
-	}
-	//console.log(transfer)
+// router.get('/data', async (req, res, next) => {
+// 	let tid = req.query.tid
+// 	if (!tid) {
+// 		return res.send('请输入transfer id')
+// 	}
+// 	let transfer = await TransferModel.findOne({ id: tid })
+// 	if (!transfer) {
+// 		return res.send('没有找到相关的transfer')
+// 	}
+// 	//console.log(transfer)
 
-	var data = {
-		tuiguang: [],
-		duibi: []
-	}
+// 	var data = {
+// 		tuiguang: [],
+// 		duibi: []
+// 	}
 
-	let links = transfer.links.concat(transfer.back_urls)
-	for (var i = 0; i < links.length; i++) {
-		var link = links[i]
-		var params = link.substr(link.lastIndexOf('/') + 1)
-		var index = params.split('?')[0]
-		var channel = params.split('channel=')[1]
-		let uv = await redis_client.pfcount('website_tuiguang_' + channel + '_' + index);
-		let cv = await redis_client.pfcount('website_tuiguang_copy_' + channel + '_' + index);
-		let ip = await redis_client.pfcount('website_tuiguang_ip_' + channel + '_' + index);
-		let wv = await redis_client.pfcount('website_tuiguang_wechat_' + channel + '_' + index);
+// 	let links = transfer.links.concat(transfer.back_urls)
+// 	for (var i = 0; i < links.length; i++) {
+// 		var link = links[i]
+// 		var params = link.substr(link.lastIndexOf('/') + 1)
+// 		var index = params.split('?')[0]
+// 		var channel = params.split('channel=')[1]
+// 		let uv = await redis_client.pfcount('website_tuiguang_' + channel + '_' + index);
+// 		let cv = await redis_client.pfcount('website_tuiguang_copy_' + channel + '_' + index);
+// 		let ip = await redis_client.pfcount('website_tuiguang_ip_' + channel + '_' + index);
+// 		let wv = await redis_client.pfcount('website_tuiguang_wechat_' + channel + '_' + index);
 
-		data.tuiguang.push({
-			index: index,
-			uv: uv,
-			cv: cv,
-			wv: wv,
-			ip: ip
-		})
-		data.duibi.push({
-			index: index,
-			copy_uv: (cv / uv * 100).toFixed(2) + '%',
-			wechat_uv: (wv / uv * 100).toFixed(2) + '%',
-		})
-	}
-	return res.send(data)
-})
+// 		data.tuiguang.push({
+// 			index: index,
+// 			uv: uv,
+// 			cv: cv,
+// 			wv: wv,
+// 			ip: ip
+// 		})
+// 		data.duibi.push({
+// 			index: index,
+// 			copy_uv: (cv / uv * 100).toFixed(2) + '%',
+// 			wechat_uv: (wv / uv * 100).toFixed(2) + '%',
+// 		})
+// 	}
+// 	return res.send(data)
+// })
 
-router.get('/data/del', async (req, res, next) => {
-	let tid = req.query.tid
-	if (!tid) {
-		return res.send('请输入transfer id')
-	}
-	let transfer = await TransferModel.findOne({ id: tid })
-	if (!transfer) {
-		return res.send('没有找到相关的transfer')
-	}
+// router.get('/data/del', async (req, res, next) => {
+// 	let tid = req.query.tid
+// 	if (!tid) {
+// 		return res.send('请输入transfer id')
+// 	}
+// 	let transfer = await TransferModel.findOne({ id: tid })
+// 	if (!transfer) {
+// 		return res.send('没有找到相关的transfer')
+// 	}
 
-	for (var i = 0; i < transfer.links.length; i++) {
-		var link = transfer.links[i]
-		var params = link.substr(link.lastIndexOf('/') + 1)
-		var index = params.split('?')[0]
-		var channel = params.split('channel=')[1]
-		let uv = await redis_client.del('website_tuiguang_' + channel + '_' + index);
-		let cv = await redis_client.del('website_tuiguang_copy_' + channel + '_' + index);
-		let ip = await redis_client.del('website_tuiguang_ip_' + channel + '_' + index);
-		let wv = await redis_client.del('website_tuiguang_wechat_' + channel + '_' + index);
-	}
-	return res.send('删除成功')
-})
+// 	for (var i = 0; i < transfer.links.length; i++) {
+// 		var link = transfer.links[i]
+// 		var params = link.substr(link.lastIndexOf('/') + 1)
+// 		var index = params.split('?')[0]
+// 		var channel = params.split('channel=')[1]
+// 		let uv = await redis_client.del('website_tuiguang_' + channel + '_' + index);
+// 		let cv = await redis_client.del('website_tuiguang_copy_' + channel + '_' + index);
+// 		let ip = await redis_client.del('website_tuiguang_ip_' + channel + '_' + index);
+// 		let wv = await redis_client.del('website_tuiguang_wechat_' + channel + '_' + index);
+// 	}
+// 	return res.send('删除成功')
+// })
 
 
-router.get('/statics/zeng', async (req, res, next) => {
-	var tid = req.query.tgid;
-	var datas = await StaticsTuiGuangModel.find({ tuiguang_id: tid, type: 0 }).sort({ date: -1 }).limit(24)
-	return res.render('statics/zeng', {
-		data: JSON.stringify(datas)
-	})
-})
+// router.get('/statics/zeng', async (req, res, next) => {
+// 	var tid = req.query.tgid;
+// 	var datas = await StaticsTuiGuangModel.find({ tuiguang_id: tid, type: 0 }).sort({ date: -1 }).limit(24)
+// 	return res.render('statics/zeng', {
+// 		data: JSON.stringify(datas)
+// 	})
+// })
 
-router.post('/data/yuewen', async (req, res, next) => {
-	//console.log('-----阅文请求body-----')
-	//console.log(req.body)
-	let ua = req.body.ua;
-	ua = new Buffer(ua, 'base64').toString();
-	//let h_ua = ua.substring(0,ua.indexOf(')',ua.indexOf(')')+1)+1);
-	let ip = req.body.ip;
-	let pd = {
-		uni_ip_h_ua: handleIpAndUa(ip, ua),
-		wx_ua: ua,
-		ip: ip,
-		regtime: new Date(req.body.time).getTime(),
-		wx_openid: req.body.open_id,
-		isfollow: 1,
-		seruid: req.body.appflag,
-		wx_platfrom: 1
-	}
-	if (!pd.regtime) {
-		delete pd.regtime
-	}
-	//console.log('-----阅文回传数据-----')
-	//console.log(pd)
-	await PlatformDataModel.findOneAndUpdate({ uni_ip_h_ua: pd.uni_ip_h_ua },
-		pd,
-		{ upsert: true },//这个之后考虑要不要加
-	)
-	//console.log('-----send yuewen------')
-	res.send({ "code": 0 });
-});
+// router.post('/data/yuewen', async (req, res, next) => {
+// 	//console.log('-----阅文请求body-----')
+// 	//console.log(req.body)
+// 	let ua = req.body.ua;
+// 	ua = new Buffer(ua, 'base64').toString();
+// 	//let h_ua = ua.substring(0,ua.indexOf(')',ua.indexOf(')')+1)+1);
+// 	let ip = req.body.ip;
+// 	let pd = {
+// 		uni_ip_h_ua: handleIpAndUa(ip, ua),
+// 		wx_ua: ua,
+// 		ip: ip,
+// 		regtime: new Date(req.body.time).getTime(),
+// 		wx_openid: req.body.open_id,
+// 		isfollow: 1,
+// 		seruid: req.body.appflag,
+// 		wx_platfrom: 1
+// 	}
+// 	if (!pd.regtime) {
+// 		delete pd.regtime
+// 	}
+// 	//console.log('-----阅文回传数据-----')
+// 	//console.log(pd)
+// 	await PlatformDataModel.findOneAndUpdate({ uni_ip_h_ua: pd.uni_ip_h_ua },
+// 		pd,
+// 		{ upsert: true },//这个之后考虑要不要加
+// 	)
+// 	//console.log('-----send yuewen------')
+// 	res.send({ "code": 0 });
+// });
 
 function handleIpAndUa(ip, ua) {
 	let uni_ip_h_ua = (ip + ua.substring(0, ua.indexOf(')', ua.indexOf(')') + 1) + 1));
