@@ -35,7 +35,8 @@ router.get('/show', async (req, res, next) => {
 	let { page = 1 } = req.query;
 	let count = await TuiGuangModel.count({});
 	let messages = await TuiGuangModel.find({}, { capter: 0 }).skip((page - 1) * 20).limit(20).sort({ zIndex: -1, _id: -1 });
-	let domain_name = "https://td.tyuss.com";
+	// let domain_name = "https://td.tyuss.com";
+	let domain_name = "http://t.dmmup.com";
 	if (messages.length) {
 		res.send({ code: 1, data: messages, domain_name, count, msg: "查询成功" })
 	} else {
