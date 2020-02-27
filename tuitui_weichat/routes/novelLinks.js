@@ -21,7 +21,7 @@ var upload = multer({
 	dest: juedui_lujing
 });
 
-router.post('/novel/upload', upload.single('imageFile'), function (req, res, next) {
+router.post('/upload', upload.single('imageFile'), function (req, res, next) {
 	fs.rename(req.file.path, juedui_lujing + "/" + req.file.filename + '.jpg', function (err) {
 		if (err) {
 			throw err;
@@ -31,24 +31,25 @@ router.post('/novel/upload', upload.single('imageFile'), function (req, res, nex
 	res.send({ filename: req.file.filename + '.jpg' });
 })
 
-router.get('/novel/show', async (req, res, next) => {
+router.get('/show', async (req, res, next) => {
 	let { page = 1 } = req.query;
 	let count = await TuiGuangModel.count({});
 	let messages = await TuiGuangModel.find({}, { capter: 0 }).skip((page - 1) * 20).limit(20).sort({ zIndex: -1, _id: -1 });
+	let domain_name = "https://td.tyuss.com";
 	if (messages.length) {
-		res.send({ code: 1, data: messages, domain_names, count, msg: "查询成功" })
+		res.send({ code: 1, data: messages, domain_name, count, msg: "查询成功" })
 	} else {
-		res.send({ code: -1, data: messages, domain_name: "https://td.tyuss.com", count, msg: "暂时没有相关数据" })
+		res.send({ code: -1, data: messages, domain_name, count, msg: "暂时没有相关数据" })
 	}
 });
 
-router.get('/novel/get_content', async (req, res, next) => {
+router.get('/get_content', async (req, res, next) => {
 	var id = req.query._id
 	var messages = await TuiGuangModel.findById(id);
 	res.send({ data: messages })
 })
 
-router.post('/novel/add', (req, res, next) => {
+router.post('/add', (req, res, next) => {
 	TuiGuangModel.find({ id: req.body.id }, function (err, data) {
 		if (err) {
 			console.log("Error:" + err);
@@ -86,7 +87,7 @@ router.post('/novel/add', (req, res, next) => {
 
 });
 
-router.post('/novel/update', async (req, res, next) => {
+router.post('/update', async (req, res, next) => {
 	var id = req.body._id
 	var message = {
 		type: req.body.type,
@@ -121,7 +122,7 @@ router.post('/novel/update', async (req, res, next) => {
 	}
 })
 
-router.post('/novel/delete_one', (req, res, next) => {
+router.post('/delete_one', (req, res, next) => {
 	var selector = {
 		id: req.body.id
 	}
