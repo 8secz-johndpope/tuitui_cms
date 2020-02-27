@@ -36,6 +36,9 @@ var template = require('./routes/template')
 var messageGroup = require('./routes/messageGroup')
 var textMaterial = require('./routes/textMaterial')
 var watermark = require('./routes/watermark')
+var tuiguang = require('./routes/tuiguang')
+var platform = require('./routes/platform')
+var zsy = require('./routes/zsy')
 
 
 var app = express();
@@ -132,6 +135,9 @@ app.use('/template',[cookieParser(),sessiond],template)
 app.use('/messageGroup',[cookieParser(),sessiond],messageGroup)
 app.use('/textMaterial',[cookieParser(),sessiond],textMaterial)
 app.use('/watermark',[cookieParser(),sessiond],watermark)
+app.use('/tuiguang',[cookieParser(),sessiond],tuiguang)
+app.use('/platform',[cookieParser(),sessiond],platform)
+app.use('/zsy',[cookieParser(),sessiond],zsy)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
