@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 37.5px">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/toutiao/index.css">
+    <style>
+        .header-img {
+            background: url(<%= gonghaoLogo %>) no-repeat center;
+            background-size: cover;
+            width: .8rem;
+            height: .8rem;
+            border-radius: 50%;
+            float: left;
+            border: 0.027rem solid #e8e8e8;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body bgcolor="<%= bgcolor %>">
+<div class="container">
+    <div class="banner-head">
+        <img src="<%= picurl %>"
+             alt="">
+    </div>
+    <div class="content">
+        <div class="chapter">
+            <% if(typeof capter != "undefined") { %>
+                <%- capter %>
+            <% } %>
+        </div>
+        <div class="brick-wrapper">
+            <div class="inner inner1"><p style="text-align:center;"><strong
+                            style="font-size:0.42rem;">因篇幅限制，请</strong><strong
+                            style="font-size:0.42rem; color:rgb(238, 17, 17);">关注微信公众号</strong><strong
+                            style="font-size:0.42rem;">继续阅读</strong></p></div>
+        </div>
+        <div class="wechat-btn" onclick="copys()" style="display: none">+ 关注</div>
+        <div class="attention">
+            <div class="header-img"></div>
+            <p class="wechat-id"><%= gonghao_id %></p>
+            <div class="wechat-btn" onclick="copys()">+ 关注</div>
+        </div>
+
+        <section id="frame-8" class="brick-frame brick-frame-server"
+                 style="padding-top:0.267rem;padding-bottom:0.267rem;padding-left:0.3rem;padding-right:0.3rem;">
+            <div class="brick-mask"></div>
+            <div class="brick-content">
+                <div class="piece text-piece"
+                     style="border-width:0.027rem;border-color:#000;border-style:none;border-radius:0;">
+                    <div class="rich-text">
+                        <div class="inner inner1">
+                            <p style="font-size:15px;"><strong>【请按照下面步骤操作】</strong></p>
+                            <p>
+                                <span style="font-size:0.48rem;">1、点击上方</span>
+                                <strong style="font-size:0.48rem; color:rgb(241, 11, 11);margin: 0 -.3rem;">【+关注】</strong>
+                                <span style="font-size:0.48rem;">按钮复制微信号；</span>
+                            </p>
+                            <p>
+                                <span style="font-size:0.48rem;">2、进入微信后→点击右上角<strong
+                                            style="font-size: .6rem; color:rgb(236, 16, 16);">"+"</strong>→点击</span>
+                                <strong style="font-size:0.48rem; color:rgb(236, 16, 16);margin-right: -.2rem;">添加朋友</strong>
+                                <span style="font-size:0.48rem;">→选择</span>
+                                <strong style="font-size:0.48rem; color:rgb(234, 16, 16);margin-left: -.2rem">公众号</strong>
+                                <span style="font-size:0.48rem;"></span>
+                            </p>
+                            <p>
+                                <span style="font-size:0.48rem;">3、长按粘贴</span>
+                                <strong style="font-size:0.48rem; color:rgb(239, 9, 9);margin: 0 -.2rem;"><%= gonghao_id %></strong>
+                                <span style="font-size:0.48rem;">→关注</span>
+                                <strong style="font-size:0.48rem; color:rgb(239, 9, 9);margin: 0 -.2rem;"><%= name %></strong>
+                                <span style=font-size:0.48rem;">即可继续阅读！</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <img style="margin-top: .8rem" src="<%= finalImg %>" alt="">
+        <p class="company"><%= company %></p>
+        <div class="popup-wrap">
+            <div class="popup-box" onclick="return false;">
+                <div class="content-tips content-tips1">
+                    点击确定复制公众号，前往微信粘贴搜索
+                </div>
+                <div class="btn popup-cancle" style="display:inline-block">取消</div>
+                <div class="btn popup-close1">确定</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/javascript/jquery.js"></script>
+<script src="/javascript/clipboard.js"></script>
+<script>
+    let gonghao_id = "<%= gonghao_id %>";
+
+    function copys(event) {
+        copyNow(gonghao_id)
+        showModal();
+    };
+
+    function copyNow(txt) {
+        var clipboard = new ClipboardJS('.wechat-btn', {
+            text: function (trigger) {
+                return txt;
+            }
+        });
+        clipboard.on('success', function (e) {
+            console.log('复制成功')
+            clipboard.destroy();
+        });
+        clipboard.on('error', function (e) {
+            console.log('复制失败')
+        });
+    }
+
+    function hideModal() {
+        $(".popup-wrap").css("display", "none");
+        $("body").css("overflow", "auto")
+    }
+
+    function showModal() {
+        $(".popup-wrap").css("display", "block")
+        $("body").css("overflow", "hidden")
+    }
+
+    $(".popup-cancle").click(function (e) {
+        hideModal()
+    });
+
+    $(".popup-close1").click(function (e) {
+        hideModal();
+        copyNow(gonghao_id)
+        window.location.replace('weixin://');
+    });
+
+    function randomString() {
+        var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var result = '';
+        for (var i = 3; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+        return result;
+    };
+</script>
+</html>

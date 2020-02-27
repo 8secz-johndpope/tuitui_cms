@@ -4,6 +4,7 @@ var connect_url = require('../conf/proj.json').mongodb;
 var db = mongoose.createConnection(connect_url);
 
 var ZhuiShuYunSchema = new Schema({
+  account_id : String,
   gonghao_name: String,
   channel_id: String,
   tuiguang_link: String
