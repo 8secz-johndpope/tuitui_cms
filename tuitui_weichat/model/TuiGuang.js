@@ -11,10 +11,21 @@ var TuiGuangSchema = new Schema({
   pageTitle: String,
   name: String,
   picurl: String,
+  picurl_ali: {
+    type : String,
+    default : ""
+  },
   capter: String,
   remarks: String,
   company: String,
-  finalImg: String,
+  finalImg: {
+    type: String,
+    default: ""
+  },
+  finalImg_ali: {
+    type : String,
+    default : ""
+  },
   gonghaoLogo: String,
   domain_name: {
     type: String,

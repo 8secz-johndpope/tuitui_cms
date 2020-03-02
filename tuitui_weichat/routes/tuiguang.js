@@ -32,7 +32,7 @@ router.get('/data/:index', async (req, res, next) => {
   let toutiao_data = {
     uni_ip_h_ua : ip+h_ua,
     td_ua : ua,
-    tuiguang_id : req.params.index,
+    tc_tuiguang_id : req.params.index,
     ip : ip,
     td_clickid : req.query.clickid,
     td_url : encodeURIComponent(fullUrl(req))
@@ -53,8 +53,10 @@ router.get('/data/:index', async (req, res, next) => {
         pageTitle: data[0].pageTitle,
         gonghao_id: data[0].gonghao_id,
         picurl: data[0].picurl,
+        picurl_ali : data[0].picurl_ali,
         name: data[0].name,
         finalImg: data[0].finalImg,
+        finalImg_ali : data[0].finalImg_ali,
         gonghaoLogo: data[0].gonghaoLogo,
         capter: data[0].capter,
         company: data[0].company,
@@ -89,21 +91,16 @@ router.get('/toutiao/:index', async (req, res, next) => {
         pageTitle: data[0].pageTitle,
         gonghao_id: data[0].gonghao_id,
         picurl: data[0].picurl,
+        picurl_ali : data[0].picurl_ali,
         name: data[0].name,
         finalImg: data[0].finalImg,
+        finalImg_ali : data[0].finalImg_ali,
         gonghaoLogo: data[0].gonghaoLogo,
         capter: data[0].capter,
         company: data[0].company,
         suffix : data[0].suffix,
         bgcolor: data[0].bgcolor
       };
-
-      if(req.hostname=='mingxing.dfcfz.cn'){
-        res_data.picurl = 'http://novel.jtjsmp.top/'+res_data.picurl;
-        res_data.finalImg = 'http://novel.jtjsmp.top/'+res_data.finalImg;
-        res_data.gonghaoLogo = 'http://novel.jtjsmp.top/'+res_data.gonghaoLogo;
-      }
-
       await  mem.set('toutiao_' + req.params.index, JSON.stringify(res_data), 60)
       if(res_data.suffix){
         let sufs = res_data.suffix.split(',')

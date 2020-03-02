@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var connect_url = require('../conf/proj.json').mongodb;
+var connect_url = "mongodb://mingxing:liujiazhi88@dds-2ze36af17eb05c042440-pub.mongodb.rds.aliyuncs.com:3717/mingxingshuo?replicaSet=mgset-5196081";
 var db = mongoose.createConnection(connect_url);
 
-var PlatformDataSchema = new Schema({
+var TPPlatformDataSchema = new Schema({
     account_id : String,
     uni_ip_h_ua: {
         type: String,
@@ -47,5 +47,5 @@ var PlatformDataSchema = new Schema({
     timestamps: {createdAt: 'createAt', updatedAt: 'updateAt'}
 });
 
-var PlatformDataModel = db.model('PlatformData', PlatformDataSchema);
-module.exports = PlatformDataModel;
+var TPPlatformDataModel = db.model('PlatformData', TPPlatformDataSchema);
+module.exports = TPPlatformDataModel;
