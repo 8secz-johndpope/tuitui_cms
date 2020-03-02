@@ -88,8 +88,9 @@ router.get('/', async(req, res, next) => {
         }
 
     }
+    let total = await MessageModel.count({account_id});
     res.send({
-        messages: messages
+        messages, total
     })
 })
 
