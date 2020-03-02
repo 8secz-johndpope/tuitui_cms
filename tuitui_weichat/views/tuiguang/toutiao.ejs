@@ -100,8 +100,8 @@
 <script>
     $(function () {
         $("img").each(function () {
-            $(this).src = $(this).data("src")
-            console.log($(this).src)
+            let src = $(this).data("src")
+            $(this).attr("src", src)
         })
     });
     let gonghao_id = "<%= gonghao_id %>";
