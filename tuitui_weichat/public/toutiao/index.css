@@ -61,6 +61,15 @@ body {
   border-radius: .3rem;
   overflow: hidden;
   box-sizing: border-box;
+  background: #d5d5d5;
+}
+
+.container > .banner-head span {
+  display: inline-block;
+}
+
+.container > .banner-head img {
+  display: none;
 }
 
 /*.content {*/

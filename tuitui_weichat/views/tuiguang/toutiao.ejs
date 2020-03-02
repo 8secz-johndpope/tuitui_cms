@@ -26,6 +26,7 @@
 <body bgcolor="<%= bgcolor %>">
 <div class="container">
     <div class="banner-head">
+        <span>加载中...</span>
         <img src="<%= picurl %>"
              alt="">
     </div>
@@ -99,6 +100,13 @@
 <script src="/javascripts/jquery.js"></script>
 <script src="/javascripts/clipboard.min.js"></script>
 <script>
+    $(function () {
+        $(".banner-head img").css('display', 'block')
+        $(".banner-head span").css('display', 'none')
+    });
+    window.onload = function () {
+
+    }
     let gonghao_id = "<%= gonghao_id %>";
 
     function copys(event) {
