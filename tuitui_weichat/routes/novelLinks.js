@@ -5,6 +5,7 @@ var TuiGuangModel = require('../model/TuiGuang.js');
 var StaticsTuiGuangModel = require('../model/StaticsTuiGuang.js');
 var TransferModel = require('../model/Transfer.js');
 var PlatformDataModel = require('../model/PlatformData.js');
+var TPPlatformDataModel = require('../model/TPPlatformData.js');
 var multer = require('multer');
 var fs = require('fs')
 var mem = require('../util/mem.js')
@@ -285,6 +286,13 @@ router.post('/data/yuewen', async (req, res, next) => {
 		pd,
 		{ upsert: true },//这个之后考虑要不要加
 	)
+
+	//tuitui_pro 数据
+	await TPPlatformDataModel.findOneAndUpdate({ uni_ip_h_ua: pd.uni_ip_h_ua },
+		pd,
+		{ upsert: true },//这个之后考虑要不要加
+	)
+
 	//console.log('-----send yuewen------')
 	res.send({ "code": 0 });
 });
