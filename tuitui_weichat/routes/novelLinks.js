@@ -132,7 +132,7 @@ router.post('/update', async (req, res, next) => {
     let finalImg = req.body.finalImg
     let finalImg_ali = ""
     if(finalImg) {
-        finalImg = finalImg.substring(picurl.lastIndexOf('/') + 1)
+        finalImg = finalImg.substring(finalImg.lastIndexOf('/') + 1)
         finalImg_ali = await ali_oss_util.upload(finalImg, img_path + finalImg)
     }
     var message = {
