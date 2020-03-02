@@ -62,10 +62,14 @@ body {
   overflow: hidden;
   box-sizing: border-box;
   background: #d5d5d5;
+  text-align: center;
 }
 
 .container > .banner-head span {
   display: inline-block;
+  line-height: 5rem;
+  font-size: .5rem;
+  color: #fff;
 }
 
 .container > .banner-head img {
