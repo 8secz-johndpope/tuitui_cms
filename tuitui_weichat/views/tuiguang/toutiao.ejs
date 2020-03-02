@@ -26,8 +26,7 @@
 <body bgcolor="<%= bgcolor %>">
 <div class="container">
     <div class="banner-head">
-        <span>加载中...</span>
-        <img src="" alt="">
+        <img src="https://tuiguang-td.oss-cn-beijing.aliyuncs.com/67e401f1026f01a409b24f44922caf36.gif" data-src="<%= picurl %>" alt="">
     </div>
     <div class="content">
         <div class="chapter">
@@ -82,7 +81,7 @@
                 </div>
             </div>
         </section>
-        <img style="margin-top: .8rem" src="<%= finalImg %>" alt="">
+        <img style="margin-top: .8rem" src="https://tuiguang-td.oss-cn-beijing.aliyuncs.com/67e401f1026f01a409b24f44922caf36.gif" data-src="<%= finalImg %>" alt="">
         <p class="company"><%= company %></p>
         <div class="popup-wrap">
             <div class="popup-box" onclick="return false;">
@@ -100,9 +99,9 @@
 <script src="/javascripts/clipboard.min.js"></script>
 <script>
     $(function () {
-        let picurl = "<%= picurl %>";
-        $(".banner-head span").css('display', 'none')
-        $(".banner-head img").attr('src', picurl).css('display', 'block')
+        $("img").each(function () {
+            console.log($(this))
+        })
     });
     let gonghao_id = "<%= gonghao_id %>";
 
