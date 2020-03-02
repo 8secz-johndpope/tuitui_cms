@@ -37,20 +37,36 @@ router.get('/', async(req, res, next) => {
     } else {
         account_id = req.session.account._id;
     }
-    let {type = "manual"} = req.query;
+    let { type = "manual", page } = req.query;
     let messages = [];
-    if (type === "is_timing") {
-        messages = await MessageModel.find({account_id, is_timing: true}).sort({
-            timing_time: -1, codes: 1
-        });
-    } else if (type === "delay") {
-        messages = await MessageModel.find({account_id, delay: {$lte: 0}}).sort({
-            _id: -1, codes: 1
-        });
-    } else if (type === "manual") {
-        messages = await MessageModel.find({account_id}).sort({
-            _id: -1, codes: 1
-        });
+    if(!page) {
+        if (type === "is_timing") {
+            messages = await MessageModel.find({account_id, is_timing: true}).sort({
+                timing_time: -1, codes: 1
+            });
+        } else if (type === "delay") {
+            messages = await MessageModel.find({account_id, delay: {$lte: 0}}).sort({
+                _id: -1, codes: 1
+            });
+        } else if (type === "manual") {
+            messages = await MessageModel.find({account_id}).sort({
+                _id: -1, codes: 1
+            });
+        }
+    } else {
+        if (type === "is_timing") {
+            messages = await MessageModel.find({account_id, is_timing: true}).skip((page - 1) * 10).limit(10).sort({
+                timing_time: -1, codes: 1
+            });
+        } else if (type === "delay") {
+            messages = await MessageModel.find({account_id, delay: {$lte: 0}}).skip((page - 1) * 10).limit(10).sort({
+                _id: -1, codes: 1
+            });
+        } else if (type === "manual") {
+            messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({
+                _id: -1, codes: 1
+            });
+        }
     }
 
     messages = JSON.parse(JSON.stringify(messages))
