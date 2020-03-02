@@ -9,6 +9,7 @@ var UserconfModel = require('../model/Userconf');
 const MessageModel = require("../model/Message")
 const MessageRandomModel = require("../model/MessageRandom")
 var account = require('../model/Account')
+var TuiGuangModel = require('../model/TuiGuang.js');
 
 async function a() {
     let code = process.argv.slice(2)[0]
@@ -27,8 +28,8 @@ async function a() {
     // console.log(a,'----------------------')
     // let b = await UserconfModel.count({code:code,subscribe_flag: {$ne: false},action_time:{$gte:yDate,$lt:LocalDate}})
     // console.log(b,'----------------------')
-    let c = await MessageRandomModel.find({})
-    console.log(JSON.stringify(c),'---------------')
+    let c = await TuiGuangModel.findOne({})
+    console.log(c.finalImg,'---------------')
     // let d = await account.findById('5dedbac43c67d104222f4c82')
     // console.log(d.password,'------------------d')
 
