@@ -69,8 +69,12 @@ router.post('/add', async (req, res, next) => {
     } else {
         account_id = req.session.account._id;
     }
-    let picurl_ali = await ali_oss_util.upload(req.body.picurl, img_path + req.body.picurl)
-    let finalImg_ali = await ali_oss_util.upload(req.body.finalImg, img_path + req.body.finalImg)
+    let picurl = req.body.picurl.substring(picurl.lastIndexOf('/')+1)
+    console.log(picurl,'------------------------picurl')
+    let picurl_ali = await ali_oss_util.upload(picurl, img_path + req.body.picurl)
+    console.log(picurl_ali,'------------------------picurl_ali')
+    let finalImg = req.body.finalImg.substring(picurl.lastIndexOf('/')+1)
+    let finalImg_ali = await ali_oss_util.upload(finalImg, img_path + req.body.finalImg)
     TuiGuangModel.find({id: req.body.id, account_id}, function (err, data) {
         if (err) {
             console.log("Error:" + err);
@@ -113,8 +117,10 @@ router.post('/add', async (req, res, next) => {
 
 router.post('/update', async (req, res, next) => {
     var id = req.body._id
-    let picurl_ali = await ali_oss_util.upload(req.body.picurl, img_path + req.body.picurl)
-    let finalImg_ali = await ali_oss_util.upload(req.body.finalImg, img_path + req.body.finalImg)
+    let picurl = req.body.picurl.substring(picurl.lastIndexOf('/')+1)
+    let picurl_ali = await ali_oss_util.upload(picurl, img_path + req.body.picurl)
+    let finalImg = req.body.finalImg.substring(picurl.lastIndexOf('/')+1)
+    let finalImg_ali = await ali_oss_util.upload(finalImg, img_path + req.body.finalImg)
     var message = {
         type: req.body.type,
         id: req.body.id,
