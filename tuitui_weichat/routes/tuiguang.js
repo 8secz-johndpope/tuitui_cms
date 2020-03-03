@@ -62,7 +62,7 @@ router.get('/data/:index', async (req, res, next) => {
     //let h_ua = ua.substring(0, ua.indexOf(')', ua.indexOf(')') + 1) + 1);
 
     let toutiao_data = {
-        uni_ip_h_ua : handleIpAndUa(ip,ua),,
+        uni_ip_h_ua : handleIpAndUa(ip,ua),
         td_ua: ua,
         tc_tuiguang_id: req.params.index,
         ip: ip,
