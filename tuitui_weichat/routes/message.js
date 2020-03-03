@@ -92,7 +92,79 @@ router.get('/', async(req, res, next) => {
     res.send({
         messages, total
     })
-})
+});
+
+router.get('/getByGroup', async (req, res, next) => {
+    let account_id, messages = [], total, { group , page = 1 } = req.query;
+    if (!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
+    if(group) {
+        messages = await MessageModel.find({account_id, group}).skip((page - 1) * 10).limit(10);
+        total = await MessageModel.count({account_id, group});
+    } else {
+        messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10);
+        total = await MessageModel.count({account_id});
+    }
+
+    res.send({code: 1, messages, total});
+});
+
+router.get('/getByName', async (req, res, next) => {
+    let account_id, messages = [], total, { nick_name , page = 1 } = req.query;
+    if (!req.session.account) {
+        account_id = req.query.account_id
+    } else {
+        account_id = req.session.account._id;
+    }
+    messages = await MessageModel.find({account_id, gonghaoList: {$elemMatch:{nick_name}}}).skip((page - 1) * 10).limit(10);
+    if(messages.length) {
+        total = await MessageModel.count({account_id, gonghaoList: {$elemMatch:{nick_name}}});
+    } else {
+        messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10);
+        total = await MessageModel.count({account_id});
+    }
+    res.send({code: 1, messages, total})
+});
+
+router.get('/getByType', async (req, res, next) => {
+    let account_id, messages = [], total, { type, page = 1 } = req.query;
+    account_id = !req.session.account ? req.query.account_id : req.session.account._id;
+    switch (type) {
+        case "is_timing":
+            messages = await MessageModel.find({account_id, is_timing: true}).skip((page - 1) * 10).limit(10).sort({
+                timing_time: -1, codes: 1
+            });
+            total = await MessageModel.find({account_id, is_timing: true});
+            break;
+        case "delay":
+            messages = await MessageModel.find({account_id, delay: {$lte: 0}}).skip((page - 1) * 10).limit(10).sort({
+                _id: -1, codes: 1
+            });
+            total = await MessageModel.count({account_id, delay: {$lte: 0}})
+            break;
+        case "is_daily":
+            messages = await MessageModel.find({account_id, is_daily: true}).skip((page - 1) * 10).limit(10).sort({
+                daily_time: -1, codes: 1
+            });
+            total = await MessageModel.count({account_id, is_daily: true})
+            break;
+        case "manual":
+            messages = await MessageModel.find({account_id, is_daily: false, is_timing: false, delay: null}).skip((page - 1) * 10).limit(10).sort({
+                _id: -1, codes: 1
+            });
+            total = await MessageModel.count({account_id, is_daily: false, is_timing: false, delay: null})
+            break;
+        default:
+            messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({
+                _id: -1, codes: 1
+            });
+            total = await MessageModel.count({account_id});
+    }
+    res.send({ code: 1, messages, total })
+});
 
 router.get('/get_code', async(req, res, next) => {
     let account_id;
