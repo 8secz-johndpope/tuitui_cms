@@ -95,16 +95,18 @@ router.get('/', async(req, res, next) => {
 });
 
 router.get('/getByGroup', async (req, res, next) => {
-    let account_id, messages = [], total, { group , page = 1 } = req.query;
+    let account_id, messages = [], total, { group, page = 1 } = req.query;
     if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
     }
     if(group) {
+        console.log(group)
         messages = await MessageModel.find({account_id, group}).skip((page - 1) * 10).limit(10);
         total = await MessageModel.count({account_id, group});
     } else {
+        console.log("没有")
         messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10);
         total = await MessageModel.count({account_id});
     }
@@ -144,7 +146,6 @@ router.get('/getByType', async (req, res, next) => {
                 _id: -1, codes: 1
             });
             total = await MessageModel.count({account_id, delay: {$gt: 0}})
-            console.log(messages, total)
             break;
         case "is_daily":
             messages = await MessageModel.find({account_id, is_daily: true}).skip((page - 1) * 10).limit(10).sort({
@@ -157,6 +158,7 @@ router.get('/getByType', async (req, res, next) => {
                 _id: -1, codes: 1
             });
             total = await MessageModel.count({account_id, is_daily: false, is_timing: false, delay: null})
+            console.log(messages, total)
             break;
         default:
             messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({
