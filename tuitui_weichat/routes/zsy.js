@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
       account_id = req.session.account._id;
     }
     let result = await ZhuiShuYunModel.find({account_id});
-    let domain_name = "https://t.1yuedu.cn/";
+    let domain_name = "https://t.1yuedu.cn";
     if(result.length) {
         res.send({code: 1, msg: "查询成功", data: result, domain_name})
     } else {
