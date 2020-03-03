@@ -103,11 +103,11 @@ router.get('/getByGroup', async (req, res, next) => {
     }
     if(group) {
         console.log(group)
-        messages = await MessageModel.find({account_id, group}).skip((page - 1) * 10).limit(10);
+        messages = await MessageModel.find({account_id, group}).skip((page - 1) * 10).limit(10).sort({ _id: -1, codes: 1 });
         total = await MessageModel.count({account_id, group});
     } else {
         console.log("没有")
-        messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10);
+        messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({ _id: -1, codes: 1 });
         total = await MessageModel.count({account_id});
     }
 
@@ -121,11 +121,11 @@ router.get('/getByName', async (req, res, next) => {
     } else {
         account_id = req.session.account._id;
     }
-    messages = await MessageModel.find({account_id, gonghaoList: {$elemMatch:{nick_name}}}).skip((page - 1) * 10).limit(10);
+    messages = await MessageModel.find({account_id, gonghaoList: {$elemMatch:{nick_name}}}).skip((page - 1) * 10).limit(10).sort({ _id: -1, codes: 1 });
     if(messages.length) {
         total = await MessageModel.count({account_id, gonghaoList: {$elemMatch:{nick_name}}});
     } else {
-        messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10);
+        messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({ _id: -1, codes: 1 });
         total = await MessageModel.count({account_id});
     }
     res.send({code: 1, messages, total})
