@@ -28,8 +28,8 @@ async function a() {
     // console.log(a,'----------------------')
     // let b = await UserconfModel.count({code:code,subscribe_flag: {$ne: false},action_time:{$gte:yDate,$lt:LocalDate}})
     // console.log(b,'----------------------')
-    let c = await TuiGuangModel.findOne({})
-    console.log(c.finalImg,'---------------')
+    let c = await TuiGuangModel.findOne({remarks:1})
+    console.log(c,'---------------')
     // let d = await account.findById('5dedbac43c67d104222f4c82')
     // console.log(d.password,'------------------d')
 

@@ -70,13 +70,17 @@ router.post('/add', async (req, res, next) => {
         account_id = req.session.account._id;
     }
     let picurl = req.body.picurl
-    picurl = picurl.substring(picurl.lastIndexOf('/')+1)
-    console.log(picurl,'------------------------picurl')
-    let picurl_ali = await ali_oss_util.upload(picurl, img_path + picurl)
-    console.log(picurl_ali,'------------------------picurl_ali')
+    let picurl_ali = ""
+    if(picurl) {
+        picurl = picurl.substring(picurl.lastIndexOf('/') + 1)
+        picurl_ali = await ali_oss_util.upload(picurl, img_path + picurl)
+    }
     let finalImg = req.body.finalImg
-    finalImg = finalImg.substring(finalImg.lastIndexOf('/')+1)
-    let finalImg_ali = await ali_oss_util.upload(finalImg, img_path + finalImg)
+    let finalImg_ali = ""
+    if(finalImg) {
+        finalImg = finalImg.substring(finalImg.lastIndexOf('/') + 1)
+        finalImg_ali = await ali_oss_util.upload(finalImg, img_path + finalImg)
+    }
     TuiGuangModel.find({id: req.body.id, account_id}, function (err, data) {
         if (err) {
             console.log("Error:" + err);
@@ -120,11 +124,17 @@ router.post('/add', async (req, res, next) => {
 router.post('/update', async (req, res, next) => {
     var id = req.body._id
     let picurl = req.body.picurl
-    picurl = picurl.substring(picurl.lastIndexOf('/')+1)
-    let picurl_ali = await ali_oss_util.upload(picurl, img_path + picurl)
+    let picurl_ali = ""
+    if(picurl) {
+        picurl = picurl.substring(picurl.lastIndexOf('/') + 1)
+        picurl_ali = await ali_oss_util.upload(picurl, img_path + picurl)
+    }
     let finalImg = req.body.finalImg
-    finalImg = finalImg.substring(picurl.lastIndexOf('/')+1)
-    let finalImg_ali = await ali_oss_util.upload(finalImg, img_path + finalImg)
+    let finalImg_ali = ""
+    if(finalImg) {
+        finalImg = finalImg.substring(finalImg.lastIndexOf('/') + 1)
+        finalImg_ali = await ali_oss_util.upload(finalImg, img_path + finalImg)
+    }
     var message = {
         type: req.body.type,
         id: req.body.id,
