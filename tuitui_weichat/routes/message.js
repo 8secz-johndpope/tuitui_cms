@@ -140,10 +140,10 @@ router.get('/getByType', async (req, res, next) => {
             total = await MessageModel.find({account_id, is_timing: true});
             break;
         case "delay":
-            messages = await MessageModel.find({account_id, delay: {$lte: 0}}).skip((page - 1) * 10).limit(10).sort({
+            messages = await MessageModel.find({account_id, delay: {$gt: 0}}).skip((page - 1) * 10).limit(10).sort({
                 _id: -1, codes: 1
             });
-            total = await MessageModel.count({account_id, delay: {$lte: 0}})
+            total = await MessageModel.count({account_id, delay: {$gt: 0}})
             console.log(messages, total)
             break;
         case "is_daily":
