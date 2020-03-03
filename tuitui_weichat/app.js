@@ -6,7 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //var MemcachedStore = require('connect-memcached')(session);
-
+const requestIp = require('request-ip');
 const redis   = require("redis");
 const redis_client = redis.createClient();
 
@@ -85,6 +85,8 @@ app.use(bodyParser.urlencoded({ extended: false,limit: '50mb' }));
       secret: "mingxingshuo" // Optionally use transparent encryption for memcache session data
     })
 }));*/
+
+app.use(requestIp.mw())
 
 function genuuid(){
     var s = [];
