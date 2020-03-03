@@ -111,6 +111,26 @@ router.get('/getByGroup', async (req, res, next) => {
         total = await MessageModel.count({account_id});
     }
 
+    messages = JSON.parse(JSON.stringify(messages))
+
+    let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
+
+    for (let i = 0; i < messages.length; i++) {
+
+        let contents = messages[i].contents
+        for (var j = 0; j < contents.length; j++) {
+            let content = contents[j]
+            if (content.local_picurl) {
+                content.picurl = content.local_picurl
+            }
+        }
+
+        if(messages[i].is_daily){
+            messages[i].daily_time_show = LocalDate + messages[i].daily_time
+        }
+
+    }
+
     res.send({code: 1, messages, total});
 });
 
@@ -127,6 +147,25 @@ router.get('/getByName', async (req, res, next) => {
     } else {
         messages = await MessageModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({ _id: -1, codes: 1 });
         total = await MessageModel.count({account_id});
+    }
+    messages = JSON.parse(JSON.stringify(messages))
+
+    let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
+
+    for (let i = 0; i < messages.length; i++) {
+
+        let contents = messages[i].contents
+        for (var j = 0; j < contents.length; j++) {
+            let content = contents[j]
+            if (content.local_picurl) {
+                content.picurl = content.local_picurl
+            }
+        }
+
+        if(messages[i].is_daily){
+            messages[i].daily_time_show = LocalDate + messages[i].daily_time
+        }
+
     }
     res.send({code: 1, messages, total})
 });
@@ -165,6 +204,25 @@ router.get('/getByType', async (req, res, next) => {
                 _id: -1, codes: 1
             });
             total = await MessageModel.count({account_id});
+    }
+    messages = JSON.parse(JSON.stringify(messages))
+
+    let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
+
+    for (let i = 0; i < messages.length; i++) {
+
+        let contents = messages[i].contents
+        for (var j = 0; j < contents.length; j++) {
+            let content = contents[j]
+            if (content.local_picurl) {
+                content.picurl = content.local_picurl
+            }
+        }
+
+        if(messages[i].is_daily){
+            messages[i].daily_time_show = LocalDate + messages[i].daily_time
+        }
+
     }
     res.send({ code: 1, messages, total })
 });
