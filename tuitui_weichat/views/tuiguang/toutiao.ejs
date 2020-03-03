@@ -24,6 +24,18 @@
     </style>
 </head>
 <body bgcolor="<%= bgcolor %>">
+<script>
+    /**
+        追书云数据回传链接
+    */
+    var img=document.createElement("img");
+    var serach = window.location.search;
+    if(serach.indexOf('dycallback=1') >= 0){
+       img.src="https://track.zhuishuyun.com/a.png"+serach;
+       img.style.display="none";
+       document.body.appendChild(img);
+    };
+</script>
 <div class="container">
     <div class="banner-head">
         <img src="https://tuiguang-td.oss-cn-beijing.aliyuncs.com/5c14b500de5138fda329dad62e0a3713.gif" data-src="<%= picurl %>" alt="">
