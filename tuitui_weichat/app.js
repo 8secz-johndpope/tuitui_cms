@@ -40,6 +40,7 @@ var tuiguang = require('./routes/tuiguang')
 var novelLinks = require('./routes/novelLinks')
 var platform = require('./routes/platform')
 var zsy = require('./routes/zsy')
+var zsyn = require('./routes/zsyn')
 
 
 var app = express();
@@ -136,10 +137,12 @@ app.use('/template',[cookieParser(),sessiond],template)
 app.use('/messageGroup',[cookieParser(),sessiond],messageGroup)
 app.use('/textMaterial',[cookieParser(),sessiond],textMaterial)
 app.use('/watermark',[cookieParser(),sessiond],watermark)
-app.use('/tuiguang',[cookieParser(),sessiond],tuiguang)
 app.use('/platform',[cookieParser(),sessiond],platform)
 app.use('/zsy',[cookieParser(),sessiond],zsy)
 app.use('/novelLinks',[cookieParser(),sessiond],novelLinks)
+
+app.use('/tuiguang',tuiguang)
+app.use('/zsyn',zsyn)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
