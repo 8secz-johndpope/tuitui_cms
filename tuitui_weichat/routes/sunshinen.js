@@ -19,7 +19,7 @@ router.get('/:id',async function (req, res, next) {
             res.send('没有查询到此链接，请先创建')
         }
     }
-    upload_sun()
+    upload_sun(req)
 })
 
 
