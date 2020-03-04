@@ -3,7 +3,7 @@ var router = express.Router();
 const SunshineModel = require('../model/Sunshine.js');
 var mem = require('../util/mem.js')
 
-router.get('/:id', function (req, res, next) {
+router.get('/:id',async function (req, res, next) {
     var id = req.params.id;
     let value = await mem.get('sun_' + id)
     if(value){
