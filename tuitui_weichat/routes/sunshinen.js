@@ -24,7 +24,8 @@ router.get('/:id',async function (req, res, next) {
 
 
 let upload_sun =async (req) =>{
-    let s_url = 'http://www.dev.kpread.com/api/toutiao/visitorsave4join?'
+    //let s_url = 'http://www.dev.kpread.com/api/toutiao/visitorsave4join?'
+    let s_url = 'https://qionggaoq.cn/api/toutiao/visitorsave4join?';
     s_url += "ip="+req.clientIp+"&";
     s_url += "ua="+req.headers['user-agent']+"&"
     s_url += "url="+encodeURIComponent("https://t.1yuedu.cn"+req.originalUrl)
