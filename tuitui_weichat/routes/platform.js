@@ -11,7 +11,7 @@ router.get("/", async (req, res, next) => {
   } else {
     account_id = req.session.account._id;
   }
-  let result = await PlatformModel.find({ account_id });
+  let result = await PlatformModel.find({ account_id }).sort({_id: -1});
   if (result.length) {
     res.send({ code: 1, msg: "查询成功", data: result });
   } else {
