@@ -28,7 +28,7 @@ let upload_sun =async (req) =>{
     s_url += "ip="+req.clientIp+"&";
     s_url += "ua="+req.headers['user-agent']+"&"
     s_url += "url="+encodeURIComponent("https://t.1yuedu.cn"+req.originalUrl)
-    let body = await rp(url)
+    let body = await rp(s_url)
     console.log('------回传阳光-------',body)
 }
 
