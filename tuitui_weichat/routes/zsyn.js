@@ -5,23 +5,19 @@ var mem = require('../util/mem.js')
 
 router.get('/:id', function (req, res, next) {
     var id = req.params.id;
-    mem.get('zsy_' + id).then(function (value) {
-        if(value){
-            value = JSON.parse(value)
-            res.redirect(get_link(value,req))
-        }else {
-            ZhuiShuYunModel.findOne({_id: id}, function (err, data) {
-                if (data) {
-                    res.redirect(get_link(data,req))
-                }else{
-                    res.send('没有查询到此链接，请先创建')
-                }
-            })
-
+    let value = await mem.get('zsy_' + id)
+    if(value){
+        value = JSON.parse(value)
+        res.redirect(get_link(value,req))
+    }else {
+        let data = await ZhuiShuYunModel.findOne({_id: id})
+        if (data) {
+            await mem.set('zsy_' + id,JSON.stringify(data),60)
+            res.redirect(get_link(data,req))
+        }else{
+            res.send('没有查询到此链接，请先创建')
         }
-    }).catch(function (err) {
-        console.log(err);
-    });
+    }
 })
 
 let get_link = (data,req) =>{

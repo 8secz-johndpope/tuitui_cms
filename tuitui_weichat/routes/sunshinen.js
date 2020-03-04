@@ -1,33 +1,29 @@
 var express = require('express');
 var router = express.Router();
-var ZhuiShuYunModel = require('../model/ZhuiShuYun.js');
+const SunshineModel = require('../model/Sunshine.js');
 var mem = require('../util/mem.js')
 
 router.get('/:id', function (req, res, next) {
     var id = req.params.id;
-    mem.get('zsy_' + id).then(function (value) {
-        if(value){
-            value = JSON.parse(value)
-            res.redirect(get_link(value,req))
-        }else {
-            ZhuiShuYunModel.findOne({_id: id}, function (err, data) {
-                if (data) {
-                    res.redirect(get_link(data,req))
-                }else{
-                    res.send('没有查询到此链接，请先创建')
-                }
-            })
-
+    let value = await mem.get('sun_' + id)
+    if(value){
+        value = JSON.parse(value)
+        res.redirect(get_link(value,req))
+    }else {
+        let data = await SunshineModel.findOne({_id: id})
+        if (data) {
+            await mem.set('sun_' + id,JSON.stringify(data),60)
+            res.redirect(get_link(data,req))
+        }else{
+            res.send('没有查询到此链接，请先创建')
         }
-    }).catch(function (err) {
-        console.log(err);
-    });
+    }
 })
 
 let get_link = (data,req) =>{
     /*console.log('----------阳光--------')
     console.log(req.clientIp)*/
-    let link = data.tuiguang_link+'?dycallback=1&channel_id='+data.channel_id
+    let link = data.tuiguang_link+'?suncb=1&channel_id='+data.channel_id
                 +'&ip='+req.clientIp+'&ua='+req.headers['user-agent'];
     let params = req.query;
     let args = []
