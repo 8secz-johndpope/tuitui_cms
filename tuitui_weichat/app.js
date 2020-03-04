@@ -41,6 +41,8 @@ var novelLinks = require('./routes/novelLinks')
 var platform = require('./routes/platform')
 var zsy = require('./routes/zsy')
 var zsyn = require('./routes/zsyn')
+var sunshine = require('./routes/sunshine')
+var sunshinen = require('./routes/sunshinen')
 
 
 var app = express();
@@ -145,6 +147,8 @@ app.use('/novelLinks',[cookieParser(),sessiond],novelLinks)
 
 app.use('/tuiguang',tuiguang)
 app.use('/zsyn',zsyn)
+app.use('/sunshine',[cookieParser(),sessiond],sunshine)
+app.use('/sunshinen',sunshinen)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
