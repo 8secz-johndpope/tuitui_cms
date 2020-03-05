@@ -36,7 +36,18 @@ var TuiGuangSchema = new Schema({
     type: Number,
     default: 0
   },
-  bgcolor: {type: String, default: "#fff"}
+  bgcolor: {type: String, default: "#fff"},
+  createAt: {
+      type: Date,
+      default: Date.now
+  },
+  updateAt: {
+      type: Date,
+      default: Date.now
+  }
+},
+{
+    timestamps: {createdAt: 'createAt', updatedAt: 'updateAt'}
 });
 
 var TuiGuangModel = db.model('TuiGuang', TuiGuangSchema);
