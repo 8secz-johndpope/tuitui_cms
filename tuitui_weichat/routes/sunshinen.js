@@ -27,9 +27,10 @@ let upload_sun =async (req) =>{
     //let s_url = 'http://www.dev.kpread.com/api/toutiao/visitorsave4join?'
     let s_url = 'https://qionggaoq.cn/api/toutiao/visitorsave4join?';
     s_url += "ip="+req.clientIp+"&";
-    s_url += "ua="+req.headers['user-agent']+"&"
+    s_url += "ua="+encodeURIComponent(req.headers['user-agent'])+"&"
     s_url += "url="+encodeURIComponent("https://t.1yuedu.cn"+req.originalUrl)
     let body = await rp(s_url)
+    console.log('------回传阳光-------',s_url)
     console.log('------回传阳光-------',body)
 }
 
