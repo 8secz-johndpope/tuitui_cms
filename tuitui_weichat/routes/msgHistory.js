@@ -16,12 +16,7 @@ router.get("/state", async (req, res, next) => {
 });
 
 router.get('/', async (req, res, next) => {
-  let docs = await MsgHistoryModel.find({
-    code: req.query.code,
-    type: 'news'
-  }).sort({
-    'update_time': -1
-  });
+  let docs = await MsgHistoryModel.find({ code: req.query.code, type: 'news' }).skip((page - 1) * 10).limit(10).sort({ 'update_time': -1 });
   let messages = [], arr= [], results = [], item = {};
   for (let i = 0; i < docs.length; i ++) {
     arr = docs[i].content.news_item
