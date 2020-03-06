@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
     type: 'news'
   }).sort({
     'update_time': -1
-  });
+  }).limit(10);
   let messages = [], arr= [], results = [], item = {};
   for (let i = 0; i < docs.length; i ++) {
     arr = docs[i].content.news_item
