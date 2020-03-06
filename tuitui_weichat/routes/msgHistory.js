@@ -16,7 +16,9 @@ router.get("/state", async (req, res, next) => {
 });
 
 router.get('/', async (req, res, next) => {
+  let {page} = req.query;
   let docs = await MsgHistoryModel.find({ code: req.query.code, type: 'news' }).skip((page - 1) * 10).limit(10).sort({ 'update_time': -1 });
+  let total = await MsgHistoryModel.count({ code: req.query.code, type: 'news' })
   let messages = [], arr= [], results = [], item = {};
   for (let i = 0; i < docs.length; i ++) {
     arr = docs[i].content.news_item
@@ -41,9 +43,10 @@ router.get('/', async (req, res, next) => {
   }
   res.send({
     success: '成功',
-    data: results
+    data: results,
+    total
   })
-})
+});
 
 router.get('/del_msg', async (req, res, next) => {
   var api = await weichat_util.getClient(req.query.code);
