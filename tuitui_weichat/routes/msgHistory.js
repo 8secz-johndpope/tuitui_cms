@@ -16,7 +16,7 @@ router.get("/state", async (req, res, next) => {
 });
 
 router.get('/', async (req, res, next) => {
-  let {page} = req.query;
+  let {page = 1} = req.query;
   let docs = await MsgHistoryModel.find({ code: req.query.code, type: 'news' }).skip((page - 1) * 10).limit(10).sort({ 'update_time': -1 });
   let total = await MsgHistoryModel.count({ code: req.query.code, type: 'news' })
   let messages = [], arr= [], results = [], item = {};
