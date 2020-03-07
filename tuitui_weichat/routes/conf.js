@@ -7,22 +7,27 @@ var exec = require('child_process').exec;
 var request = require('request');
 var OpenidModel = require('../model/Openidjg');
 var UserconfModel = require('../model/Userconfjg');
-var UserTagModel = require('../model/UserTag')
-var RecordModel = require('../model/Record')
+var UserTagModel = require('../model/UserTag');
+var RecordModel = require('../model/Record');
 var WechatUtil = require('../util/get_weichat_client.js');
 const asyncRedis = require("async-redis");
 const redis_client = asyncRedis.createClient();
 var async = require('async');
 
 router.get('/', async(req, res, next) => {
-    let account_id;
+    let account_id, {page, pageSize} = req.query, doc;
     if(!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
     }
-    let doc = await ConfigModel.find({account_id}).sort({_id: -1});
-    res.send({code: 1, msg: "查询成功", data: doc})
+    if(page) {
+        doc = await ConfigModel.find({account_id}).skip((page - 1) * pageSize).limit(pageSize).sort({_id: -1});
+    } else {
+        doc = await ConfigModel.find({account_id}).sort({_id: -1});
+    }
+    let total = await ConfigModel.count({account_id});
+    res.send({code: 1, msg: "查询成功", data: doc, total})
 });
 
 router.get('/group', async(req, res, next) => {

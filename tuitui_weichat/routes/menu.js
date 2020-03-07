@@ -44,7 +44,7 @@ router.post('/create', async(req, res, next) => {
                 createMenu(code, doc.values)
             }
             for (let value of doc.values) {
-                if (value.sub_button && value.sub_button.length == 0) {
+                if (!value.sub_button || (value.sub_button && value.sub_button.length == 0)) {
                     console.log(3)
                     if (value.type == 'click') {
                         await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
