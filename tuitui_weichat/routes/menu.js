@@ -54,6 +54,7 @@ router.post('/create', async(req, res, next) => {
                     }
                 } else {
                     console.log(4)
+                    console.log(value.sub_button)
                     for (let button of value.sub_button) {
                         if (button.type == 'click') {
                             await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + button.key}}, {
