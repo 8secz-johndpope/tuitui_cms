@@ -33,16 +33,19 @@ router.post('/create', async(req, res, next) => {
         account_id
     };
     let doc = await MenuModel.create(data);
-
+    console.log(doc)
     if (doc) {
+        console.log(1)
         for (let code of doc.codes) {
             if (doc.individual) {
                 createIndividualMenu(code, doc.values, doc.sex, doc._id, null)
             } else {
+                console.log(2)
                 createMenu(code, doc.values)
             }
             for (let value of doc.values) {
                 if (value.sub_button && value.sub_button.length == 0) {
+                    console.log(3)
                     if (value.type == 'click') {
                         await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
                             upsert: true,
@@ -50,6 +53,7 @@ router.post('/create', async(req, res, next) => {
                         })
                     }
                 } else {
+                    console.log(4)
                     for (let button of value.sub_button) {
                         if (button.type == 'click') {
                             await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + button.key}}, {
