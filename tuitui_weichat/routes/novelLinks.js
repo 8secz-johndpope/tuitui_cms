@@ -47,8 +47,7 @@ router.get('/show', async (req, res, next) => {
         zIndex: -1,
         _id: -1
     });
-    // let domain_name = "https://td.tyuss.com";
-    let domain_name = "http://t.dmmup.com";
+    let domain_name = "https://t.1yuedu.cn";
     if (messages.length) {
         res.send({code: 1, data: messages, domain_name, count, msg: "查询成功"})
     } else {
