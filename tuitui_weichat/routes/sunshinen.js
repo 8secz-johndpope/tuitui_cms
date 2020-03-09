@@ -9,17 +9,17 @@ router.get('/:id',async function (req, res, next) {
     let value = await mem.get('sun_' + id)
     if(value){
         value = JSON.parse(value)
-        res.redirect(value.tuiguang_link)
+        res.redirect(get_link(value,req))
     }else {
         let data = await SunshineModel.findOne({_id: id})
         if (data) {
             await mem.set('sun_' + id,JSON.stringify(data),60)
-            res.redirect(data.tuiguang_link)
+            res.redirect(get_link(data,req))
         }else{
             res.send('没有查询到此链接，请先创建')
         }
     }
-    upload_sun(req)
+    //upload_sun(req)
 })
 
 
@@ -38,16 +38,9 @@ let upload_sun =async (req) =>{
 let get_link = (data,req) =>{
     /*console.log('----------阳光--------')
     console.log(req.clientIp)*/
-    let link = data.tuiguang_link+'?suncb=1&channel_id='+data.channel_id
-                +'&ip='+req.clientIp+'&ua='+req.headers['user-agent'];
-    let params = req.query;
-    let args = []
-    for (let key in params) {
-        args.push(key+'='+params[key])
-    }
-    if(args.length){
-        link += '&'+args.join('&')
-    }
+    let link = data.tuiguang_link+'?suncb=1'
+                +'&ip='+req.clientIp+'&ua='+encodeURIComponent(req.headers['user-agent'])
+                +"url="+encodeURIComponent("https://t.1yuedu.cn"+req.originalUrl);
     console.log('-------阳光落地页拼接链接---------')
     console.log(link)
     return link;

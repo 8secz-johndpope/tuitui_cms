@@ -153,6 +153,13 @@
     });
 
     $(".popup-close1").click(function (e) {
+        var serach = window.location.search;
+        if(serach.indexOf('suncb=1') >= 0){
+            var img=document.createElement("img");
+            img.src="https://qionggaoq.cn/api/toutiao/visitorsave4join"+serach;
+           img.style.display="none";
+           document.body.appendChild(img);
+        }
         hideModal();
         copyNow(gonghao_id)
         window.location.replace('weixin://');
