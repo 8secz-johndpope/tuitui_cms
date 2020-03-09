@@ -36,11 +36,9 @@ let upload_sun =async (req) =>{
 
 
 let get_link = (data,req) =>{
-    /*console.log('----------阳光--------')
-    console.log(req.clientIp)*/
     let link = data.tuiguang_link+'?suncb=1'
                 +'&ip='+req.clientIp+'&ua='+encodeURIComponent(req.headers['user-agent'])
-                +"url="+encodeURIComponent("https://t.1yuedu.cn"+req.originalUrl);
+                +"&url="+encodeURIComponent("https://t.1yuedu.cn"+req.originalUrl);
     console.log('-------阳光落地页拼接链接---------')
     console.log(link)
     return link;
