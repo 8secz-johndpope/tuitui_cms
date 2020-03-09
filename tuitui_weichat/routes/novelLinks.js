@@ -43,7 +43,7 @@ router.get('/show', async (req, res, next) => {
     }
     let {page = 1} = req.query;
     let count = await TuiGuangModel.count({account_id});
-    let messages = await TuiGuangModel.find({account_id}, {capter: 0}).skip((page - 1) * 20).limit(20).sort({
+    let messages = await TuiGuangModel.find({account_id}, {capter: 0}).skip((page - 1) * 10).limit(10).sort({
         zIndex: -1,
         _id: -1
     });
