@@ -12,15 +12,9 @@ router.get('/', async(req, res, next) => {
     }
     var messages = await TransferModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({order: -1, _id: -1});
     let total = await TransferModel.count({account_id});
-    let domain_names = await DomainModel.find({account_id});
-    res.send({messages: messages, domain_names: domain_names, total})
+    let domain_name = "http://doumobone.top";
+    res.send({messages: messages, domain_name, total})
 });
-
-// 删除开始创建的
-// router.get("/find_count", async(req, res, next) => {
-//   let messages = await TransferModel.remove({_id: {$lt: "5c2359c4b221222e3cc809b1"}})
-//   res.send({data: messages})
-// })
 
 router.post('/goTop', async(req, res, next) => {
     let account_id;
