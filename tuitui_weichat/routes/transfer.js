@@ -11,7 +11,7 @@ router.get('/', async(req, res, next) => {
         account_id = req.session.account._id;
     }
     var messages = await TransferModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({order: -1, _id: -1});
-    let total = await ZhuiShuYunModel.count({account_id});
+    let total = await TransferModel.count({account_id});
     let domain_names = await DomainModel.find({account_id});
     res.send({messages: messages, domain_names: domain_names, total})
 });
