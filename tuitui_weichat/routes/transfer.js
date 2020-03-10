@@ -2,17 +2,25 @@ var express = require('express');
 var router = express.Router();
 var TransferModel = require('../model/Transfer');
 var DomainModel = require('../model/Domain');
-var mem = require('../util/mem.js')
+var mem = require('../util/mem.js');
+
+
 router.get('/', async(req, res, next) => {
-    let account_id, {page = 1} = req.query;
+    let account_id, messages, total;
+    let {page = 1, group} = req.query;
+    let domain_name = "http://doumobone.top";
     if(!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
     }
-    var messages = await TransferModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({order: -1, _id: -1});
-    let total = await TransferModel.count({account_id});
-    let domain_name = "http://doumobone.top";
+    if(group) {
+        messages = await TransferModel.find({account_id, group}).skip((page - 1) * 10).limit(10).sort({order: -1, _id: -1});
+        total = await TransferModel.count({account_id, group});
+    } else {
+        messages = await TransferModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({order: -1, _id: -1});
+        total = await TransferModel.count({account_id});
+    }
     res.send({messages: messages, domain_name, total})
 });
 
