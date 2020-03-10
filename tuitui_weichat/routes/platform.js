@@ -5,15 +5,16 @@ var PlatformDataModel = require("../model/PlatformData.js");
 var rp = require("request-promise");
 
 router.get("/", async (req, res, next) => {
-  let account_id;
+  let account_id, {page = 1} = req.query;
   if (!req.session.account) {
     account_id = req.query.account_id;
   } else {
     account_id = req.session.account._id;
   }
-  let result = await PlatformModel.find({ account_id }).sort({_id: -1});
+  let result = await PlatformModel.find({ account_id }).skip((page - 1) * 10).limit(10).sort({_id: -1});
+  let total = await PlatformModel.count({ account_id });
   if (result.length) {
-    res.send({ code: 1, msg: "查询成功", data: result });
+    res.send({ code: 1, msg: "查询成功", data: result, total });
   } else {
     res.send({ code: -1, msg: "没有数据，请添加" });
   }

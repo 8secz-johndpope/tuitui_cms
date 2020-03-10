@@ -4,16 +4,17 @@ const router = express.Router();
 const ZhuiShuYunModel = require('../model/ZhuiShuYun.js');
 
 router.get('/', async (req, res, next) => {
-    let account_id;
+    let account_id, {page = 1} = req.query;
     if (!req.session.account) {
       account_id = req.query.account_id;
     } else {
       account_id = req.session.account._id;
     }
-    let result = await ZhuiShuYunModel.find({account_id});
+    let result = await ZhuiShuYunModel.find({account_id}).skip((page - 1) * 10).limit(10);
+    let total = await ZhuiShuYunModel.count({account_id});
     let domain_name = "https://t.1yuedu.cn";
     if(result.length) {
-        res.send({code: 1, msg: "查询成功", data: result, domain_name})
+        res.send({code: 1, msg: "查询成功", data: result, domain_name, total})
     } else {
         res.send({code: -1, msg: "没有查询到数据", domain_name})
     }

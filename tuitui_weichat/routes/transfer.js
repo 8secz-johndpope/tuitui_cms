@@ -4,15 +4,16 @@ var TransferModel = require('../model/Transfer');
 var DomainModel = require('../model/Domain');
 var mem = require('../util/mem.js')
 router.get('/', async(req, res, next) => {
-    let account_id;
+    let account_id, {page = 1} = req.query;
     if(!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
     }
-    var messages = await TransferModel.find({account_id}).sort({order: -1, _id: -1})
-    var domain_names = await DomainModel.find({account_id});
-    res.send({messages: messages, domain_names: domain_names})
+    var messages = await TransferModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({order: -1, _id: -1});
+    let total = await ZhuiShuYunModel.count({account_id});
+    let domain_names = await DomainModel.find({account_id});
+    res.send({messages: messages, domain_names: domain_names, total})
 });
 
 // 删除开始创建的
