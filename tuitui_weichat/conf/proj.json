@@ -1,4 +1,6 @@
 {
 	"mongodb":"mongodb://mingxing:liujiazhi88@dds-2ze36af17eb05c042440-pub.mongodb.rds.aliyuncs.com:3717/tuitui_cms?replicaSet=mgset-5196081",
-	"memcache_prefix": "wx_platform"
+	"memcache_prefix": "wx_platform",
+	"accessKeyId":"LTAI4Fet8ckC13LicyVEtgDR",
+	"accessKeySecret":"DowKHUfM1A6czBHU8cIQSX5nNk2jRn"
 }
