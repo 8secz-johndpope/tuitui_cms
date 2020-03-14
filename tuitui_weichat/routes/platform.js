@@ -42,15 +42,17 @@ router.post("/", async (req, res, next) => {
   } else {
     account_id = req.session.account._id;
   }
-  let { platform, gonghao_name, seruid } = req.body;
-  if (!platform || !gonghao_name || !seruid) {
+  let { platform, gonghao_name, seruid, secret, email } = req.body;
+  if (!platform || !gonghao_name || !seruid || !secret || !email) {
     res.send({ code: -1, msg: "参数填写有误" });
   } else {
     let result = await PlatformModel.create({
       platform,
       gonghao_name,
       seruid,
-      account_id
+      account_id,
+      secret,
+      email
     });
     if (result) {
       res.send({ code: 1, msg: "创建成功", data: result });
@@ -61,13 +63,13 @@ router.post("/", async (req, res, next) => {
 });
 
 router.put("/", async (req, res, next) => {
-  let { platform, gonghao_name, seruid, _id } = req.body;
-  if (!_id || !platform || !gonghao_name || !seruid) {
+  let { platform, gonghao_name, seruid, _id, secret, email } = req.body;
+  if (!_id || !platform || !gonghao_name || !seruid || !secret || !email) {
     res.send({ code: -1, msg: "修改失败" });
   } else {
     let result = await PlatformModel.findByIdAndUpdate(
       _id,
-      { platform, gonghao_name, seruid },
+      { platform, gonghao_name, seruid, secret, email },
       { new: true }
     );
     if (result) {
