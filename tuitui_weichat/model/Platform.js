@@ -5,7 +5,7 @@ var db = mongoose.createConnection(connect_url);
 
 var PlatformSchema = new Schema({
     account_id : String,
-    platform: Number,   // 平台名称  1 阅文 2 腾文 3 有书阁
+    platform: Number,   // 平台名称  1 阅文 2 腾文 3 有书阁 4 掌读
     gonghao_name: String,  // 公号名称,
     seruid: String,  // 公号id
     secret: {
