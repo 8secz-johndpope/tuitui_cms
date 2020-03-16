@@ -44,6 +44,14 @@ var TuiGuangSchema = new Schema({
   updateAt: {
       type: Date,
       default: Date.now
+  },
+  platform: {
+    type: Number,
+    default: 0
+  },
+  seruid: {
+    type: String,
+    default: ""
   }
 },
 {
