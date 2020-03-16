@@ -5,7 +5,7 @@ var PlatformDataModel = require("../model/PlatformData.js");
 var rp = require("request-promise");
 
 router.get("/", async (req, res, next) => {
-  let result = await PlatformModel.find();
+  let result = await PlatformModel.find().sort({_id: -1});
   if (result.length) {
     res.send({ code: 1, msg: "查询成功", data: result });
   } else {
