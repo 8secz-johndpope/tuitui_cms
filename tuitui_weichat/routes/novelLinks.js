@@ -104,6 +104,8 @@ router.post('/add', async (req, res, next) => {
                     finalImg_ali: finalImg_ali,
                     company: req.body.company,
                     suffix: req.body.suffix,
+                    platform: req.body.platform,
+                    seruid: req.body.seruid,
                     bgcolor: req.body.bgcolor
                 };
                 var user = new TuiGuangModel(novelInfo)
@@ -150,6 +152,8 @@ router.post('/update', async (req, res, next) => {
         finalImg_ali: finalImg_ali,
         company: req.body.company,
         suffix: req.body.suffix,
+        platform: req.body.platform,
+        seruid: req.body.seruid,
         bgcolor: req.body.bgcolor
     };
     if (req.body.capter) {
