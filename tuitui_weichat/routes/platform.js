@@ -5,16 +5,9 @@ var PlatformDataModel = require("../model/PlatformData.js");
 var rp = require("request-promise");
 
 router.get("/", async (req, res, next) => {
-  let account_id, {page = 1} = req.query;
-  if (!req.session.account) {
-    account_id = req.query.account_id;
-  } else {
-    account_id = req.session.account._id;
-  }
-  let result = await PlatformModel.find({ account_id }).skip((page - 1) * 10).limit(10).sort({_id: -1});
-  let total = await PlatformModel.count({ account_id });
+  let result = await PlatformModel.find();
   if (result.length) {
-    res.send({ code: 1, msg: "查询成功", data: result, total });
+    res.send({ code: 1, msg: "查询成功", data: result });
   } else {
     res.send({ code: -1, msg: "没有数据，请添加" });
   }
@@ -36,12 +29,6 @@ router.post("/liantiao", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  let account_id;
-  if (!req.session.account) {
-    account_id = req.body.account_id;
-  } else {
-    account_id = req.session.account._id;
-  }
   let { platform, gonghao_name, seruid, secret, email } = req.body;
   if (!platform || !gonghao_name || !seruid || !secret || !email) {
     res.send({ code: -1, msg: "参数填写有误" });
@@ -50,7 +37,6 @@ router.post("/", async (req, res, next) => {
       platform,
       gonghao_name,
       seruid,
-      account_id,
       secret,
       email
     });
