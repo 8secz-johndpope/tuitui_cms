@@ -15,6 +15,18 @@ var PlatformDataSchema = new Schema({
         type : String,
         default : ''
     },
+    td_adid: {
+        type : String,
+        default : ''
+    },
+    td_creativeid: {
+        type : String,
+        default : ''
+    },
+    event : {
+        type : Number,// 0 load 1 click
+        default : 0
+    },
     ip: String,
     td_ua: String,    // 头条的ua 需要处理
     tc_tuiguang_id: String,

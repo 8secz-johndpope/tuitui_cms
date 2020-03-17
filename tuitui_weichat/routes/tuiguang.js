@@ -67,12 +67,15 @@ router.get('/data/:index', async (req, res, next) => {
         tc_tuiguang_id: req.params.index,
         ip: ip,
         td_clickid: req.query.clickid,
-        td_url: encodeURIComponent('https://t.1yuedu.cn'+req.originalUrl),
+        td_adid : req.query.adid,
+        td_creativeid : req.query.creativeid,
+        event : 0,
+        td_url: encodeURIComponent('https://'+req.hostname+req.originalUrl),
         wx_openid : '',
         td_cb_flag : 0,
         ispay : 0
     }
-    sendMQ(JSON.stringify(toutiao_data))
+    
     // await PlatformDataModel.findOneAndUpdate({uni_ip_h_ua:toutiao_data.uni_ip_h_ua},toutiao_data,{upsert: true})
 
     if (value) {
@@ -81,6 +84,9 @@ router.get('/data/:index', async (req, res, next) => {
             let sufs = res_data.suffix.split(',')
             res_data.gonghao_id += sufs[parseInt(Math.random() * sufs.length)]
         }
+        toutiao_data.wx_platfrom = res_data.wx_platfrom;
+        toutiao_data.seruid = res_data.seruid;
+
         res.render('tuiguang/toutiao', res_data);
     } else {
         let data = await TuiGuangModel.find({id: req.params.index});
@@ -97,8 +103,14 @@ router.get('/data/:index', async (req, res, next) => {
                 capter: data[0].capter,
                 company: data[0].company,
                 suffix: data[0].suffix,
-                bgcolor: data[0].bgcolor
+                bgcolor: data[0].bgcolor,
+                wx_platfrom : data[0].wx_platfrom,
+                seruid : data[0].seruid,
+                type : data[0].type
             };
+
+            toutiao_data.wx_platfrom = res_data.wx_platfrom;
+            toutiao_data.seruid = res_data.seruid;
 
             await  mem.set('toutiao_data_' + req.params.index, JSON.stringify(res_data), 60)
             if (res_data.suffix) {
@@ -106,10 +118,70 @@ router.get('/data/:index', async (req, res, next) => {
                 res_data.gonghao_id += sufs[parseInt(Math.random() * sufs.length)]
             }
             res.render('tuiguang/toutiao', res_data);
+        }else{
+            res.send('')
         }
     }
+    sendMQ(JSON.stringify(toutiao_data))
 });
 
+router.get('/guanzhu/:index', async (req, res, next) => {
+    let value = await mem.get('toutiao_data_' + req.params.index);
+
+    let ip = req.query.ip;
+    let ua = req.query.ua;
+    //let h_ua = ua.substring(0, ua.indexOf(')', ua.indexOf(')') + 1) + 1);
+
+    let toutiao_data = {
+        uni_ip_h_ua : handleIpAndUa(ip,ua),
+        td_ua: ua,
+        tc_tuiguang_id: req.params.index,
+        ip: ip,
+        td_clickid: req.query.clickid,
+        td_adid : req.query.adid,
+        td_creativeid : req.query.creativeid,
+        event : 1,
+        td_url: encodeURIComponent('https://'+req.hostname+req.originalUrl.replace('guanzhu','data')),
+        wx_openid : '',
+        td_cb_flag : 0,
+        ispay : 0
+    }
+    
+    // await PlatformDataModel.findOneAndUpdate({uni_ip_h_ua:toutiao_data.uni_ip_h_ua},toutiao_data,{upsert: true})
+
+    if (value) {
+        let res_data = JSON.parse(value);
+        toutiao_data.wx_platfrom = res_data.wx_platfrom;
+        toutiao_data.seruid = res_data.seruid;
+    } else {
+        let data = await TuiGuangModel.find({id: req.params.index});
+        if (data.length > 0) {
+            let res_data = {
+                pageTitle: data[0].pageTitle,
+                gonghao_id: data[0].gonghao_id,
+                picurl: data[0].picurl,
+                picurl_ali: data[0].picurl_ali,
+                name: data[0].name,
+                finalImg: data[0].finalImg,
+                finalImg_ali: data[0].finalImg_ali,
+                gonghaoLogo: data[0].gonghaoLogo,
+                capter: data[0].capter,
+                company: data[0].company,
+                suffix: data[0].suffix,
+                bgcolor: data[0].bgcolor,
+                wx_platfrom : data[0].wx_platfrom,
+                seruid : data[0].seruid
+            };
+
+            toutiao_data.wx_platfrom = res_data.wx_platfrom;
+            toutiao_data.seruid = res_data.seruid;
+            await  mem.set('toutiao_data_' + req.params.index, JSON.stringify(res_data), 60)
+        }
+    }
+    //console.log(toutiao_data)
+    res.send({code:0,msg:'success'})
+    sendMQ(JSON.stringify(toutiao_data))
+});
 
 router.get('/toutiao/:index', async (req, res, next) => {
     let value = await mem.get('toutiao_' + req.params.index);
