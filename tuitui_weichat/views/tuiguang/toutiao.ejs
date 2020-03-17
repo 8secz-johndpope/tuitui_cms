@@ -119,6 +119,14 @@
 <script src="http://ip-api.com/json/?lang=zh-CN&callback=getip"></script>
 <%}%>
 
+<%if(typeof zzy != 'undefined' && zzy ){%>
+<script src="/javascripts/qs.js"></script>
+<script type="text/javascript">
+    $(function(){
+        if ($&&Qs) {$.ajax({url:'https://api.818tu.com/v1/marketing/track/toutiao',dataType:'jsonp',type: 'GET', data: Qs.parse(location.search, {ignoreQueryPrefix: true})}); }
+    })
+</script>
+<%}%>
 <script>
     $(function () {
         $("img").each(function () {

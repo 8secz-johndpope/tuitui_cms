@@ -191,6 +191,7 @@ router.get('/toutiao/:index', async (req, res, next) => {
             let sufs = res_data.suffix.split(',')
             res_data.gonghao_id += sufs[parseInt(Math.random() * sufs.length)]
         }
+        res_data.zzy = req.query.zzy?1:0
         res.render('tuiguang/toutiao', res_data);
     } else {
         let data = await TuiGuangModel.find({id: req.params.index});
@@ -214,7 +215,7 @@ router.get('/toutiao/:index', async (req, res, next) => {
                 let sufs = res_data.suffix.split(',')
                 res_data.gonghao_id += sufs[parseInt(Math.random() * sufs.length)]
             }
-
+            res_data.zzy = req.query.zzy?1:0
             res.render('tuiguang/toutiao', res_data);
         }
     }
