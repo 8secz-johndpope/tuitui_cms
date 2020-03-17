@@ -44,6 +44,7 @@ var zsyn = require('./routes/zsyn')
 var sunshine = require('./routes/sunshine')
 var sunshinen = require('./routes/sunshinen')
 var platformManage = require('./routes/platformManage')
+var zzy = require('./routes/zzy')
 
 var app = express();
 
@@ -150,6 +151,7 @@ app.use('/zsyn',zsyn)
 app.use('/sunshine',[cookieParser(),sessiond],sunshine)
 app.use('/sunshinen',sunshinen)
 app.use('/platformManage',platformManage)
+app.use('/zzy',[cookieParser(),sessiond],zzy)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
