@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
     } else {
         account_id = req.session.account._id;
     }
-    let doc = await ReplyTimeModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({_id: -1});
+    let doc = await ReplyTimeModel.find({account_id}).sort({_id: -1});
     let total = await ReplyTimeModel.count({account_id});
     if (doc.length > 0) {
         res.send({code: 1, msg: "查询成功", data: doc, total})
