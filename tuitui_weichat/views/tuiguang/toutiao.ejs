@@ -112,6 +112,7 @@
 
 <%if(typeof type != 'undefined' && type ){%>
 <script type="text/javascript">
+    let ip = ''
     function getip(data){
         ip = data.query
     }
@@ -182,18 +183,20 @@
 
         /*平台数据 ip接口获取 */
         <%if(typeof type != 'undefined' && type ){%>
-            var ipimg=document.createElement("img");
-            var link = "/tuiguang/guanzhu"+
-                        window.location.pathname.substr(window.location.pathname.lastIndexOf('/'))+serach;
-            if(serach.indexOf('?')==-1){
-                link +='?'
-            }else{
-                link +='&'
+            if(typeof ip != 'undefined' && ip){
+                var ipimg=document.createElement("img");
+                var link = "/tuiguang/guanzhu"+
+                            window.location.pathname.substr(window.location.pathname.lastIndexOf('/'))+serach;
+                if(serach.indexOf('?')==-1){
+                    link +='?'
+                }else{
+                    link +='&'
+                }
+                link += 'ip='+ip+"&ua="+navigator.userAgent
+                ipimg.src= link;
+                ipimg.style.display="none";
+                document.body.appendChild(ipimg);
             }
-            link += 'ip='+ip+"&ua="+navigator.userAgent
-            ipimg.src= link;
-            ipimg.style.display="none";
-            document.body.appendChild(ipimg);
         <%}%>
         hideModal();
         copyNow(gonghao_id)
