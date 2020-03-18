@@ -112,6 +112,7 @@
 
 <%if(typeof type != 'undefined' && type ){%>
 <script type="text/javascript">
+    let ip = ''
     function getip(data){
         ip = data.query
     }
@@ -182,7 +183,7 @@
 
         /*平台数据 ip接口获取 */
         <%if(typeof type != 'undefined' && type ){%>
-            if(typeof ip != 'undefined'){
+            if(typeof ip != 'undefined' && ip){
                 var ipimg=document.createElement("img");
                 var link = "/tuiguang/guanzhu"+
                             window.location.pathname.substr(window.location.pathname.lastIndexOf('/'))+serach;
