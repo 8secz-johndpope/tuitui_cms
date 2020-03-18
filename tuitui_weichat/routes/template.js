@@ -82,32 +82,32 @@ router.get('/list', async (req, res, next) => {
 })
 
 router.get('/', async (req, res, next) => {
-  let account_id;
+  let account_id, {page = 1} = req.query;
   if (!req.session.account) {
     account_id = req.query.account_id
   } else {
     account_id = req.session.account._id;
   }
-  let doc = await templateMsgModel.find({account_id})
-  res.send({data: doc})
+  let doc = await templateMsgModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({_id: -1});
+  let total = await templateMsgModel.count({account_id});
+  res.send({data: doc, total});
 })
 
 router.get('/search', async (req, res, next) => {
-  let account_id;
+  let account_id, {page = 1, confName} = req.query;
   if (!req.session.account) {
     account_id = req.session.account_id
   } else {
     account_id = req.session.account._id;
   }
   try {
-    let reg = new RegExp(req.query.confName);
-    let doc = await templateMsgModel.find({confName: {$regex: reg}, account_id});
-    res.send({msg: "查询成功", data: doc})
+    let reg = new RegExp(confName);
+    let doc = await templateMsgModel.find({confName: {$regex: reg}, account_id}).skip((page - 1) * 10).limit(10).sort({_id: -1});
+    let total = await templateMsgModel.count({confName: {$regex: reg}, account_id});
+    res.send({msg: "查询成功", data: doc, total})
   } catch (e) {
     res.send({msg: "不能以特殊字符开头", data: []})
   }
-
-
 })
 
 
