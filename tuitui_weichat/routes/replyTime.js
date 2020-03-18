@@ -3,15 +3,16 @@ var router = express.Router();
 var ReplyTimeModel = require('../model/ReplyTime');
 
 router.get('/', async (req, res, next) => {
-    let account_id;
+    let account_id, {page = 1} = req.query;
     if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
     }
-    let doc = await ReplyTimeModel.find({account_id});
+    let doc = await ReplyTimeModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({_id: -1});
+    let total = await ReplyTimeModel.count({account_id});
     if (doc.length > 0) {
-        res.send({code: 1, msg: "查询成功", data: doc})
+        res.send({code: 1, msg: "查询成功", data: doc, total})
     } else {
         res.send({code: -1, msg: "没有查询到相关数据"})
     }

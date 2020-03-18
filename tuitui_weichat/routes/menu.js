@@ -5,14 +5,15 @@ var ActionModel = require('../model/Action')
 var WechatUtil = require('../util/get_weichat_client.js');
 
 router.get('/', async(req, res, next) => {
-    let account_id;
+    let account_id, {page = 1} = req.query;
     if (!req.session.account) {
         account_id = req.query.account_id
     } else {
         account_id = req.session.account._id;
     }
-    let doc = await MenuModel.find({account_id});
-    res.send({data: doc})
+    let doc = await MenuModel.find({account_id}).skip((page - 1) * 10).limit(10).sort({_id: -1});
+    let total = await MenuModel.count({account_id});
+    res.send({data: doc, total})
 });
 
 router.post('/create', async(req, res, next) => {
@@ -35,17 +36,14 @@ router.post('/create', async(req, res, next) => {
     let doc = await MenuModel.create(data);
     console.log(doc)
     if (doc) {
-        console.log(1)
         for (let code of doc.codes) {
             if (doc.individual) {
                 createIndividualMenu(code, doc.values, doc.sex, doc._id, null)
             } else {
-                console.log(2)
                 createMenu(code, doc.values)
             }
             for (let value of doc.values) {
                 if (!value.sub_button || (value.sub_button && value.sub_button.length == 0)) {
-                    console.log(3)
                     if (value.type == 'click') {
                         await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + value.key}}, {
                             upsert: true,
@@ -53,8 +51,6 @@ router.post('/create', async(req, res, next) => {
                         })
                     }
                 } else {
-                    console.log(4)
-                    console.log(value.sub_button)
                     for (let button of value.sub_button) {
                         if (button.type == 'click') {
                             await ActionModel.findOneAndUpdate({code: code}, {$addToSet: {actions: 'click_' + button.key}}, {
