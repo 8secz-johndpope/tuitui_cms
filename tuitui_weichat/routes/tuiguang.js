@@ -66,14 +66,22 @@ router.get('/data/:index', async (req, res, next) => {
         td_ua: ua,
         tc_tuiguang_id: req.params.index,
         ip: ip,
-        td_clickid: req.query.clickid,
-        td_adid : req.query.adid,
-        td_creativeid : req.query.creativeid,
         event : 0,
         td_url: encodeURIComponent('https://'+req.hostname+req.originalUrl),
         wx_openid : '',
         td_cb_flag : 0,
         ispay : 0
+    }
+
+    //判断头条还是uc
+    if(req.query.clickid&&req.adid){
+        toutiao.td_clickid= req.query.clickid;
+        toutiao.td_adid = req.query.adid;
+        toutiao.td_creativeid = req.query.creativeid;
+        toutiao_data.tg_platform = 1
+    }else if(req.query.uctrackid){
+        toutiao_data.uctrackid = req.query.uctrackid
+        toutiao_data.tg_platform = 2
     }
     
     // await PlatformDataModel.findOneAndUpdate({uni_ip_h_ua:toutiao_data.uni_ip_h_ua},toutiao_data,{upsert: true})
@@ -137,14 +145,22 @@ router.get('/guanzhu/:index', async (req, res, next) => {
         td_ua: ua,
         tc_tuiguang_id: req.params.index,
         ip: ip,
-        td_clickid: req.query.clickid,
-        td_adid : req.query.adid,
-        td_creativeid : req.query.creativeid,
         event : 1,
         td_url: encodeURIComponent('https://'+req.hostname+req.originalUrl.replace('guanzhu','data')),
         wx_openid : '',
         td_cb_flag : 0,
         ispay : 0
+    }
+
+    //判断头条还是uc
+    if(req.query.clickid&&req.adid){
+        toutiao.td_clickid= req.query.clickid;
+        toutiao.td_adid = req.query.adid;
+        toutiao.td_creativeid = req.query.creativeid;
+        toutiao_data.tg_platform = 1
+    }else if(req.query.uctrackid){
+        toutiao_data.uctrackid = req.query.uctrackid
+        toutiao_data.tg_platform = 2
     }
     
     // await PlatformDataModel.findOneAndUpdate({uni_ip_h_ua:toutiao_data.uni_ip_h_ua},toutiao_data,{upsert: true})
