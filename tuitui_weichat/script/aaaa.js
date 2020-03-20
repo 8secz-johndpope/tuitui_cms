@@ -1,3 +1,4 @@
+var ConfigModel = require('../model/Config');
 var ReplyModel = require('../model/Reply');
 var ReplyTimeModel = require('../model/ReplyTime');
 // var UserTagModel = require('../model/UserTag')
@@ -7,12 +8,20 @@ var UserconfModel = require('../model/Userconf');
 // var OpenidTagModel = require('../model/OpenidTag');
 // var SubOpenidTagModel = require('../model/SubOpenidTag');
 const MessageModel = require("../model/Message")
+const MaterialModel = require("../model/Material")
+const TextMaterialModel = require('../model/TextMaterial.js');
+const MsgHistoryModel = require('../model/MsgHistory');
 const MessageRandomModel = require("../model/MessageRandom")
 var account = require('../model/Account')
 var TuiGuangModel = require('../model/TuiGuang.js');
+const templateMsgModel = require('../model/templateMsg');
 
 async function a() {
     let code = process.argv.slice(2)[0]
+    // let a = await templateMsgModel.find({code: code})
+    // console.log(a, '----------------------')
+    // let a = await ConfigModel.find({nick_name:'青焰文海'})
+    // console.log(a,'------------a')
     // let user = await UserconfModel.count({code: code})
     // console.log(user, '-----------------user')
     // let OpenidTag = await OpenidTagModel.count({code: code})
@@ -28,8 +37,32 @@ async function a() {
     // console.log(a,'----------------------')
     // let b = await UserconfModel.count({code:code,subscribe_flag: {$ne: false},action_time:{$gte:yDate,$lt:LocalDate}})
     // console.log(b,'----------------------')
-    let c = await TuiGuangModel.findOne({remarks:1})
-    console.log(c,'---------------')
+    // let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
+    // let a = await MessageModel.count({daily_time:{$gte:1584504000000-LocalDate,$lt:1584504000000-LocalDate+60*1000}})
+    // console.log(a,'---------------a')
+    // let b = await MessageModel.count({timing_time:{$gte:1584504000000,$lt:1584504000000+60*1000}})
+    // console.log(b,'---------------b')
+    // let a = await UserconfModel.find({openid:'oVWfp5irPDm_FbVASNKS8Wbs9vDo'})
+    // console.log(a,'---------------a')
+    let b = await TextMaterialModel.find({code:10000001839}).sort({updateAt:1})
+    console.log(b,'---------------b')
+    // let obj = {
+    //     codes:b.codes,
+    //     contents:b.contents,
+    //     remarks:b.remarks,
+    //     sex:b.sex,
+    //     is_daily:b.is_daily,
+    //     daily_time:b.daily_time,
+    //     is_timing:b.is_timing,
+    //     timing_time:b.timing_time,
+    //     account_id:b.account_id,
+    //     type:b.type,
+    //     gonghaoList:b.gonghaoList,
+    //     action_type:b.action_type,
+    // }
+    // for(let i=0;i<300;i++){
+    //     await MessageModel.create(obj);
+    // }
     // let d = await account.findById('5dedbac43c67d104222f4c82')
     // console.log(d.password,'------------------d')
 

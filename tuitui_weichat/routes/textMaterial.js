@@ -3,6 +3,7 @@ const router = express.Router();
 const TextMaterialModel = require('../model/TextMaterial.js');
 var UserTagModel = require('../model/UserTag');
 var wechat_util = require('../util/get_weichat_client.js');
+var mem = require('../util/mem');
 
 router.get('/', async (req, res, next) => {
     let account_id, {code} = req.query;
@@ -82,22 +83,31 @@ router.post('/preview', async (req, res, next) => {
 
 router.post('/send', async (req, res, next) => {
     let {code, content, tagId, _id} = req.body;
-    let client = await wechat_util.getClient(code);
-    let receivers = tagId === -1 ? true : tagId;
-    console.log(receivers, "receivers----------------------------2019-12-16")
-    client.massSendText(content, receivers, async function (err, result) {
-        if (err) {
-            console.log(err)
-        }
-        console.log('------发送文本消息--------')
-        console.log(result)
-        if (result.errcode === 0) {
-            let data = await TextMaterialModel.findByIdAndUpdate(_id, {msg_id: result.msg_id, isSend: 1}, {new: true});
-            res.send({code: 1, msg: "发送成功"})
-        } else {
-            res.send({code: 0, msg: "消息发送失败", errcode: result.errcode, errmsg: result.errmsg})
-        }
-    })
+    let text_mass = await mem.get('send_text_mass_' + _id)
+    if (text_mass) {
+        res.send({code: 0, msg: "正在发送"})
+    } else {
+        let client = await wechat_util.getClient(code);
+        let receivers = tagId === -1 ? true : tagId;
+        await mem.set('send_text_mass_' + _id, 1, 5 * 60)
+        console.log(receivers, "receivers----------------------------2019-12-16")
+        client.massSendText(content, receivers, async function (err, result) {
+            if (err) {
+                console.log(err)
+            }
+            console.log('------发送文本消息--------')
+            console.log(result)
+            if (result.errcode === 0) {
+                let data = await TextMaterialModel.findByIdAndUpdate(_id, {
+                    msg_id: result.msg_id,
+                    isSend: 1
+                }, {new: true});
+                res.send({code: 1, msg: "发送成功"})
+            } else {
+                res.send({code: 0, msg: "消息发送失败", errcode: result.errcode, errmsg: result.errmsg})
+            }
+        })
+    }
 });
 
 
