@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
     } else {
         res.send({code: -1, msg: "没有查询到数据", domain_name})
     }
-})
+});
 
 router.post("/", async (req, res, next) => {
     let account_id;
@@ -27,32 +27,32 @@ router.post("/", async (req, res, next) => {
     } else {
       account_id = req.session.account._id;
     }
-    let {gonghao_name, channel_id, tuiguang_link} = req.body;
-    if(!gonghao_name || !channel_id || !tuiguang_link) {
+    let {gonghao_name, tuiguang_link} = req.body;
+    if(!gonghao_name || !tuiguang_link) {
         res.send({code: 0, msg: "字段不能为空"})
     } else {
-        let result = await SunshineModel.create({gonghao_name, channel_id, tuiguang_link, account_id});
+        let result = await SunshineModel.create({gonghao_name, tuiguang_link, account_id});
         if(result) {
             res.send({code: 1, msg: "创建成功", data: result})
         } else {
             res.send({code: -1, msg: "创建失败，请重试"})
         }
     }
-})
+});
 
 router.put('/', async(req, res, next) => {
-    let {gonghao_name, channel_id, tuiguang_link, _id} = req.body;
-    if(!gonghao_name || !channel_id || !tuiguang_link) {
+    let {gonghao_name, tuiguang_link, _id} = req.body;
+    if(!gonghao_name || !tuiguang_link) {
         res.send({code: 0, msg: "字段不能为空"})
     } else {
-        let result = await SunshineModel.findByIdAndUpdate(_id, {gonghao_name, channel_id, tuiguang_link}, {new: true});
+        let result = await SunshineModel.findByIdAndUpdate(_id, {gonghao_name, tuiguang_link}, {new: true});
         if(result) {
             res.send({code: 1, msg: "修改成功", data: result})
         } else {
             res.send({code: -1, msg: "修改失败，请重试"})
         }
     }
-})
+});
 
 router.delete('/', async(req, res, next) => {
     let {_id} = req.query;
@@ -62,7 +62,7 @@ router.delete('/', async(req, res, next) => {
     } else {
         res.send({code: -1, msg: "删除失败，请重试"})
     }
-})
+});
 
 
 module.exports = router;
