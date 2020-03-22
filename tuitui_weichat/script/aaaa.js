@@ -20,7 +20,7 @@ async function a() {
     let code = process.argv.slice(2)[0]
     // let a = await templateMsgModel.find({code: code})
     // console.log(a, '----------------------')
-    // let a = await ConfigModel.find({nick_name:'青焰文海'})
+    // let a = await ConfigModel.find({nick_name:'寻花文学'})
     // console.log(a,'------------a')
     // let user = await UserconfModel.count({code: code})
     // console.log(user, '-----------------user')
@@ -38,14 +38,24 @@ async function a() {
     // let b = await UserconfModel.count({code:code,subscribe_flag: {$ne: false},action_time:{$gte:yDate,$lt:LocalDate}})
     // console.log(b,'----------------------')
     // let LocalDate = new Date(new Date().toLocaleDateString()).getTime()
-    // let a = await MessageModel.count({daily_time:{$gte:1584504000000-LocalDate,$lt:1584504000000-LocalDate+60*1000}})
+    // let a = await MessageModel.count({daily_time:{$gte:1584669600000-LocalDate,$lt:1584669600000-LocalDate+31*60*1000}})
     // console.log(a,'---------------a')
-    // let b = await MessageModel.count({timing_time:{$gte:1584504000000,$lt:1584504000000+60*1000}})
+    // let b = await MessageModel.count({timing_time:{$gte:1584669600000,$lt:1584669600000+31*60*1000}})
     // console.log(b,'---------------b')
+    let sql = {
+        subscribe_flag: {'$ne': false},
+        code: {'$in': [10000000459]},
+        action_time: { '$lt': 1584768576877, '$gte': 1584768516877 }
+    }
+    let a = await UserconfModel.find
+    // let a = await MessageModel.find({codes:[10000001988],daily_time:1584671400000})
+    // console.log(a,'------------------a')
+    // let b = await MessageModel.find({codes:[10000001988],timing_time:1584671400000})
+    // console.log(b,'------------------b')
     // let a = await UserconfModel.find({openid:'oVWfp5irPDm_FbVASNKS8Wbs9vDo'})
     // console.log(a,'---------------a')
-    let b = await TextMaterialModel.find({code:10000001839}).sort({updateAt:1})
-    console.log(b,'---------------b')
+    // let b = await TextMaterialModel.find({code:10000001839}).sort({updateAt:1})
+    // console.log(b,'---------------b')
     // let obj = {
     //     codes:b.codes,
     //     contents:b.contents,

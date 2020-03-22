@@ -7,18 +7,18 @@ async function getClient(code) {
         let appid = await mem.get("configure_" + code)
         // let appid = ""
         if (!appid) {
-            let conf = await ConfigModel.findOne({code: code})
+            let conf = await ConfigModel.findOne({code: code},['appid'])
             if (conf) {
                 appid = conf.appid
-                await mem.set("configure_" + code, appid, 60)
+                await mem.set("configure_" + code, appid, 36 * 60 * 60)
             } else {
                 appid = ''
             }
         }
-        if(appid) {
+        if (appid) {
             let api = await Singleton.getInterface(appid)
             return api.api;
-        }else{
+        } else {
             return ''
         }
     } catch (e) {
