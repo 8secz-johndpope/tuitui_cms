@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var connect_url = require('../conf/proj.json').mongodb;
 var db = mongoose.createConnection(connect_url);
 
-var AccountSchema = new Schema({
+var AdvertisePlanSchema = new Schema({
     id : Number,  // 计划ID
     name : String,  // 计划名称
     advertiser_id : Number,  // 广告主ID
@@ -20,5 +20,5 @@ var AccountSchema = new Schema({
     external_url : String,  // 广告落地页链接
 });
 
-var AccountModel = db.model('Account', AccountSchema);
-module.exports = AccountModel;
+var AdvertisePlanModel = db.model('AdvertisePlan', AdvertisePlanSchema);
+module.exports = AdvertisePlanModel;
