@@ -46,6 +46,7 @@ var sunshinen = require('./routes/sunshinen')
 var platformManage = require('./routes/platformManage')
 var zzy = require('./routes/zzy')
 var marketing = require('./routes/marketing')
+var advertisePlan = require('./routes/advertisePlan')
 
 var app = express();
 
@@ -154,6 +155,7 @@ app.use('/sunshinen',sunshinen)
 app.use('/platformManage',platformManage)
 app.use('/zzy',[cookieParser(),sessiond],zzy)
 app.use('/marketing',marketing)
+app.use('/advertisePlan',advertisePlan)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
