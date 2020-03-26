@@ -5,11 +5,13 @@ var db = mongoose.createConnection(connect_url);
 
 var MarketingSchema = new Schema({
     app_id: String,
-    advertiser_id: String,
+    advertiser_ids: [],
     secret: String,
     access_token: String,
     expires_in: Number,
     refresh_token: String,
+    refresh_token_expires_in: Number,
+    refresh_type: {type: Number, default: 1},//1授权，2刷新
     refresh_time: Number,
     createAt: {
         type: Date,

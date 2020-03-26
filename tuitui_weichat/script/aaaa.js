@@ -20,8 +20,10 @@ async function a() {
     let code = process.argv.slice(2)[0]
     // let a = await templateMsgModel.find({code: code})
     // console.log(a, '----------------------')
-    // let a = await ConfigModel.find({nick_name:'寻花文学'})
-    // console.log(a,'------------a')
+    let a = await ConfigModel.find({nick_name:'万象生活志'})
+    console.log(a,'------------a')
+    let b = await ConfigModel.find({code:code})
+    console.log(b,'------------b')
     // let user = await UserconfModel.count({code: code})
     // console.log(user, '-----------------user')
     // let OpenidTag = await OpenidTagModel.count({code: code})
@@ -42,16 +44,18 @@ async function a() {
     // console.log(a,'---------------a')
     // let b = await MessageModel.count({timing_time:{$gte:1584669600000,$lt:1584669600000+31*60*1000}})
     // console.log(b,'---------------b')
-    let sql = {
-        subscribe_flag: {'$ne': false},
-        code: {'$in': [10000000459]},
-        action_time: { '$lt': 1584768576877, '$gte': 1584768516877 }
-    }
-    let a = await UserconfModel.find
+    // let sql = {
+    //     subscribe_flag: {'$ne': false},
+    //     code: {'$in': [10000000459]},
+    //     action_time: { '$lt': 1584768576877, '$gte': 1584768516877 }
+    // }
+    // let a = await UserconfModel.find
     // let a = await MessageModel.find({codes:[10000001988],daily_time:1584671400000})
     // console.log(a,'------------------a')
     // let b = await MessageModel.find({codes:[10000001988],timing_time:1584671400000})
     // console.log(b,'------------------b')
+    // let b = await MessageModel.find({codes:[10000002562]})
+    // console.log(JSON.stringify(b),'-------------------b')
     // let a = await UserconfModel.find({openid:'oVWfp5irPDm_FbVASNKS8Wbs9vDo'})
     // console.log(a,'---------------a')
     // let b = await TextMaterialModel.find({code:10000001839}).sort({updateAt:1})
@@ -76,7 +80,7 @@ async function a() {
     // let d = await account.findById('5dedbac43c67d104222f4c82')
     // console.log(d.password,'------------------d')
 
-    // await ConfigModel.update({code: code}, {status: -2})
+    // await ConfigModel.update({code: code}, {status: 1})
     //
     // let result = await UserconfModel.remove({code:code})
     // console.log(result,'---result')
