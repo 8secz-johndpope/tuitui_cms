@@ -5,7 +5,7 @@ const request = require("request");
 const mem = require('../util/mem.js');
 
 router.get('/auth', async (req, res, next) => {
-    let {app_id, auth_code, advertiser_ids, state} = req.query
+    let {app_id, auth_code, state} = req.query
         , secret = state
     request({
         url: "https://ad.oceanengine.com/open_api/oauth2/access_token/",
@@ -17,7 +17,7 @@ router.get('/auth', async (req, res, next) => {
             await mem.set('marketing_access_token_' + app_id, res.data.access_token, 24 * 3600)
             await MarketingModel.update({app_id: app_id}, {
                 app_id: app_id,
-                advertiser_ids: advertiser_ids,
+                advertiser_ids: res.data.advertiser_ids,
                 secret: secret,
                 access_token: res.data.access_token,
                 expires_in: res.data.expires_in,
