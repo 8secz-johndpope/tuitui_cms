@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const MarketingModel = require('../model/Marketing')
+const AdvertiseInfoModel = require('../model/AdvertiseInfo')
 const request = require("request");
 const mem = require('../util/mem.js');
 
@@ -26,11 +27,57 @@ router.get('/auth', async (req, res, next) => {
                 refresh_type: 1,
                 refresh_time: Date.now()
             }, {upsert: true})
+            AdvertiseInfo(app_id, res.data.advertiser_ids)
             res.send('success')
         } else {
+            console.log(res.code, '---------------code')
             res.send('false------', res.message)
         }
     })
 })
+
+function AdvertiseInfo(app_id, advertiser_ids) {
+    request({
+        url: "https://ad.oceanengine.com/open_api/2/advertiser/info/",
+        method: "get",
+        qs: {advertiser_ids: advertiser_ids},
+        json: true
+    }, async (err, res) => {
+        if (res.code == 0) {
+            for (let advertise of res.data) {
+                await AdvertiseInfoModel.update({id: advertise.id}, {
+                    app_id: app_id,
+                    id: advertise.id,
+                    name: String,
+                    description: advertise.description,
+                    email: advertise.email,
+                    contacter: advertise.contacter,
+                    phonenumber: advertise.phonenumber,
+                    role: advertise.role,
+                    status: advertise.status,
+                    telephone: advertise.telephone,
+                    address: advertise.address,
+                    license_url: advertise.license_url,
+                    license_no: advertise.license_no,
+                    license_province: advertise.license_province,
+                    license_city: advertise.license_city,
+                    company: advertise.company,
+                    brand: advertise.brand,
+                    promotion_area: advertise.promotion_area,
+                    promotion_center_province: advertise.promotion_center_province,
+                    promotion_center_city: advertise.promotion_center_city,
+                    first_industry_name: advertise.first_industry_name,
+                    second_industry_name: advertise.second_industry_name,
+                    reason: advertise.reason,
+                    balance: advertise.balance,
+                    create_time: advertise.create_time
+                }, {upsert: true})
+            }
+        } else {
+            console.log(res.code, '---------------code')
+        }
+        return
+    })
+}
 
 module.exports = router;

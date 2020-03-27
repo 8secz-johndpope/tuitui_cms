@@ -44,6 +44,15 @@ async function a() {
     // console.log(a,'---------------a')
     // let b = await MessageModel.count({timing_time:{$gte:1584669600000,$lt:1584669600000+31*60*1000}})
     // console.log(b,'---------------b')
+    let a = await UserconfModel.count({
+        subscribe_flag: {$ne: false},
+        $or: [
+            {action_time: {$lt: Date.now() - 1 * 60 * 1000, $gte: Date.now() - 2 * 60 * 1000}},
+            {subscribe_time: {$lt: Date.now() - 1 * 60 * 1000, $gte: Date.now() - 2 * 60 * 1000}}
+        ]
+    })
+    // let a = await MessageModel.count({task:true})
+    console.log(a, '---------------a')
     // let sql = {
     //     subscribe_flag: {'$ne': false},
     //     code: {'$in': [10000000459]},
