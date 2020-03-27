@@ -48,6 +48,7 @@ var zzy = require('./routes/zzy')
 var marketing = require('./routes/marketing')
 var advertisePlan = require('./routes/advertisePlan')
 var advertiseInfo = require('./routes/advertiseInfo')
+var advertiseGroup = require('./routes/advertiseGroup')
 
 var app = express();
 
@@ -158,6 +159,7 @@ app.use('/zzy',[cookieParser(),sessiond],zzy)
 app.use('/marketing',marketing)
 app.use('/advertisePlan',advertisePlan)
 app.use('/advertiseInfo',advertiseInfo)
+app.use('/advertiseGroup',advertiseGroup)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
