@@ -71,8 +71,11 @@ async function getChannel() {
 }
 
 async function sendMQ(msg) {
-    await ch.assertQueue(q);
-    ch.sendToQueue(q, Buffer.from(msg));
+    await ch.assertQueue('user_tasks_cb',{
+        autoDelete: true,
+        durable: false
+    });
+    ch.sendToQueue('user_tasks_cb', Buffer.from(msg));
 }
 
 async function sendSaveMQ(msg) {
