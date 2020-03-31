@@ -72,7 +72,7 @@ router.get('/data/:index', async (req, res, next) => {
         tc_tuiguang_id: req.params.index,
         ip: ip,
         event : 0,
-        td_url: encodeURIComponent('https://'+req.hostname+req.originalUrl),
+        td_url: encodeURIComponent((req.hostname=='a82.yilwlkj.cn'?'http://':'https://')+req.hostname+req.originalUrl),
         wx_openid : '',
         td_cb_flag : 0,
         ispay : 0
