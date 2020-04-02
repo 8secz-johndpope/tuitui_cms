@@ -4,7 +4,7 @@ var connect_url = require('../conf/proj.json').mongodb;
 var db = mongoose.createConnection(connect_url);
 
 var MarketingSchema = new Schema({
-    app_id: String,
+    app_id: Number,
     advertiser_ids: [],
     secret: String,
     access_token: String,
