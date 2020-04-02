@@ -6,7 +6,7 @@ const mem = require('../util/mem.js');
 const url = "https://ad.oceanengine.com/open_api/2/ad/get";
 const uri = "https://ad.oceanengine.com/open_api/2/majordomo/advertiser/select/";
 
-getAdvertiseHostList();
+// getAdvertiseHostList();
 
 async function getAdvertiseHostList() {
     let result = await MarketingModel.find({}, {advertiser_ids: 1, access_token: 1, _id: 0});
@@ -30,19 +30,28 @@ async function getAdvertiseHostList() {
         if(res.code === 0) {
             console.log(res.data.list[0], "res");
             await AdvertiseHostModel.remove();
-            let data = await AdvertiseHostModel.insertMany(res.data.list);
-            console.log(data, "data");
+            await AdvertiseHostModel.insertMany(res.data.list);
         }
     })
 }
 
-async function getAdvertiseData(page = 1) {
-    let result = await MarketingModel.find({}, {advertiser_ids: 1, app_id: 1, access_token: 1, _id: 0});
+getAllAdvertisePlan(1);
+
+
+async function getAllAdvertisePlan(page) {
+    let advertiseHostList = await AdvertiseHostModel.find();
+    await getAdvertisePlan(page, advertiseHostList[0].advertiser_id)
+    // advertiseHostList.map(item => {
+    //
+    // })
+}
+
+async function getAdvertisePlan(page = 1, advertiser_id) {
+    let result = await MarketingModel.find({}, {app_id: 1, access_token: 1, _id: 0});
     console.log(result, "result");
-    let app_id, advertiser_ids, access_token;
+    let app_id, access_token;
     if(result.length) {
         app_id = result[1].app_id;
-        advertiser_ids = result[1].advertiser_ids;
         access_token = result[1].access_token;
         // access_token = mem.get('marketing_access_token_' + app_id);
     }
@@ -50,7 +59,7 @@ async function getAdvertiseData(page = 1) {
     var options = {
         uri: url,
         qs: {
-            advertiser_id: advertiser_ids[0],
+            advertiser_id,
             page,
             page_size: 10,
             field: ["id", "name", "advertiser_id", "campaign_id", "status", "delivery_range", "budget_mode", "budget", "bid", "ad_create_time", "ad_modify_time", "start_time", "end_time", "external_url"]
@@ -66,5 +75,4 @@ async function getAdvertiseData(page = 1) {
     })
 }
 
-// getAdvertiseData(1)
 
