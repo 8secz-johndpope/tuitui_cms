@@ -8,9 +8,7 @@ const mem = require('../util/mem.js');
 router.get('/auth', async (req, res, next) => {
     let {app_id, auth_code, state} = req.query
         , secret = state;
-    console.log("app_id", app_id);
-    console.log("auth_code", auth_code);
-    console.log("state", state);
+    app_id = parseInt(app_id);
     console.log("req.query", req.query);
     request({
         url: "https://ad.oceanengine.com/open_api/oauth2/access_token/",
