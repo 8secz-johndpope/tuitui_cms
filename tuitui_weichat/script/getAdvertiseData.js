@@ -17,14 +17,14 @@ async function getAdvertiseData(page = 1) {
     var options = {
         uri: url,
         qs: {
-            advertiser_id: 0,
+            advertiser_id: advertiser_ids[0],
             page,
             page_size: 10,
             field: ["id", "name", "advertiser_id", "campaign_id", "status", "delivery_range", "budget_mode", "budget", "bid", "ad_create_time", "ad_modify_time", "start_time", "end_time", "external_url"]
         },
         headers: {
             'User-Agent': 'Request-Promise',
-            'Access-Token': ''
+            'Access-Token': access_token
         },
         json: true
     };
