@@ -10,8 +10,9 @@ async function getAdvertiseData(page = 1) {
     let app_id, advertiser_ids, access_token;
     if(result.length) {
         app_id = result[1].app_id;
-        advertiser_ids = result[0].advertiser_ids;
-        access_token = mem.get('marketing_access_token_' + app_id);
+        advertiser_ids = result[1].advertiser_ids;
+        access_token = result[1].access_token;
+        // access_token = mem.get('marketing_access_token_' + app_id);
     }
     console.log(typeof access_token, access_token, "access_token");
     var options = {
