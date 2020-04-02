@@ -1,6 +1,7 @@
 const rp = require("request-promise");
 const AccountModel = require('../model/Account.js');
 const MarketingModel = require('../model/Marketing.js');
+const AdvertiseHostModel = require('../model/AdvertiseHost.js');
 const mem = require('../util/mem.js');
 const url = "https://ad.oceanengine.com/open_api/2/ad/get";
 const uri = "https://ad.oceanengine.com/open_api/2/majordomo/advertiser/select/";
@@ -25,8 +26,13 @@ async function getAdvertiseHostList() {
         },
         json: true
     };
-    rp(options).then(res => {
-        console.log(res, "res")
+    rp(options).then(async res => {
+        if(res.code === 0) {
+            console.log(res.data.list[0], "res");
+            await AdvertiseHostModel.remove();
+            let data = await AdvertiseHostModel.insertMany(res.data.list);
+            console.log(data, "data");
+        }
     })
 }
 
@@ -60,5 +66,5 @@ async function getAdvertiseData(page = 1) {
     })
 }
 
-getAdvertiseData(1)
+// getAdvertiseData(1)
 
