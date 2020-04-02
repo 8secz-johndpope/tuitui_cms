@@ -5,7 +5,7 @@ const mem = require('../util/mem.js');
 const url = "https://ad.oceanengine.com/open_api/2/ad/get";
 
 async function getAdvertiseData(page = 1) {
-    let result = await MarketingModel.find({}, {advertiser_ids: 1, app_id: 1, _id: 0});
+    let result = await MarketingModel.find({});
     console.log(result, "result");
     let app_id, advertiser_ids, access_token;
     if(result.length) {
