@@ -9,13 +9,15 @@ router.get('/auth', async (req, res, next) => {
     let {app_id, auth_code, state} = req.query
         , secret = state;
     app_id = parseInt(app_id);
-    console.log("req.query", req.query);
     request({
         url: "https://ad.oceanengine.com/open_api/oauth2/access_token/",
         method: "post",
         qs: {app_id: app_id, secret: secret, grant_type: 'auth_code', auth_code: auth_code},
         json: true
     }, async (err, result) => {
+        console.log("err", err);
+        console.log("result", result);
+
         if (result.code == 0) {
             await mem.set('marketing_access_token_' + app_id, result.data.access_token, 24 * 3600)
             await MarketingModel.update({app_id: app_id}, {
