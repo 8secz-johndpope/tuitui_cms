@@ -13,24 +13,24 @@ router.get('/auth', async (req, res, next) => {
         method: "post",
         qs: {app_id: app_id, secret: secret, grant_type: 'auth_code', auth_code: auth_code},
         json: true
-    }, async (err, res) => {
-        if (res.code == 0) {
-            await mem.set('marketing_access_token_' + app_id, res.data.access_token, 24 * 3600)
+    }, async (err, result) => {
+        if (result.code == 0) {
+            await mem.set('marketing_access_token_' + app_id, result.data.access_token, 24 * 3600)
             await MarketingModel.update({app_id: app_id}, {
                 app_id: app_id,
-                advertiser_ids: res.data.advertiser_ids,
+                advertiser_ids: result.data.advertiser_ids,
                 secret: secret,
-                access_token: res.data.access_token,
-                expires_in: res.data.expires_in,
-                refresh_token: res.data.refresh_token,
-                refresh_token_expires_in: res.data.refresh_token_expires_in,
+                access_token: result.data.access_token,
+                expires_in: result.data.expires_in,
+                refresh_token: result.data.refresh_token,
+                refresh_token_expires_in: result.data.refresh_token_expires_in,
                 refresh_type: 1,
                 refresh_time: Date.now()
             }, {upsert: true})
-            AdvertiseInfo(app_id, res.data.advertiser_ids)
+            AdvertiseInfo(app_id, result.data.advertiser_ids)
             res.send('success')
         } else {
-            console.log(res.code, '---------------code')
+            console.log(result.code, '---------------code')
             res.send('false------', res.message)
         }
     })
