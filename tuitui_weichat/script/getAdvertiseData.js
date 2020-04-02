@@ -3,6 +3,32 @@ const AccountModel = require('../model/Account.js');
 const MarketingModel = require('../model/Marketing.js');
 const mem = require('../util/mem.js');
 const url = "https://ad.oceanengine.com/open_api/2/ad/get";
+const uri = "https://ad.oceanengine.com/open_api/2/majordomo/advertiser/select/";
+
+getAdvertiseHostList();
+
+async function getAdvertiseHostList() {
+    let result = await MarketingModel.find({}, {advertiser_ids: 1, access_token: 1, _id: 0});
+    let advertiser_ids, access_token;
+    if(result.length) {
+        advertiser_ids = result[1].advertiser_ids;
+        access_token = result[1].access_token;
+    }
+    let options = {
+        uri,
+        qs: {
+            advertiser_id: advertiser_ids[0]
+        },
+        headers: {
+            'User-Agent': 'Request-Promise',
+            'Access-Token': access_token
+        },
+        json: true
+    };
+    rp(options).then(res => {
+        console.log(res, "res")
+    })
+}
 
 async function getAdvertiseData(page = 1) {
     let result = await MarketingModel.find({}, {advertiser_ids: 1, app_id: 1, access_token: 1, _id: 0});
