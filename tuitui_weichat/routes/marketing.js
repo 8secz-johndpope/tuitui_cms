@@ -15,9 +15,7 @@ router.get('/auth', async (req, res, next) => {
         qs: {app_id: app_id, secret: secret, grant_type: 'auth_code', auth_code: auth_code},
         json: true
     }, async (err, response) => {
-        console.log("err", err);
         let result = response.body;
-        console.log("result.data.access_token", typeof result.data.access_token,result.data.access_token);
         if (result.code == 0) {
             await mem.set('marketing_access_token_' + app_id, result.data.access_token, 24 * 3600)
             await MarketingModel.update({app_id: app_id}, {
